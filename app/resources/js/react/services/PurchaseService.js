@@ -1,0 +1,13 @@
+import api from "../common/api";
+
+ const PurchaseService = {
+  add: (data) => api.post("/business-access/purchases",data),
+  show: (id) => api.get("/business-access/purchases/" + id),
+  list: ({
+    keywords = '',
+    page = 0,
+    status = 'draf'
+  }) => api.get("/business-access/purchases" + `?keywords=${keywords ?? ''}&page=${page ?? 0}&status=${status ?? 'draf'}`),
+  update: (data) => api.put("/business-access/purchases/" + data.id,data)
+};
+export default PurchaseService;

@@ -1,0 +1,164 @@
+import React, { useCallback, useEffect, useState } from 'react'
+import CommonDataTable from '../CommonDataTable';
+import useTable from '../../libraries/handleTable';
+import { useForm } from '../../libraries/handleInput';
+import { usePopup } from '../popups/PopupContext';
+import { Select } from '../UI/Input/Select';
+import SearchInput from '../UI/Input/SearchInput';
+import { PopupLayout } from '../../layouts/PopupLayout';
+import { InputForm } from '../UI/Input/InputForm';
+import TextArea from '../UI/Input/Textarea';
+import CustomerService from '../../services/CustomerService';
+import CustomerForm from './ListCustomer/CustomerForm';
+export default function ListCustomer() {
+    const table = useTable();
+    const search = useForm();
+    const { openPopup } = usePopup();
+    const form = useForm();
+    const [showAdd, setShowAdd] = useState(false);
+    const columns = [
+        { label: "ID", key: "id" },
+        { label: "Name", key: "name" },
+        { label: "Email", key: "email" },
+        { label: "Number phone", key: "phone" },
+        { label: "Ordered", key: "total_order" },
+        { label: "Group", key: "group_name" },
+        {
+            label: 'Type', key: 'type', render: (value) => {
+                return <span className={'badge text-uppercase ' + (value === 'company' ? 'bg-primary' : 'bg-secondary')}>
+                    {value}
+                </span>
+            }
+        }
+    ];
+
+    const handleEdit = (row) => {
+        console.log("Edit clicked:", row);
+        form.setIsEdit(true);
+        form.setFormData(row);
+        setShowAdd(true)
+    };
+
+    const handleDelete = (row) => {
+        console.log("Delete clicked:", row);
+    };
+    const submit = useCallback(() => {
+        form.setLoading(true)
+        form.setFormErrors(null);
+        CustomerService.add(form.formData)
+            .then((resp) => {
+                openPopup({
+                    type: 'success',
+                    message: 'You has been created'
+                });
+                setShowAdd(false);
+                getCustomers();
+                form.setLoading(false)
+            })
+            .catch((error) => {
+                if (error.response.data?.errors) {
+                    form.setFormErrors(error.response.data?.errors)
+                }
+                if (error.response.data?.message) {
+                    openPopup({
+                        type: 'error',
+                        message: error.response.data?.message
+                    })
+                }
+                form.setLoading(false)
+            })
+    }, [form.formData]);
+    const update = useCallback(() => {
+        form.setFormErrors(null);
+        form.setLoading(true)
+        CustomerService.update(form.formData)
+            .then((resp) => {
+                openPopup({
+                    type: 'success',
+                    message: 'You has been created'
+                });
+                setShowAdd(false);
+                getCustomers();
+                form.setLoading(false)
+            })
+            .catch((error) => {
+                if (error.response.data?.errors) {
+                    form.setFormErrors(error.response.data?.errors)
+                }
+                if (error.response.data?.message) {
+                    openPopup({
+                        type: 'error',
+                        message: error.response.data?.message
+                    })
+                }
+                form.setLoading(false)
+            })
+    }, [form.formData]);
+    const getCustomers = useCallback((page = 0) => {
+        table.setLoading(true)
+        CustomerService.list({
+            keywords: search.formData?.keywords ?? '',
+            page: page,
+            type: search.formData?.type ?? ''
+        })
+            .then((resp) => {
+                table.setData(resp.message.data);
+                table.setLinks(resp.message.links);
+                table.setLoading(false)
+            })
+            .catch((error) => {
+
+            })
+    }, [search.formData]);
+    useEffect(() => {
+        getCustomers();
+    }, [search.formData?.type]);
+    return <div>
+        <CommonDataTable
+            add={() => setShowAdd(true)}
+            filter={<div className='d-flex'>
+                <div className='col-4'>
+                    <label>Type</label>
+                    <Select
+                        value={search.formData?.type}
+                        name='type'
+                        handleChange={search.handleChange}
+                        options={[
+                            { value: 'individual', label: 'Individual' },
+                            { value: 'company', label: 'Company' }
+                        ]} />
+                </div>
+                <div className='mx-2 col-4'>
+                    <label>Search</label>
+                    <SearchInput
+                        submit={getCustomers}
+                        placeholder='Search by customer name'
+                        value={search.formData?.keywords}
+                        name='keywords'
+                        handleChange={search.handleChange}
+                    />
+                </div>
+            </div>}
+            movePage={getCustomers}
+            columns={columns}
+            data={table?.data}
+            links={table?.links}
+            onEdit={handleEdit}
+            onDelete={handleDelete}
+            loading={table.loading}
+        />
+        <div>
+            {showAdd ? <PopupLayout
+                loading={form.loading}
+                confirmText='Save'
+                onConfirm={form.isEdit ? update : submit}
+                onClose={() => {
+                    setShowAdd(false);
+                    form.setIsEdit(false);
+                }} title={form.isEdit ? 'Update customer' : 'Add customer'}>
+                <CustomerForm form={form}/>
+            </PopupLayout> : null}
+
+        </div>
+    </div>
+}

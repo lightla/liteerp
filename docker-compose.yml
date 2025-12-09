@@ -1,0 +1,62 @@
+version: "3"
+
+services:
+  erpsoft:
+    mem_limit: 1024m
+    mem_reservation: 512M
+    #cpus: 50
+    build: 
+      context: ./
+      dockerfile: './Dockerfile.server'
+    container_name: 'erpsoft-8.3'
+    restart: 'always'
+    ports:
+      - 8001:80
+    links: 
+      - laravelcmsdatabase
+    volumes: 
+      - ./app:/var/www/html
+      - ./docker-config:/etc/apache2/sites-enabled
+      - ./docker-config/php/php.ini:/usr/local/etc/php/conf.d/custom.ini
+  laravelcmsdatabase:
+    mem_limit: 1024m
+    mem_reservation: 512M
+    #cpus: 10
+    build:
+      context: "./"
+      dockerfile: 'Dockerfile.db'
+    container_name: 'erpsoft'
+    restart: 'always'
+    ports:
+      - "3303:3306"
+    volumes: 
+      - ./docker/data/mysql:/var/lib/mysql
+      - ./docker/logs/mysql:/var/log/mysql
+      - ./docker-config/database/custom.cnf:/etc/mysql/conf.d/custom.cnf:ro
+    environment:
+      MYSQL_ROOT_PASSWORD: adfg245425245dfadfadf
+      MYSQL_DATABASE: erpsoft
+      MYSQL_USER: erpsoft
+      MYSQL_PASSWORD: adfg245425245dfadfadf
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    mem_limit: 64m
+    restart: 'always'
+    mem_reservation: 32M
+    container_name: 'erpsoft-phpmyadmin'
+    links:
+      - laravelcmsdatabase
+    environment:
+      PMA_HOST: laravelcmsdatabase
+      PMA_PORT: 3306
+      UPLOAD_LIMIT: 1000000
+    ports:
+      - '3309:80'
+  redis:
+    container_name: 'erpsoft-redis'
+    image: redis:latest
+    restart: 'always'
+    mem_limit: 64m
+    mem_reservation: 32M
+    ports:
+      - "6379:6379"

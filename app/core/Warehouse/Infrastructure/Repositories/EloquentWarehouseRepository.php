@@ -1,0 +1,52 @@
+<?php
+
+namespace Core\Warehouse\Infrastructure\Repositories;
+
+use App\Models\WarehouseModel;
+use Core\Warehouse\Domain\Repositories\WarehouseRepositoryInterface;
+use Core\Warehouse\Domain\Entities\Warehouse;
+use Illuminate\Support\Facades\DB;
+
+class EloquentWarehouseRepository implements WarehouseRepositoryInterface
+{
+    public function create(Warehouse $entity): Warehouse
+    {
+        $entity->setActive();
+        $create = WarehouseModel::create($entity->toArray());
+        $entity->id = $create['id'];
+        return $entity;
+    }
+    public function checkNameExists(Warehouse $entity): bool
+    {
+        $exists = WarehouseModel::where('name',$entity->name)
+        ->where('business_id',$entity->business_id);
+        return $exists->count() == false ? false : true;
+    }
+    public function index(array $data) : array {
+        $exists = WarehouseModel::select("warehouses.*")
+        ->where('warehouses.business_id',$data['business_id'])
+        ->where('warehouses.active',$data['active'] ?? false);
+        if(!empty($data['keywords'])) {
+            $exists = $exists->where('warehouses.name','like','%'.$data['keywords'].'%');
+        }
+        return $exists->paginate($data['limit'] ?? 15)->toArray();
+    }
+    public function findById(array $data): ?Warehouse
+    {
+        $exists = WarehouseModel::where('id',$data['id'])
+        ->where('business_id',$data['business_id']);
+        if($exists->count() == false ) {
+            return null;
+        }
+        $exists = $exists->first();
+        $entity = Warehouse::fromArray($exists->toArray());
+        return $entity;
+    }
+    public function update(Warehouse $entity): Warehouse
+    {
+        WarehouseModel::where('id',$entity->id)
+        ->where('business_id',$entity->business_id)
+        ->update($entity->toArray());
+        return $entity;
+    }
+}

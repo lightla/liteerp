@@ -1,0 +1,58 @@
+<?php
+
+namespace Core\Notifications\Application\DTOs;
+
+class CreateNotificationRequest
+{
+    public function __construct(
+        public int $user_id,
+        public string $message,
+        public ?string $link = null,
+        public ?string $title,
+        public ?string $entity_type,
+        public ?int $entity_id,
+        public array $chanels = ['db'],
+        public ?string $queue = null,
+        public ?string $type = 'default'
+    ) {}
+
+    public static function fromArray(array $data): self
+    {
+        return new self(
+            user_id: $data['user_id'],
+            message: $data['message'],
+            link: $data['link'] ?? null,        
+            title: $data['title'],      
+            entity_type: $data['entity_type'] ?? null,
+            entity_id: $data['entity_id'] ?? null,
+            chanels: $data['chanels']  ?? ['db'],
+            queue: $data['queue'] ?? null,
+            type: $data['type'] ?? null
+        );
+    }
+    
+    public function toArray(): array
+    {
+        return [
+            'user_id' => $this->user_id,
+            'message' => $this->message,
+            'link'    => $this->link, 
+            'title'   => $this->title,
+            'entity_type' => $this->entity_type,
+            'entity_id' => $this->entity_id,
+            'chanels' => $this->chanels,
+            'queue'   => $this->queue,
+            'type'    => $this->type
+        ];
+        
+    }
+    public function setDanger(){
+        $this->type = 'danger';
+    }
+    public function setWarning(){
+        $this->type = 'warning';
+    }
+    public function setInfo(){
+        $this->type = 'info';
+    }
+}

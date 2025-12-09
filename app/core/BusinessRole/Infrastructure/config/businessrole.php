@@ -1,0 +1,371 @@
+<?php
+
+return [
+    'default_role' => 'admin',
+    'limit' => 500,
+    'roles' => [
+
+        'admin' => [
+            // USER
+            'erp.user.index',
+            'erp.user.show',
+            'erp.user.create',
+            'erp.user.update',
+            'erp.user.delete',
+
+            // CUSTOMER
+            'erp.customer.index',
+            'erp.customer.show',
+            'erp.customer.create',
+            'erp.customer.update',
+            'erp.customer.delete',
+            'erp.customer.creatordershipping',
+
+            // CUSTOMER GROUP 
+            'erp.customergroup.index',
+            'erp.customergroup.show',
+            'erp.customergroup.create',
+            'erp.customergroup.update',
+            'erp.customergroup.delete',
+
+            // SUPPLIER
+            'erp.supplier.index',
+            'erp.supplier.show',
+            'erp.supplier.create',
+            'erp.supplier.update',
+            'erp.supplier.delete',
+
+            // PRICE LIST
+            'erp.pricelist.index',
+            'erp.pricelist.show',
+            'erp.pricelist.create',
+            'erp.pricelist.update',
+            'erp.pricelist.delete',
+
+            // SHIPPING PROVIDER
+            'erp.shipping.index',
+            'erp.shipping.show',
+            'erp.shipping.create',
+            'erp.shipping.update',
+            'erp.shipping.delete',
+
+            // ORDER
+            'erp.order.index',
+            'erp.order.show',
+            'erp.order.create',
+            'erp.order.update',
+            'erp.order.delete',
+            'erp.order.approved',
+            'erp.order.cancelled',
+
+            // ORDER SHIPPING
+            'erp.ordershipping.index',
+            'erp.ordershipping.show',
+            'erp.ordershipping.create',
+            'erp.ordershipping.update',
+            'erp.ordershipping.delete',
+
+            // ORDER ITEM
+            'erp.orderitem.index',
+            'erp.orderitem.show',
+            'erp.orderitem.create',
+            'erp.orderitem.update',
+            'erp.orderitem.delete',
+            'erp.orderitem.completed',
+            'erp.orderitem.summary',
+            'erp.orderitem.cancelled',
+
+            // PRODUCT
+            'erp.product.index',
+            'erp.product.show',
+            'erp.product.create',
+            'erp.product.update',
+            'erp.product.delete',
+
+            // CATEGORY PRODUCT
+            'erp.categoryproduct.index',
+            'erp.categoryproduct.show',
+            'erp.categoryproduct.create',
+            'erp.categoryproduct.update',
+            'erp.categoryproduct.delete',
+
+            // INVENTORY
+            'erp.inventory.index',
+            'erp.inventory.show',
+            'erp.inventory.create',
+            'erp.inventory.update',
+            'erp.inventory.delete',
+
+            // INVENTORY ADJUSTMENT
+            'erp.inventoryadjustment.create',
+
+            // INVOICE
+            'erp.invoicein.index',
+            'erp.invoicein.show',
+            'erp.invoicein.create',
+            'erp.invoicein.update',
+            'erp.invoicein.delete',
+            'erp.invoicein.cancelled',
+            'erp.invoicein.approved',
+
+            'erp.invoiceout.index',
+            'erp.invoiceout.show',
+            'erp.invoiceout.create',
+            'erp.invoiceout.update',
+            'erp.invoiceout.delete',
+            'erp.invoiceout.unapproved',
+            'erp.invoiceout.approved',
+
+            // PURCHASE
+            'erp.purchase.index',
+            'erp.purchase.show',
+            'erp.purchase.create',
+            'erp.purchase.update',
+            'erp.purchase.delete',
+            'erp.purchase.cancelled',
+            'erp.purchase.approved',
+            'erp.purchase.requested',
+
+            // PURCHASE ITEM
+            'erp.purchaseitem.index',
+            'erp.purchaseitem.show',
+            'erp.purchaseitem.create',
+            'erp.purchaseitem.update',
+            'erp.purchaseitem.delete',
+
+            // STOCK IN
+            'erp.stockin.index',
+            'erp.stockin.show',
+            'erp.stockin.create',
+            'erp.stockin.update',
+            'erp.stockin.delete',
+            'erp.stockin.cancelled',
+            'erp.stockin.received',
+
+            // STOCK OUT
+            'erp.stockout.index',
+            'erp.stockout.show',
+            'erp.stockout.create',
+            'erp.stockout.update',
+            'erp.stockout.delete',
+            'erp.stockout.completed',
+            'erp.stockout.shipped',
+
+            // STOCK MOVEMENT
+            'erp.stockmovementin.index',
+            'erp.stockmovementin.show',
+            'erp.stockmovementin.create',
+            'erp.stockmovementin.update',
+            'erp.stockmovementin.delete',
+            'erp.stockmovementin.completed',
+
+            'erp.stockmovementout.index',
+            'erp.stockmovementout.show',
+            'erp.stockmovementout.create',
+            'erp.stockmovementout.update',
+            'erp.stockmovementout.delete',
+
+            // WAREHOUSE
+            'erp.warehouse.index',
+            'erp.warehouse.show',
+            'erp.warehouse.create',
+            'erp.warehouse.update',
+            'erp.warehouse.delete',
+
+            // REPORT
+            'erp.report.index',
+            'erp.report.show',
+        ],
+
+
+        // MANAGER
+        'manager' => [
+            // USER
+            'erp.user.index',
+            'erp.user.show',
+            'erp.user.create',
+            'erp.user.update',
+            'erp.user.delete',
+
+            // CUSTOMER
+            'erp.customer.index',
+            'erp.customer.show',
+            'erp.customer.create',
+            'erp.customer.update',
+            'erp.customer.delete',
+            'erp.customer.creatordershipping',
+
+            // SUPPLIER
+            'erp.supplier.index',
+            'erp.supplier.show',
+            'erp.supplier.create',
+            'erp.supplier.update',
+            'erp.supplier.delete',
+
+            // PRICE LIST
+            'erp.pricelist.index',
+            'erp.pricelist.show',
+            'erp.pricelist.create',
+            'erp.pricelist.update',
+            'erp.pricelist.delete',
+
+            // SHIPPING PROVIDER
+            'erp.shipping.index',
+            'erp.shipping.show',
+            'erp.shipping.create',
+            'erp.shipping.update',
+            'erp.shipping.delete',
+
+            // ORDER
+            'erp.order.index',
+            'erp.order.show',
+            'erp.order.create',
+            'erp.order.update',
+            'erp.order.delete',
+            'erp.order.approved',
+            'erp.order.cancelled',
+
+            // ORDER SHIPPING
+            'erp.ordershipping.index',
+            'erp.ordershipping.show',
+            'erp.ordershipping.create',
+            'erp.ordershipping.update',
+            'erp.ordershipping.delete',
+
+            // ORDER ITEM
+            'erp.orderitem.index',
+            'erp.orderitem.show',
+            'erp.orderitem.create',
+            'erp.orderitem.update',
+            'erp.orderitem.delete',
+            'erp.orderitem.completed',
+            'erp.orderitem.summary',
+            'erp.orderitem.cancelled',
+
+            // PRODUCT
+            'erp.product.index',
+            'erp.product.show',
+            'erp.product.create',
+            'erp.product.update',
+            'erp.product.delete',
+
+            // CATEGORY PRODUCT
+            'erp.categoryproduct.index',
+            'erp.categoryproduct.show',
+            'erp.categoryproduct.create',
+            'erp.categoryproduct.update',
+            'erp.categoryproduct.delete',
+
+            // INVENTORY
+            'erp.inventory.index',
+            'erp.inventory.show',
+            'erp.inventory.create',
+            'erp.inventory.update',
+            'erp.inventory.delete',
+
+            // INVENTORY ADJUSTMENT
+            'erp.inventoryadjustment.create',
+
+            // INVOICE
+            'erp.invoicein.index',
+            'erp.invoicein.show',
+            'erp.invoicein.create',
+            'erp.invoicein.update',
+            'erp.invoicein.delete',
+            'erp.invoicein.cancelled',
+            'erp.invoicein.approved',
+
+            'erp.invoiceout.index',
+            'erp.invoiceout.show',
+            'erp.invoiceout.create',
+            'erp.invoiceout.update',
+            'erp.invoiceout.delete',
+            'erp.invoiceout.unapproved',
+            'erp.invoiceout.approved',
+
+            // PURCHASE
+            'erp.purchase.index',
+            'erp.purchase.show',
+            'erp.purchase.create',
+            'erp.purchase.update',
+            'erp.purchase.delete',
+            'erp.purchase.cancelled',
+            'erp.purchase.approved',
+            'erp.purchase.requested',
+
+            // PURCHASE ITEM
+            'erp.purchaseitem.index',
+            'erp.purchaseitem.show',
+            'erp.purchaseitem.create',
+            'erp.purchaseitem.update',
+            'erp.purchaseitem.delete',
+
+            // STOCK IN
+            'erp.stockin.index',
+            'erp.stockin.show',
+            'erp.stockin.create',
+            'erp.stockin.update',
+            'erp.stockin.delete',
+            'erp.stockin.cancelled',
+            'erp.stockin.received',
+
+            // STOCK OUT
+            'erp.stockout.index',
+            'erp.stockout.show',
+            'erp.stockout.create',
+            'erp.stockout.update',
+            'erp.stockout.delete',
+            'erp.stockout.completed',
+            'erp.stockout.shipped',
+
+            // STOCK MOVEMENT
+            'erp.stockmovementin.index',
+            'erp.stockmovementin.show',
+            'erp.stockmovementin.create',
+            'erp.stockmovementin.update',
+            'erp.stockmovementin.delete',
+            'erp.stockmovementin.completed',
+
+            'erp.stockmovementout.index',
+            'erp.stockmovementout.show',
+            'erp.stockmovementout.create',
+            'erp.stockmovementout.update',
+            'erp.stockmovementout.delete',
+
+            // WAREHOUSE
+            'erp.warehouse.index',
+            'erp.warehouse.show',
+            'erp.warehouse.create',
+            'erp.warehouse.update',
+            'erp.warehouse.delete',
+
+            // REPORT
+            'erp.report.index',
+            'erp.report.show',
+        ],
+
+
+        // SELLER
+        'seller' => [
+            
+        ],
+
+
+        // ACCOUNTANTER
+        'accountanter' => [
+           
+        ],
+
+
+        // WAREHOUSEMAN
+        'warehouseman' => [
+            
+        ],
+
+
+        // PURCHASER
+        'purchaser' => [
+           
+        ],
+    ],
+];

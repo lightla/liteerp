@@ -1,0 +1,27 @@
+<?php
+
+namespace Core\StockMovementIn\Application\UseCases;
+
+use App\Exceptions\BadException;
+use Core\StockMovementIn\Application\DTOs\IndexStockMovementInRequest;
+use Core\StockMovementIn\Domain\Services\StockMovementInService;
+use Illuminate\Support\Facades\Event;
+
+class CompleteStockMovementIn
+{
+    public function __construct(private StockMovementInService $service) {}
+    public function handle(IndexStockMovementInRequest $data)
+    {
+        $list = $this->service->index($data->toArray());
+        if(intval($list['total']) === 0) {
+            throw new BadException(__("You are not yet add inventory"));
+        }
+        Event::dispatch('erp.stockmovementin.completed', [
+            'stock_in_id' => $data->stock_in_id,
+            'business_id' => $data->business_id,
+            'user_id' => $data->created_by,
+            'list' => $list['data']
+        ]);
+        return $list;
+    }
+}

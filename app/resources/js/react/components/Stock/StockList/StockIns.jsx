@@ -1,0 +1,131 @@
+import React from 'react'
+import { useCallback, useEffect, useState } from "react";
+import StockInService from "../../../services/StockInService";
+import useTable from '../../../libraries/handleTable'
+import CommonDataTable from '../../CommonDataTable';
+import { Link } from 'react-router-dom';
+import { isoToDateTime } from '../../../libraries/common';
+import {useForm} from '../../../libraries/handleInput'
+import {Select} from '../../UI/Input/Select';
+import SearchInput from '../../UI/Input/SearchInput'
+import { usePopup } from '../../popups/PopupContext';
+export default function StockIns() {
+    const search = useForm();
+    const table = useTable();
+    const {openPopup} = usePopup();
+
+    const getListStockIn = useCallback((page = 0) => {
+        table.setLoading(true)
+        StockInService.list({
+            page: page,
+            keywords: search.formData?.keywords ?? '',
+            status: search.formData?.status ?? ''
+        }).then((resp) => {
+                table.setData(resp.message.data);
+                table.setLinks(resp.message.links);
+                table.setLoading(false)
+            })
+            .catch((error) => {
+                if(error.response.message?.errors) {
+                    openPopup({
+                        type: 'error',
+                        message: error.response.message?.errors
+                    })
+                }
+            })
+    }, [table]);
+
+    const columns = [
+        { label: "ID", key: "id", render: (id) => <Link to={'/stock?id=' + id}>{id}</Link> },
+        {
+            label: "Supplier", key: "supplier_name", render: (name) => {
+                return <span>{name}</span>
+            }
+        },
+        {
+            label: "Purchase ID", key: "purchase_id", render: (name) => {
+                return <span>PU{name}</span>
+            }
+        },
+        {
+            label: "Invoice no", key: "document_no", render: (document_no) => {
+                return <span>{document_no}</span>
+            }
+        },
+        {
+            label: "Status", key: "status", render: (status) => {
+                return <span className='badge bg-primary text-uppercase'>
+                    {status}
+                </span>
+            }
+        },
+
+        {
+            label: "Products", key: "total_product", render: (products) => {
+                return <span>{products}</span>
+            }
+        },
+
+        {
+            label: "Approver",
+            key: "approved_name",
+            render: (name) => {
+                return name ? <span className='badge bg-success'>{name}</span> : '-'
+            }
+        },
+        {
+            label: "Import date",
+            key: "import_date",
+            render: (date) => {
+                return date ? isoToDateTime(date) : '-'
+            }
+        },
+        {
+            label: "View",
+            key: "id",
+            render: (id) => {
+                return <Link to={'/stocks?stockin=' + id}>View</Link>
+            }
+        }
+    ];
+
+    useEffect(() => {
+        getListStockIn();
+    }, [search.formData?.status]);
+    return <div className='mt-3'>
+        <CommonDataTable
+            loading={table.loading}
+            filter={<div>
+                <div className='d-flex'>
+                    <div className='col-6'>
+                        <label>Status</label>
+                        <Select
+                        name='status'
+                        handleChange={search.handleChange}
+                        value={search.formData?.status}
+                        options={[
+                            {value: 'draf', label: 'Draf'},
+                            {value: 'requested', label: 'Approved'},
+                            {value: 'paid', label: 'Paid'},
+                            {value: 'received', label: 'Received'},
+                            {value: 'cancelled', label: 'Cancelled'}
+                        ]}
+                        />
+                    </div>
+                    <div className='col-6 mx-2'>
+                        <label>Search</label>
+                        <SearchInput
+                        placeholder='Search by supplier'
+                        name='keywords'
+                        value={search.formData?.keywords}
+                        handleChange={search.handleChange}
+                        />
+                    </div>
+                </div>
+            </div>}
+            columns={columns}
+            data={table.data}
+            links={table.links}
+        />
+    </div>
+}

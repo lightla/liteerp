@@ -1,0 +1,43 @@
+<?php
+
+namespace Core\CategoryProduct\Infrastructure\Services;
+use Illuminate\Support\Str;
+use App\Exceptions\BadException;
+use Core\CategoryProduct\Domain\Services\CategoryProductService;
+use Core\CategoryProduct\Domain\Repositories\CategoryProductRepositoryInterface;
+use Core\CategoryProduct\Domain\Entities\CategoryProduct;
+
+class CategoryProductServiceImpl implements CategoryProductService
+{
+    public function __construct(private CategoryProductRepositoryInterface $repo) {}
+
+    public function create(array $data): CategoryProduct | BadException
+    {
+        if($this->repo->checkNameExists($data)) {
+            throw new BadException(__("Category name has been used"));
+        }
+        $entity = CategoryProduct::fromArray($data);
+        return $this->repo->create($entity);
+    }
+    public function index(array $data): array
+    {
+        return $this->repo->index($data);
+    }
+    public function show(array $data) : CategoryProduct | BadException {
+        return $this->repo->findById($data) ?? throw new BadException(__("Not found data"));
+    }
+    public function update(array $data): CategoryProduct | BadException {
+        $entity = $this->repo->findById($data);
+        if(!$entity) {
+            throw new BadException(__("not found data"));
+        }
+        if($entity->name !== $data['name']) {
+            if($this->repo->checkNameExists($data)) {
+                throw new BadException(__("Category name has been used"));
+            }
+        }
+        $entity->name = $data['name'];
+        $entity->description = $data['description'] ?? $entity->description;
+        return $this->repo->update($entity);
+    }
+}

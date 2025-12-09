@@ -1,0 +1,34 @@
+<?php
+
+namespace Core\Authencation\Application\UseCases;
+
+use App\Exceptions\UnauthorizedException;
+use Core\Authencation\Application\DTOs\CreateAuthencationRequest;
+use Core\Authencation\Domain\Entities\Authencation;
+use Core\Authencation\Domain\Services\AuthencationService;
+use Illuminate\Support\Facades\Auth;
+
+class ProfileAuthencation
+{
+    public function __construct(private AuthencationService $service) {}
+
+    public function handle()
+    {
+        $user = Auth::guard('sanctum')->user();
+        if(!$user) {
+            throw new UnauthorizedException(__("You are not logged"));
+        }
+        return $this->service->profile([
+            'email'=> $user->email,
+            'password'=> $user->password,
+            'name'=> $user->name,
+            'id'=> $user->id,
+            'email_verified_at'=> $user->email_verified_at,
+            'bio'=> $user->bio,
+            'avatar'=> $user->avatar,
+            'phone'=> $user->phone,
+            'last_seen'=> $user->last_seen,
+            'role' => $user->role
+        ]);
+    }
+}

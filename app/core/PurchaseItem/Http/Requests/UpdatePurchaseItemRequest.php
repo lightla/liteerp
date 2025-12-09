@@ -1,0 +1,46 @@
+<?php
+
+namespace Core\PurchaseItem\Http\Requests;
+
+use Illuminate\Foundation\Http\FormRequest;
+
+class UpdatePurchaseItemRequest extends FormRequest
+{
+    public function rules(): array
+    {
+        return [
+            'discount'                => 'integer|min:0',
+            'tax'                     => 'required|integer|min:0|max:100',
+            'product_link'            => 'string|max:250',
+            'buy_quantity'            => 'integer|min:0',
+            'gift_quantity'           => 'integer|min:0',
+            'compensation_quantity'   => 'integer|min:0',
+            'conversion_quantity'     => 'integer|min:0',
+            'unit_cost'               => 'integer|min:0'
+        ];
+    }
+
+    public function withValidator($validator)
+    {
+        $validator->after(function ($validator) {
+
+            $buy  = (int) $this->input('buy_quantity', 0);
+            $gift = (int) $this->input('gift_quantity', 0);
+            $comp = (int) $this->input('compensation_quantity', 0);
+            $conv = (int) $this->input('conversion_quantity', 0);
+
+            // Check: at least one quantity > 0
+            if ($buy <= 0 && $gift <= 0 && $comp <= 0 && $conv <= 0) {
+                $validator->errors()->add(
+                    'quantity',
+                    'At least one quantity field must be greater than 0: buy_quantity, gift_quantity, compensation_quantity, or conversion_quantity.'
+                );
+            }
+        });
+    }
+
+    public function authorize(): bool
+    {
+        return true;
+    }
+}

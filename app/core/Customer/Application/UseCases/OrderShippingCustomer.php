@@ -1,0 +1,36 @@
+<?php
+
+namespace Core\Customer\Application\UseCases;
+
+use Core\Customer\Application\DTOs\OrderShippingCustomerRequest;
+use Core\Customer\Domain\Services\CustomerService;
+use Illuminate\Support\Facades\Event;
+
+class OrderShippingCustomer
+{
+    public function __construct(private CustomerService $service) {}
+
+    public function handle(OrderShippingCustomerRequest $dto)
+    {
+        $customer = $this->service->show($dto->toArray());
+
+        Event::dispatch('erp.customer.creatordershipping', [
+            'order_id' => $dto->order_id,
+            'receiver_name' => $customer->name,
+            'receiver_phone' => $customer->phone,
+            'receiver_address' => $customer->address,
+            'business_id' => $dto->business_id,
+            'user_id' => $dto->created_by,
+            ...$customer->toArray()
+        ]);
+        // Event::dispatch('erp.ordershipping.triggerCreate', [
+        //     'order_id' => $data['id'],
+        //     'receiver_name' => $customer->name,
+        //     'receiver_phone' => $customer->phone,
+        //     'receiver_address' => $customer->address,
+        //     'business_id' => $data['business_id'],
+        //     'user_id' => $data['user_id'],
+        //     'id' => $data['customer_id']
+        // ]);
+    }
+}
