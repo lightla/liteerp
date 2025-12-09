@@ -177,6 +177,8 @@ You need config SMTP mail, timezone at `./app/.env` before start.
 - Next run `php artisan queue:work --queue=low,default,high`
 - Last step exit docker container and go to `./app` and run `npm run dev` or `npm run build` for production.
 
+Visit: http://localhost:8001/dashboard/login
+
 Note: You can change password for mysql account at `docker-compose.yml` 
 --- 
 
