@@ -175,6 +175,7 @@ You need config SMTP mail, timezone at `./app/.env` before start.
 - Next run `php artisan jwt:generate-keys` to generate private key and public key for Json Web Token
 - Next run `php artisan app:create-admin {email} {password} {name}` to create admin account
 - Next run `php artisan queue:work --queue=low,default,high`
+- Last step exit docker container and go to `./app` and run `npm run dev` or `npm run build` for production.
 
 Note: You can change password for mysql account at `docker-compose.yml` 
 --- 
