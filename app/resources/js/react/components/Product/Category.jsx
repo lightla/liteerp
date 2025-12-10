@@ -87,6 +87,9 @@ export default function Category() {
     const columns = [
         { label: "ID", key: "id" },
         { label: "Name", key: "name" },
+        { label: "Tax(%)", key: "tax",render:(value) => {
+            return value
+        } },
         { label: "Description", key: "description" },
         {
             label: "Created by", key: 'created_by_name', render: (name) => {
@@ -139,6 +142,14 @@ export default function Category() {
                             type='text'
                             value={form.formData?.name}
                             handleChange={form.handleChange} name='name' />
+                    </div>
+                    <div className='form-group'>
+                        <label>Tax(%)</label>
+                        <InputForm
+                            errorMessage={form.formErrors?.tax}
+                            type='number'
+                            value={form.formData?.tax}
+                            handleChange={form.handleChange} name='tax' />
                     </div>
                     <div className='form-group mt-3'>
                         <label>Description</label>

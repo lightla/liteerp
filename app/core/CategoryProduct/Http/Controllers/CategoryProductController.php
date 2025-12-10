@@ -4,7 +4,6 @@ namespace Core\CategoryProduct\Http\Controllers;
 
 use Core\CategoryProduct\Application\UseCases\CreateCategoryProduct;
 use Core\CategoryProduct\Application\DTOs\CreateCategoryProductRequest;
-use Core\CategoryProduct\Application\DTOs\UpdateCategoryProductRequest as DTOsUpdateCategoryProductRequest;
 use Core\CategoryProduct\Application\UseCases\IndexCategoryProduct;
 use Core\CategoryProduct\Application\UseCases\ShowCategoryProduct;
 use Core\CategoryProduct\Application\UseCases\UpdateCategoryProduct;
@@ -34,7 +33,7 @@ class CategoryProductController
     UpdateCategoryProduct $useCase,
     string $id) {
         $request->merge(['id' => $id]);
-        $dto = DTOsUpdateCategoryProductRequest::fromArray($request->all());
+        $dto = CreateCategoryProductRequest::fromArray($request->all());
         return response()->json(['message' => $useCase->handle($dto)]);
     }
 }

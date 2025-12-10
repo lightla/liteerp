@@ -20,7 +20,8 @@ class CreateCategoryProductRequest extends FormRequest
                 'string',
                 'max:150',
                 'regex:/^[\p{L}\p{N}\s]+$/u' 
-            ]
+            ],
+            'tax' => 'required|numeric|min:0|max:100'
         ];
     }
 

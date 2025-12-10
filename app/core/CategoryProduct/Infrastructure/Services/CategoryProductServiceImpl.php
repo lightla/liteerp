@@ -37,6 +37,7 @@ class CategoryProductServiceImpl implements CategoryProductService
             }
         }
         $entity->name = $data['name'];
+        $entity->tax = $data['tax'];
         $entity->description = $data['description'] ?? $entity->description;
         return $this->repo->update($entity);
     }
