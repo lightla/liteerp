@@ -20,15 +20,7 @@ class StockOutModel extends Model
         'business_id',
         'invoice_out_id',
         'status',
-        'shipping_fee',
         'approved_by'
-    ];
-
-    /**
-     * Cast types
-     */
-    protected $casts = [
-        'shipping_fee'      => 'float',
     ];
 
     /**

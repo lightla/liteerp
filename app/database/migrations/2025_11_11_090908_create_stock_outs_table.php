@@ -14,8 +14,7 @@ return new class extends Migration
         Schema::create('stock_outs', function (Blueprint $table) {
             $table->id();
             $table->foreignId('business_id')->constrained('business')->onDelete('cascade');
-            $table->foreignId('invoice_out_id')->unique()->constrained('invoice_outs')->onDelete('cascade');
-            $table->decimal('shipping_fee', 15, 2)->default(0);     
+            $table->foreignId('invoice_out_id')->unique()->constrained('invoice_outs')->onDelete('cascade');    
             $table->enum('status',['shipped','pending','cancelled','completed']);
             $table->foreignId('approved_by')->nullable()->constrained('users')->onDelete('cascade');
             $table->softDeletes();
