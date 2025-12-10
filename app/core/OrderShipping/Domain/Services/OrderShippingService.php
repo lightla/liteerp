@@ -1,9 +1,9 @@
 <?php
 
-namespace Core\Ordershipping\Domain\Services;
+namespace Core\OrderShipping\Domain\Services;
 
 use App\Exceptions\BadException;
-use Core\Ordershipping\Domain\Entities\OrderShipping;
+use Core\OrderShipping\Domain\Entities\OrderShipping;
 
 interface OrderShippingService
 {

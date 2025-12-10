@@ -1,11 +1,11 @@
 <?php
 
-namespace Core\Ordershipping\Infrastructure\Services;
+namespace Core\OrderShipping\Infrastructure\Services;
 
 use App\Exceptions\BadException;
-use Core\Ordershipping\Domain\Services\OrderShippingService;
-use Core\Ordershipping\Domain\Repositories\OrderShippingRepositoryInterface;
-use Core\Ordershipping\Domain\Entities\OrderShipping;
+use Core\OrderShipping\Domain\Services\OrderShippingService;
+use Core\OrderShipping\Domain\Repositories\OrderShippingRepositoryInterface;
+use Core\OrderShipping\Domain\Entities\OrderShipping;
 use Illuminate\Support\Facades\Log;
 
 class OrderShippingServiceImpl implements OrderShippingService
@@ -34,16 +34,16 @@ class OrderShippingServiceImpl implements OrderShippingService
         if(!$entity) {
             throw new BadException(__("Not found data"));
         }
-        $entity->receiver_name = $data['receiver_name'] ?? null;
-        $entity->receiver_phone = $data['receiver_phone'] ?? null;
-        $entity->receiver_address = $data['receiver_address'] ?? null;
-        $entity->receiver_note = $data['receiver_note'] ?? null;
-        $entity->preferred_unit  = $data['preferred_unit'] ?? null;
-        $entity->shipping_fee_estimated = $data['shipping_fee_estimated'] ?? null;
-        $entity->shipping_fee_actual = $data['shipping_fee_actual'] ?? null;
-        $entity->shipping_code = $data['shipping_code'] ?? null;
-        $entity->shipped_at = $data['shipped_at'] ?? null;
-        $entity->delivered_at = $data['delivered_at'] ?? null;
+        $entity->receiver_name = $data['receiver_name'] ?? $entity->receiver_name;
+        $entity->receiver_phone = $data['receiver_phone'] ?? $entity->receiver_phone;
+        $entity->receiver_address = $data['receiver_address'] ?? $entity->receiver_address;
+        $entity->receiver_note = $data['receiver_note'] ?? $entity->receiver_note;
+        $entity->preferred_unit  = $data['preferred_unit'] ?? $entity->preferred_unit;
+        $entity->shipping_fee_estimated = $data['shipping_fee_estimated'] ?? $entity->shipping_fee_estimated;
+        $entity->shipping_fee_actual = $data['shipping_fee_actual'] ?? $entity->shipping_fee_actual;
+        $entity->shipping_code = $data['shipping_code'] ?? $entity->shipping_code;
+        $entity->shipped_at = $data['shipped_at'] ?? $entity->shipped_at;
+        $entity->delivered_at = $data['delivered_at'] ?? $entity->delivered_at;
         return $this->repo->update($entity);
     }
     public function findByOrderId(array $data): OrderShipping|BadException

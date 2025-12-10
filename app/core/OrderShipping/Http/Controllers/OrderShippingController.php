@@ -1,16 +1,16 @@
 <?php
 
-namespace Core\Ordershipping\Http\Controllers;
+namespace Core\OrderShipping\Http\Controllers;
 
-use Core\Ordershipping\Application\UseCases\CreateOrderShipping;
-use Core\Ordershipping\Application\DTOs\CreateOrderShippingRequest;
-use Core\Ordershipping\Application\UseCases\IndexOrderShipping;
-use Core\Ordershipping\Application\UseCases\ShowOrderShipping;
-use Core\Ordershipping\Application\UseCases\UpdateOrderShipping;
-use Core\Ordershipping\Http\Requests\CreateOrderShippingRequest as FormRequest;
-use Core\Ordershipping\Http\Requests\IndexOrderShippingRequest;
-use Core\Ordershipping\Http\Requests\ShowOrderShippingRequest;
-use Core\Ordershipping\Http\Requests\UpdateOrderShippingRequest;
+use Core\OrderShipping\Application\UseCases\CreateOrderShipping;
+use Core\OrderShipping\Application\DTOs\CreateOrderShippingRequest;
+use Core\OrderShipping\Application\UseCases\IndexOrderShipping;
+use Core\OrderShipping\Application\UseCases\ShowOrderShipping;
+use Core\OrderShipping\Application\UseCases\UpdateOrderShipping;
+use Core\OrderShipping\Http\Requests\CreateOrderShippingRequest as FormRequest;
+use Core\OrderShipping\Http\Requests\IndexOrderShippingRequest;
+use Core\OrderShipping\Http\Requests\ShowOrderShippingRequest;
+use Core\OrderShipping\Http\Requests\UpdateOrderShippingRequest;
 
 class OrderShippingController
 {

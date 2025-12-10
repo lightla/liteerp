@@ -1,6 +1,6 @@
 <?php
 
-namespace Core\Ordershipping\Application\DTOs;
+namespace Core\OrderShipping\Application\DTOs;
 
 class CreateOrderShippingRequest
 {

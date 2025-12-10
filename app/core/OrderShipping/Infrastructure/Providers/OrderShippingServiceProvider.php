@@ -1,15 +1,16 @@
 <?php
 
-namespace Core\Ordershipping\Infrastructure\Providers;
+namespace Core\OrderShipping\Infrastructure\Providers;
 
-use Core\Ordershipping\Application\UseCases\CheckReadyOrderShipping;
-use Core\Ordershipping\Application\UseCases\CreateOrderShipping;
+use Core\OrderShipping\Application\UseCases\CheckReadyOrderShipping;
+use Core\OrderShipping\Application\UseCases\CreateOrderShipping;
+use Core\OrderShipping\Application\UseCases\UpdateShippingFeeActual;
 use Illuminate\Support\ServiceProvider;
-use Core\Ordershipping\Domain\Repositories\OrderShippingRepositoryInterface;
-use Core\Ordershipping\Infrastructure\Repositories\EloquentOrderShippingRepository;
-use Core\Ordershipping\Domain\Services\OrderShippingService;
-use Core\Ordershipping\Infrastructure\Listeners\OrderShippingListener;
-use Core\Ordershipping\Infrastructure\Services\OrderShippingServiceImpl;
+use Core\OrderShipping\Domain\Repositories\OrderShippingRepositoryInterface;
+use Core\OrderShipping\Infrastructure\Repositories\EloquentOrderShippingRepository;
+use Core\OrderShipping\Domain\Services\OrderShippingService;
+use Core\OrderShipping\Infrastructure\Listeners\OrderShippingListener;
+use Core\OrderShipping\Infrastructure\Services\OrderShippingServiceImpl;
 
 class OrderShippingServiceProvider extends ServiceProvider
 {
@@ -26,7 +27,8 @@ class OrderShippingServiceProvider extends ServiceProvider
         $this->loadModuleRoutes();
         $this->loadModuleTranslations();
         $listener = new OrderShippingListener();
-        $listener->handle($createOrderShipping,$CheckReadyOrderShipping);
+        $listener->handle($createOrderShipping,
+        $CheckReadyOrderShipping);
     }
 
     protected function mergeModuleConfig(): void

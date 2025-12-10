@@ -1,10 +1,10 @@
 <?php
 
-namespace Core\Ordershipping\Application\UseCases;
+namespace Core\OrderShipping\Application\UseCases;
 
 use Core\Order\Application\UseCases\FindOrderOneById;
-use Core\Ordershipping\Application\DTOs\CreateOrderShippingRequest;
-use Core\Ordershipping\Domain\Services\OrderShippingService;
+use Core\OrderShipping\Application\DTOs\CreateOrderShippingRequest;
+use Core\OrderShipping\Domain\Services\OrderShippingService;
 
 class CreateOrderShipping
 {

@@ -1,10 +1,12 @@
 <?php 
-namespace Core\Ordershipping\Infrastructure\Listeners;
+namespace Core\OrderShipping\Infrastructure\Listeners;
 
-use Core\Ordershipping\Application\DTOs\CheckReadyOrderShippingRequest;
-use Core\Ordershipping\Application\DTOs\CreateOrderShippingRequest;
-use Core\Ordershipping\Application\UseCases\CheckReadyOrderShipping;
-use Core\Ordershipping\Application\UseCases\CreateOrderShipping;
+use Core\OrderShipping\Application\DTOs\CheckReadyOrderShippingRequest;
+use Core\OrderShipping\Application\DTOs\CreateOrderShippingRequest;
+use Core\OrderShipping\Application\DTOs\UpdateShippingFeeActualRequest;
+use Core\OrderShipping\Application\UseCases\CheckReadyOrderShipping;
+use Core\OrderShipping\Application\UseCases\CreateOrderShipping;
+use Core\OrderShipping\Application\UseCases\UpdateShippingFeeActual;
 use Illuminate\Support\Facades\Event;
 
 class OrderShippingListener {

@@ -1,8 +1,8 @@
 <?php
 
-namespace Core\Ordershipping\Domain\Repositories;
+namespace Core\OrderShipping\Domain\Repositories;
 
-use Core\Ordershipping\Domain\Entities\OrderShipping;
+use Core\OrderShipping\Domain\Entities\OrderShipping;
 
 interface OrderShippingRepositoryInterface
 {

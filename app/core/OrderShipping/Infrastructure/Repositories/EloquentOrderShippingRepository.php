@@ -1,10 +1,10 @@
 <?php
 
-namespace Core\Ordershipping\Infrastructure\Repositories;
+namespace Core\OrderShipping\Infrastructure\Repositories;
 
 use App\Models\ShippingModel;
-use Core\Ordershipping\Domain\Repositories\OrderShippingRepositoryInterface;
-use Core\Ordershipping\Domain\Entities\OrderShipping;
+use Core\OrderShipping\Domain\Repositories\OrderShippingRepositoryInterface;
+use Core\OrderShipping\Domain\Entities\OrderShipping;
 
 class EloquentOrderShippingRepository implements OrderShippingRepositoryInterface
 {

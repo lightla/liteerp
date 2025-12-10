@@ -1,6 +1,6 @@
 <?php
 
-namespace Core\Ordershipping\Domain\Entities;
+namespace Core\OrderShipping\Domain\Entities;
 
 class OrderShipping
 {

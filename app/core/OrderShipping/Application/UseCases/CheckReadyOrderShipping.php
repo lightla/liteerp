@@ -1,10 +1,10 @@
 <?php
 
-namespace Core\Ordershipping\Application\UseCases;
+namespace Core\OrderShipping\Application\UseCases;
 
 use App\Exceptions\BadException;
-use Core\Ordershipping\Application\DTOs\CheckReadyOrderShippingRequest;
-use Core\Ordershipping\Domain\Services\OrderShippingService;
+use Core\OrderShipping\Application\DTOs\CheckReadyOrderShippingRequest;
+use Core\OrderShipping\Domain\Services\OrderShippingService;
 
 class CheckReadyOrderShipping
 {
@@ -12,8 +12,8 @@ class CheckReadyOrderShipping
 
     public function handle(CheckReadyOrderShippingRequest $dto)
     {
-        $ordershipping = $this->service->findByOrderId($dto->toArray());
-        if(!$ordershipping->isReady()) {
+        $OrderShipping = $this->service->findByOrderId($dto->toArray());
+        if(!$OrderShipping->isReady()) {
             throw new BadException(__("You are not yet selecting to service shipping"));
         }
     }
