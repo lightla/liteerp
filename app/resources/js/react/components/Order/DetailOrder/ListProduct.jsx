@@ -1,6 +1,6 @@
 import React from "react";
 import CommonDataTable from "../../CommonDataTable";
-import { formatMoney } from "../../../libraries/common";
+import Currencies from "../../Currencies";
 
 export default function ListProduct({
     data = null,
@@ -14,12 +14,12 @@ export default function ListProduct({
         { label: "Category", key: "category.name" },
         {
             label: "Retail Price", key: "retail_price", render: (value) => {
-                return formatMoney(value);
+                return <Currencies amount={value}/>
             }
         },
         {
             label: "Wholesale Price", key: "wholesale_price", render: (value) => {
-                return formatMoney(value);
+                return <Currencies amount={value}/>
             }
         },
         {

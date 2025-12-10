@@ -1,6 +1,5 @@
 import React from 'react'
 import BootstrapAlert from '../../BootstrapAlert'
-import { formatMoney } from '../../../libraries/common'
 export default function ShippingInformation({
     form = {
         formData: null
@@ -52,8 +51,8 @@ export default function ShippingInformation({
             <div className="col-md-6">
                 <div className="mb-2">
                     <div className="theme-title small">Shipping fee actual</div>
-                    <div className="theme-title">{form.formData?.shipping_fee_actual
-                        ? formatMoney(form.formData?.shipping_fee_actual) : '-'}</div>
+                    <div className="theme-title">
+                        <Currencies amount={form.formData?.shipping_fee_actual}/></div>
                 </div>
                 {/* <SupplierRow label="Mã số thuế" value="0987654321" /> */}
             </div>
@@ -61,8 +60,8 @@ export default function ShippingInformation({
                 {/* <SupplierRow label="Số điện thoại" value="0987 654 321" /> */}
                 <div className="mb-2">
                     <div className="theme-title small">Shipping fee estimated</div>
-                    <div className="theme-title">{form.formData?.shipping_fee_estimated
-                        ? formatMoney(form.formData?.shipping_fee_estimated) : '-'}</div>
+                    <div className="theme-title">
+                        <Currencies amount={form.formData?.shipping_fee_estimated}/></div>
                 </div>
             </div>
         </div>

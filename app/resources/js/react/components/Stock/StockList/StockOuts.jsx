@@ -4,11 +4,11 @@ import StockOutService from "../../../services/StockOutService";
 import useTable from '../../../libraries/handleTable'
 import CommonDataTable from '../../CommonDataTable';
 import { Link } from 'react-router-dom';
-import { formatMoney } from '../../../libraries/common';
 import {useForm} from '../../../libraries/handleInput'
 import {Select} from '../../UI/Input/Select';
 import SearchInput from '../../UI/Input/SearchInput'
 import { usePopup } from '../../popups/PopupContext';
+import Currencies from '../../Currencies';
 export default function StockOuts() {
     const search = useForm();
     const table = useTable();
@@ -71,7 +71,7 @@ export default function StockOuts() {
             label: "Shipping fee",
             key: "shipping_fee",
             render: (name) => {
-                return <span>{formatMoney(name)}</span>
+                return <span><Currencies amount={name}/></span>
             }
         },
         {

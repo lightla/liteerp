@@ -3,7 +3,6 @@ import DashboardLayout from '../layouts/DashboardLayout'
 import { Link, useSearchParams } from 'react-router-dom';
 import { usePopup } from '../components/popups/PopupContext';
 import ListOrder from '../components/Order/ListOrder';
-import DetailOrder from '../components/Order/A';
 import AddOrder from '../components/Order/AddOrder';
 import EditOrder from '../components/Order/EditOrder';
 export default function Order() {

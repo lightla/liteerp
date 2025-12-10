@@ -1,6 +1,6 @@
 import React from "react";
 import CommonDataTable from "../../../CommonDataTable";
-import { formatMoney } from "../../../../libraries/common";
+import Currencies from '../../../Currencies';
 
 export default function ProductAdded({ table = null, orderType = 'retail', movePage = (page) => {}, loading = false, disabled = false }) {
     
@@ -10,7 +10,9 @@ export default function ProductAdded({ table = null, orderType = 'retail', moveP
         {
             label: 'Price',
             key: "price",
-            render: (value) => formatMoney(value)
+            render: (value) => {
+                return <Currencies amount={value}/>
+            }
         },
 
         {

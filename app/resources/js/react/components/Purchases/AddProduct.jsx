@@ -1,14 +1,7 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
 import ListProducts from './AddProduct/ListProduct';
-import { usePopup } from '../../components/popups/PopupContext';
-import PurchaseService from '../../services/PurchaseService'
-import { useForm } from '../../libraries/handleInput'
 import VerticalCommonTable from '../VerticalCommonTable'
-import { formatMoney, isoToDateTime } from '../../libraries/common';
-import GradientButton from '../UI/Buttons/GradientButton';
-import SecondaryButton from '../UI/Buttons/SecondaryButton';
-import WarningButton from '../UI/Buttons/WarningButton';
+import Currencies from '../Currencies';
 export default function AddProduct({
     detail = null
 }) {
@@ -23,14 +16,14 @@ export default function AddProduct({
                     </div>
                     <VerticalCommonTable data={{
                         shipping_fee: detail?.shipping_fee 
-                            ? formatMoney(detail?.shipping_fee) : 0,
+                            ? <Currencies amount={detail?.shipping_fee}/> : 0,
                         quantity: detail?.quantity ?? 0,
                         subtotal: detail?.subtotal 
-                            ? formatMoney(detail?.subtotal) : 0,
+                            ? <Currencies amount={detail?.subtotal}/> : 0,
                         total_tax: detail?.total_tax 
-                            ? formatMoney(detail?.total_tax) : 0,
+                            ? <Currencies amount={detail?.total_tax}/> : 0,
                         total: detail?.total 
-                            ? formatMoney(detail?.total) : 0,
+                            ? <Currencies amount={detail?.total}/> : 0,
                     }} />
                 </div>
 

@@ -1,11 +1,9 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import SecondaryButton from '../../UI/Buttons/SecondaryButton'
 import PrimaryButton from '../../UI/Buttons/PrimaryButton'
-import InvoiceInService from '../../../services/InvoiceInService'
 import { useSearchParams } from "react-router-dom";
 import { useForm } from "../../../libraries/handleInput";
 import { usePopup } from "../../popups/PopupContext";
-import { formatMoney } from '../../../libraries/common'
 import CommonDataTable from '../../CommonDataTable'
 import useTable from '../../../libraries/handleTable'
 import { PopupLayout } from '../../../layouts/PopupLayout'
@@ -16,6 +14,7 @@ import BootstrapAlert from "../../BootstrapAlert";
 import OrderItemService from "../../../services/OrderItemService";
 import PageHead from "../../PageHead";
 import LoadingBox from "../../LoadingBox";
+import Currencies from "../../Currencies";
 export default function InvoiceOutDetail() {
     const [loading, setLoading] = useState(false)
     const { openPopup } = usePopup();
@@ -43,13 +42,13 @@ export default function InvoiceOutDetail() {
             {
                 label: 'Subtotal', key: 'subtotal',
                 render: (value) => {
-                    return <span>{formatMoney(value)}</span>
+                    return <span><Currencies amount={value}/></span>
                 }
             },
             {
                 label: 'Total', key: 'total',
                 render: (value) => {
-                    return <span>{formatMoney(value)}</span>
+                    return <span><Currencies amount={value}/></span>
                 }
             },
             { label: "Warehouse", key: "warehouse" },
@@ -276,8 +275,9 @@ export default function InvoiceOutDetail() {
                                     <div className="col-md-6">
                                         <div className="mb-2">
                                             <div className="theme-title small">Shipping fee actual</div>
-                                            <div className="theme-title">{form.formData?.shipping_fee_actual
-                                                ? formatMoney(form.formData?.shipping_fee_actual) : '-'}</div>
+                                            <div className="theme-title">
+                                                <Currencies amount={form.formData?.shipping_fee_actual}/>
+                                                </div>
                                         </div>
                                         {/* <SupplierRow label="Mã số thuế" value="0987654321" /> */}
                                     </div>
@@ -285,8 +285,9 @@ export default function InvoiceOutDetail() {
                                         {/* <SupplierRow label="Số điện thoại" value="0987 654 321" /> */}
                                         <div className="mb-2">
                                             <div className="theme-title small">Shipping fee estimated</div>
-                                            <div className="theme-title">{form.formData?.shipping_fee_estimated
-                                                ? formatMoney(form.formData?.shipping_fee_estimated) : '-'}</div>
+                                            <div className="theme-title">
+                                                <Currencies amount={form.formData?.shipping_fee_estimated}/>
+                                                </div>
                                         </div>
                                     </div>
                                 </div>
@@ -351,27 +352,29 @@ export default function InvoiceOutDetail() {
                                         </div>
                                         <div className="d-flex justify-content-between theme-title">
                                             <span>Subtotal</span>
-                                            <span>{formatMoney(detail?.subtotal)}</span>
+                                            <Currencies amount={detail?.subtotal}/>
+                                            
                                         </div>
 
                                         <div className="d-flex justify-content-between theme-title">
                                             <span>Shipping fee</span>
-                                            <span>{formatMoney(detail?.shipping_fee)}</span>
+                                            <Currencies amount={detail?.shipping_fee}/>
                                         </div>
 
                                         <div className="d-flex justify-content-between theme-title">
                                             <span>VAT</span>
-                                            <span>{formatMoney(detail?.total_tax)}</span>
+                                            <Currencies amount={detail?.total_tax}/>
                                         </div>
                                         <div className="d-flex justify-content-between theme-title">
                                             <span>Discount</span>
-                                            <span>{formatMoney(detail?.discount)}</span>
+                                            <Currencies amount={detail?.discount}/>
                                         </div>
 
                                         <div className="d-flex justify-content-between mt-3 fs-5 fw-semibold">
                                             <span className="theme-title">Total:</span>
                                             <span className="text-primary">
-                                                {formatMoney(detail?.total_adjusted)}</span>
+                                                <Currencies amount={detail?.total_adjusted}/></span>
+                                                
                                         </div>
 
                                         {/* Buttons */}

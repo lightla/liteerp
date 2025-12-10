@@ -105,9 +105,9 @@ export default function AdjustmentTabs() {
                 { key: "product_name", label: "Name" },
                 { key: "qty_adjusted", label: "Quantity", render:(quantity) => {
                     return quantity >= 1 ? <span>
-                        <i class="bi bi-arrow-up-short text-success"></i> +{quantity}
+                        <i className="bi bi-arrow-up-short text-success"></i> +{quantity}
                     </span> : <span>
-                        <i class="bi bi-arrow-down-short text-danger"></i> {quantity}
+                        <i className="bi bi-arrow-down-short text-danger"></i> {quantity}
                     </span>
                 } },
                 { key: "reason", label: "Reason" },

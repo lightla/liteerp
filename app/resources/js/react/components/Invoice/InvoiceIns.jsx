@@ -7,11 +7,10 @@ import SearchInput from "../UI/Input/SearchInput";
 import useTable from "../../libraries/handleTable";
 import { usePopup } from "../popups/PopupContext";
 import { Select } from '../UI/Input/Select';
-import { formatMoney } from '../../libraries/common';
 import { PopupLayout } from '../../layouts/PopupLayout';
 import { InputForm } from '../UI/Input/InputForm';
 import { useNavigate } from 'react-router-dom';
-
+import Currencies from '../../components/Currencies'
 export default function InvoiceIns() {
     const navigate = useNavigate();
     const { openPopup } = usePopup();
@@ -42,17 +41,19 @@ export default function InvoiceIns() {
         {
             label: "Subtotal",
             key: "subtotal",
-            render: (value) => <span>{formatMoney(value)}</span>,
+            render: (value) => <span>
+                <Currencies amount={value}/>
+            </span>,
         },
         {
             label: "Tax",
             key: "tax",
-            render: (value) => <span>{formatMoney(value)}</span>,
+            render: (value) => <span><Currencies amount={value}/></span>,
         },
         {
             label: "Total paid",
             key: "total",
-            render: (value) => <strong>{formatMoney(value)}</strong>,
+            render: (value) => <strong><Currencies amount={value}/></strong>,
         },
         {
             label: "Status",
@@ -189,20 +190,21 @@ export default function InvoiceIns() {
                                     </tr>
                                     <tr>
                                         <th>Subtotal</th>
-                                        <td>{formatMoney(form.formData?.subtotal)}</td>
+                                        <td><Currencies amount={form.formData?.subtotal}/></td>
                                     </tr>
                                     <tr>
                                         <th>Tax (VAT)</th>
-                                        <td>{formatMoney(form.formData?.tax)}</td>
+                                        <td>
+                                            <Currencies amount={form.formData?.tax}/></td>
                                     </tr>
                                     <tr>
                                         <th>Discount</th>
-                                        <td>{formatMoney(form.formData?.discount)}</td>
+                                        <td><Currencies amount={form.formData?.discount}/></td>
                                     </tr>
                                     <tr>
                                         <th>Total Amount</th>
                                         <td>
-                                            <strong>{formatMoney(form.formData?.total)}</strong>
+                                            <strong><Currencies amount={form.formData?.total}/></strong>
                                         </td>
                                     </tr>
                                     <tr>

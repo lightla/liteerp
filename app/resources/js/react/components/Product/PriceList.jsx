@@ -6,18 +6,15 @@ import { useForm } from '../../libraries/handleInput';
 import useTable from '../../libraries/handleTable';
 import { PopupLayout } from '../../layouts/PopupLayout'
 import { InputForm } from '../UI/Input/InputForm';
-import TextArea from '../UI/Input/Textarea';
 import { usePopup } from '../popups/PopupContext'
 import PriceListService from '../../services/PriceListService';
 import SearchSelect from '../UI/Input/SearchSelect';
 import CustomerGroupService from '../../services/CustomerGroupService'
-import { formatMoney } from '../../libraries/common';
+import Currency from '../../components/Currencies';
 export default function PriceList() {
     const { openPopup } = usePopup();
     const [showAdd, setShowAdd] = useState(false);
     const search = useForm();
-    {/* const { formData, setFormData, formErrors, setFormErrors, 
-        handleChange, isEdit, setIsEdit, handleChangeByKey } = useForm(); */}
         const form = useForm();
     const table = useTable();
     const [products,setProducts] = useState([]);
@@ -123,7 +120,7 @@ export default function PriceList() {
         { label: "Name", key: "name" },
         { label: "Price", key: "price", render: (value) => {
             return <strong>
-                {formatMoney(value)}
+                <Currency amount={value}/>
             </strong>
         } },
         { label: "Customer Group", key: "group" }

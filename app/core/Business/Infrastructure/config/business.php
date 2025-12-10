@@ -1,6 +1,6 @@
 <?php
 
 return [
-    'trial_days' => 7,
-    'business_default_active' => true
+    'currency' => env('APP_CURRENCY', 'USD'),
+    'currency_locale' => env('APP_CURRENCY_LOCALE', 'en-US')
 ];

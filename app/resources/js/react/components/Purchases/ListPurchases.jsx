@@ -6,14 +6,13 @@ import PurchaseService from '../../services/PurchaseService';
 import SupplierService from '../../services/SupplierService';
 import { Select } from '../UI/Input/Select'
 import { Link, useNavigate } from 'react-router-dom';
-import { formatMoney, isoToDateTime } from '../../libraries/common';
-import { Cart } from 'react-bootstrap-icons';
 import { usePopup } from '../popups/PopupContext';
 import SearchSelect from '../UI/Input/SearchSelect';
 import SearchInput from '../UI/Input/SearchInput';
 import useTable from '../../libraries/handleTable'
 import { useForm } from '../../libraries/handleInput'
 import PageHead from '../PageHead';
+import Currencies from '../Currencies';
 export default function ListPurchases() {
     const navigate = useNavigate();
     const { openPopup } = usePopup();
@@ -43,7 +42,7 @@ export default function ListPurchases() {
         {
             label: "Shipping fee", key: "shipping_fee", render: (value) => {
                 return <strong>
-                    {formatMoney(value)}
+                    <Currencies amount={value}/>
                 </strong>
             }
         },
@@ -54,7 +53,7 @@ export default function ListPurchases() {
         { label: "Gift", key: "gift_quantity" },
         { label: "Tax", key: "tax", render: (value) => {
             return <strong>
-                {formatMoney(value)}
+                <Currencies amount={value}/>
             </strong>
         } },
         {

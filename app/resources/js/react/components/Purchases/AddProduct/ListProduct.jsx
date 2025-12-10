@@ -2,7 +2,6 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import CommonDataTable from '../../CommonDataTable';
 import ProductService from '../../../services/ProductService';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
-import { formatMoney, isoToDateTime } from '../../../libraries/common';
 import { usePopup } from '../../popups/PopupContext';
 import PrimaryButton from '../../UI/Buttons/PrimaryButton'
 import { useForm } from '../../../libraries/handleInput';
@@ -12,6 +11,7 @@ import { PopupLayout } from '../../../layouts/PopupLayout';
 import { InputForm } from '../../UI/Input/InputForm';
 import SearchSelect from '../../UI/Input/SearchSelect';
 import PurchaseTaxService from '../../../services/PurchaseTaxService';
+import Currencies from '../../Currencies';
 export default function ListProducts({
     purchase = null
 }) {
@@ -80,12 +80,12 @@ export default function ListProducts({
             { label: "Conversion", key: "conversion_quantity" },
             {
                 label: "Unit cost", key: "unit_cost", render: (value) => {
-                    return <span>{formatMoney(value)}</span>
+                    return <span>{<Currencies amount={value}/>}</span>
                 }
             },
             {
                 label: "Subtotal", key: "subtotal", render: (value) => (
-                    <span>{formatMoney(value)}</span>
+                    <span>{<Currencies amount={value}/>}</span>
                 )
             },
             {
@@ -95,12 +95,12 @@ export default function ListProducts({
             },
             {
                 label: "Total tax", key: "total_tax", render: (value) => {
-                    return <span>{formatMoney(value)}</span>
+                    return <span>{<Currencies amount={value}/>}</span>
                 }
             },
             {
                 label: "Total price", key: "total", render: (value) => (
-                    <span>{formatMoney(value)}</span>
+                    <span>{<Currencies amount={value}/>}</span>
                 )
             }
         ]

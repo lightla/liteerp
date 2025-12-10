@@ -2,13 +2,14 @@ import React, { useCallback, useEffect, useState } from 'react'
 import InvoiceOutService from '../../services/InvoiceOutService';
 import CommonDataTable from '../CommonDataTable';
 import useTable from '../../libraries/handleTable';
-import { formatMoney, isoToDateTime } from '../../libraries/common';
+import { isoToDateTime } from '../../libraries/common';
 import { PopupLayout } from '../../layouts/PopupLayout'
 import { InputForm } from '../UI/Input/InputForm'
 import { useForm } from '../../libraries/handleInput';
 import { Select } from '../UI/Input/Select';
 import { usePopup } from '../popups/PopupContext'
 import { useNavigate } from 'react-router-dom';
+import Currencies from '../Currencies';
 export default function InvoiceOuts() {
     const navigate = useNavigate();
     const form = useForm();
@@ -36,17 +37,17 @@ export default function InvoiceOuts() {
         {
             label: "Subtotal",
             key: "subtotal",
-            render: (value) => <span>{formatMoney(value)}</span>,
+            render: (value) => <span><Currencies amount={value}/></span>,
         },
         {
             label: "Tax",
             key: "tax",
-            render: (value) => <span>{formatMoney(value)}</span>,
+            render: (value) => <span><Currencies amount={value}/></span>,
         },
         {
             label: "Total paid",
             key: "total_adjusted",
-            render: (value) => <strong>{formatMoney(value)}</strong>,
+            render: (value) => <strong><Currencies amount={value}/></strong>,
         },
         {
             label: "Status",

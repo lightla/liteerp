@@ -1,6 +1,6 @@
 import React from "react";
 import CommonDataTable from "../../CommonDataTable";
-import { formatMoney } from "../../../libraries/common";
+import Currencies from "../../Currencies";
 
 export default function ProductAdded({ data = null, orderType = 'retail', movePage = (page) => {}, loading = false, disabled = false }) {
 
@@ -10,7 +10,9 @@ export default function ProductAdded({ data = null, orderType = 'retail', movePa
         {
             label: 'Price',
             key: orderType === 'retail' ? 'retail_price' : "wholesale_price",
-            render: (value) => formatMoney(value)
+            render: (value) => {
+                return <Currencies amount={value}/>
+            }
         },
 
         {
@@ -40,7 +42,9 @@ export default function ProductAdded({ data = null, orderType = 'retail', movePa
         {
             label: "Discount",
             key: "discount",
-            render: (value) => formatMoney(value)
+            render: (value) => {
+                return <Currencies amount={value}/>
+            }
         },
 
         { label: "Tax (%)", key: "tax" },

@@ -27,7 +27,11 @@ class ShowBusiness {
             'exp' => 600
         ]));
         return [
-            'business' => $business,
+            'business' => [
+                ...$business,
+                'currency' => config('business.currency'),
+                'currency_locale'   => config('business.currency_locale')
+            ],
             'token' => $token
         ];
     }

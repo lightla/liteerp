@@ -1,9 +1,3 @@
-export function formatMoney(amount = 0) {
-  return new Intl.NumberFormat("en-US", {
-  style: "currency",
-  currency: "USD",
-}).format(amount ?? 0);
-}
 export function formatToDateTime(dateStr) {
   const date = new Date(dateStr);
   const Y = date.getFullYear();

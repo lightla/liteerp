@@ -1,6 +1,6 @@
 import React from 'react'
 import VerticalCommonTable from '../../VerticalCommonTable'
-import { formatMoney } from '../../../libraries/common';
+import Currencies from '../../../components/Currencies';
 export default function Summary({
     summaryData = null,
     reload = null
@@ -16,12 +16,12 @@ export default function Summary({
             </div>
         </div>
         <VerticalCommonTable data={{
-            total_quantity: summaryData.total_quantity,
-            total_discount: formatMoney(summaryData.discount),
-            subtotal: formatMoney(summaryData.subtotal),
-            total_tax: formatMoney(summaryData.total_tax),
-            shipping_fee: formatMoney(summaryData.shipping_fee),
-            total: formatMoney(summaryData.total),
+            total_quantity: summaryData?.total_quantity,
+            total_discount: <Currencies amount={summaryData?.discount}/>,
+            subtotal: <Currencies amount={summaryData?.subtotal}/>,
+            total_tax: <Currencies amount={summaryData?.total_tax}/>,
+            shipping_fee: <Currencies amount={summaryData?.shipping_fee}/>,
+            total: <Currencies amount={summaryData?.total}/>,
         }}/>
     </div>
 }

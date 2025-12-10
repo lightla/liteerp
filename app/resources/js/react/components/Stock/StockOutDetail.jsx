@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import { useForm } from "../../libraries/handleInput";
-import { formatMoney, isoToDateTime } from "../../libraries/common";
+import { isoToDateTime } from "../../libraries/common";
 import TwoCol from "./StockInDetail/TwoCol";
 import InfoBox from './StockInDetail/InfoBox'
 import useTable from "../../libraries/handleTable";
@@ -11,8 +11,6 @@ import PrimaryButton from "../UI/Buttons/PrimaryButton";
 import { PopupLayout } from "../../layouts/PopupLayout";
 import { usePopup } from "../popups/PopupContext";
 import StockOutService from "../../services/StockOutService";
-import OrderItemService from "../../services/OrderItemService";
-import DangerButton from "../UI/Buttons/DangerButton";
 import FormUpdate from "./StockOutDetail/FormUpdate";
 import CustomerInfo from "./StockOutDetail/CustomerInfo";
 import OrderShippingService from "../../services/OrderShippingService";
@@ -22,6 +20,7 @@ import PaymentInformation from "./StockOutDetail/PaymentInformation";
 import StockMovementOut from "../../services/StockMovementOut";
 import PageHead from "../PageHead";
 import LoadingBox from "../LoadingBox";
+import Currencies from "../Currencies";
 export default function StockOutDetail() {
     const [loading,setLoading] = useState(false)
     const [showForm, setShowForm] = useState(false);
@@ -149,29 +148,29 @@ export default function StockOutDetail() {
             },
             {
                 label: 'Price', key: 'price',render: (value) => {
-                    return formatMoney(value)
+                    return <Currencies amount={value}/>
                 }
             },
             {
                 label: 'Total tax', key: 'total_tax',render: (value) => {
-                    return formatMoney(value)
+                    return <Currencies amount={value}/>
                 }
             },
             {
                 label: 'Discount', key: 'discount',render: (value) => {
-                    return formatMoney(value)
+                    return <Currencies amount={value}/>
                 }
             },
             {
                 label: 'Subtotal', key: 'subtotal',
                 render: (value) => {
-                    return <span>{formatMoney(value)}</span>
+                    return <span>{<Currencies amount={value}/>}</span>
                 }
             },
             {
                 label: 'Total', key: 'total',
                 render: (value) => {
-                    return <span>{formatMoney(value)}</span>
+                    return <span>{<Currencies amount={value}/>}</span>
                 }
             },
             { label: "Warehouse", key: "warehouse" },
@@ -248,26 +247,26 @@ export default function StockOutDetail() {
                                     </div>
                                     <div className="d-flex justify-content-between theme-title">
                                         <span>Subtotal</span>
-                                        <span>{formatMoney(detail?.subtotal)}</span>
+                                        <Currencies amount={detail?.subtotal}/>
                                     </div>
 
                                     <div className="d-flex justify-content-between theme-title">
                                         <span>Shipping fee</span>
-                                        <span>{formatMoney(detail?.shipping_fee)}</span>
+                                        <Currencies amount={detail?.shipping_fee}/>
                                     </div>
 
                                     <div className="d-flex justify-content-between theme-title">
                                         <span>VAT</span>
-                                        <span>{formatMoney(detail?.total_tax)}</span>
+                                        <Currencies amount={detail?.total_tax}/>
                                     </div>
                                     <div className="d-flex justify-content-between theme-title">
                                         <span>Discount</span>
-                                        <span>{formatMoney(detail?.discount)}</span>
+                                        <Currencies amount={detail?.discount}/>
                                     </div>
 
                                     <div className="d-flex justify-content-between mt-3 fs-5 fw-semibold">
                                         <span className="theme-title">Total:</span>
-                                        <span className="text-primary">{formatMoney(detail?.total_adjusted)}</span>
+                                        <Currencies amount={detail?.total_adjusted}/>
                                     </div>
                                 </div>
                             </div>

@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect } from "react";
 import CommonDataTable from "../../../CommonDataTable";
-import { formatMoney } from "../../../../libraries/common";
-import ProductService from "../../../../services/ProductService";
+import Currencies from "../../../Currencies";
 import useTable from "../../../../libraries/handleTable";
 import { useForm } from "../../../../libraries/handleInput";
 import InventoryService from '../../../../services/InventoryService'
@@ -16,7 +15,7 @@ export default function ListProduct({
         { label: "Category", key: "category" },
         {
             label: "Price", key: "price", render: (value) => {
-                return formatMoney(value);
+                return <Currencies amount={value}/>;
             }
         },
         {
