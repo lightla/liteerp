@@ -2,23 +2,17 @@
 
 namespace Core\StockMovementOut\Application\UseCases;
 
-use App\Jobs\CreateNotificationJob;
-use Core\ActivityLog\Application\DTOs\CreateActivityLogRequest;
-use Core\ActivityLog\Application\UseCases\CreateActivityLog;
 use Core\Inventory\Application\DTOs\CreateInventoryRequest;
 use Core\Inventory\Application\UseCases\UpdateInventory;
-use Core\Notifications\Application\DTOs\InsertManyNotificationRequest;
 use Core\StockMovementOut\Application\DTOs\CreateStockMovementOutRequest;
 use Core\StockMovementOut\Domain\Services\StockMovementOutService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Event;
-use Illuminate\Support\Facades\URL;
 
 class UpdateStockMovementOut
 {
     public function __construct(private StockMovementOutService $service,
-    private UpdateInventory $updateInventory,
-    private CreateActivityLog $createLog) {}
+    private UpdateInventory $updateInventory) {}
 
     public function handle(CreateStockMovementOutRequest $dto)
     {
@@ -29,7 +23,8 @@ class UpdateStockMovementOut
         $this->updateInventory->handle(CreateInventoryRequest::fromArray([
             'product_id' => $dto->product_id,
             'warehouse_id'  => $dto->warehouse_id,
-            'reserved_quantity' => $qty_change
+            'reserved_quantity' => $qty_change,
+            'business_id' => $dto->business_id
         ]));
         Event::dispatch("erp.stockmovementout.update", [
             ...$update->toArray(),

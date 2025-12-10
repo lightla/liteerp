@@ -4,7 +4,6 @@ namespace Core\StockMovementOut\Domain\Entities;
 
 class StockMovementOut
 {
-    public ?int $id;
 
     public function __construct(
         public int $product_id,
@@ -12,10 +11,9 @@ class StockMovementOut
         public float $qty_change,
         public int $stock_out_id,
         public int $created_by,
-        public int $business_id,
-        ?int $id = null
+        public ?int $id = null
     ) {
-        $this->id = $id;
+        
     }
 
     public static function fromArray(array $data): self
@@ -27,7 +25,6 @@ class StockMovementOut
             stock_out_id: (int) $data['stock_out_id'],
             created_by: (int) $data['created_by'],
             id: $data['id'] ?? null,
-            business_id: (int) $data['business_id']
         );
     }
 
@@ -39,8 +36,7 @@ class StockMovementOut
             'warehouse_id' => $this->warehouse_id,
             'qty_change'   => $this->qty_change,
             'stock_out_id' => $this->stock_out_id,
-            'created_by'   => $this->created_by,
-            'business_id'  => $this->business_id
+            'created_by'   => $this->created_by
         ];
     }
 }

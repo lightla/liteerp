@@ -45,7 +45,7 @@ export default function InvoiceOuts() {
         },
         {
             label: "Total paid",
-            key: "total",
+            key: "total_adjusted",
             render: (value) => <strong>{formatMoney(value)}</strong>,
         },
         {

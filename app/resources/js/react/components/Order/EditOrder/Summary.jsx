@@ -17,7 +17,7 @@ export default function Summary({
         </div>
         <VerticalCommonTable data={{
             total_quantity: summaryData.total_quantity,
-            total_discount: formatMoney(summaryData.total_discount),
+            total_discount: formatMoney(summaryData.discount),
             subtotal: formatMoney(summaryData.subtotal),
             total_tax: formatMoney(summaryData.total_tax),
             shipping_fee: formatMoney(summaryData.shipping_fee),

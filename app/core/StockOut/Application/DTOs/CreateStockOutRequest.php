@@ -10,9 +10,8 @@ class CreateStockOutRequest
         public ?int $approved_by = null,
         public ?int $id,
         public ?string $status = null,
-        public ?float $shipping_fee = 0,
         public ?int $created_by = null,
-        public int $order_id 
+        public int $order_id
     ) {}
 
     public static function fromArray(array $data): self
@@ -23,7 +22,6 @@ class CreateStockOutRequest
             approved_by: $data['user_id'] ?? null,
             id: $data['id'] ?? null,
             status: $data['status'] ?? null,
-            shipping_fee: !empty($data['shipping_fee']) ? (float) $data['shipping_fee'] : 0,
             created_by: $data['user_id'] ?? null,
             order_id: $data['order_id']
         );
@@ -37,7 +35,6 @@ class CreateStockOutRequest
             'approved_by'    => $this->approved_by,
             'id'             => $this->id,
             'status'         => $this->status,
-            'shipping_fee'   => $this->shipping_fee,
             'created_by'     => $this->created_by,
             'order_id'  => $this->order_id
         ];

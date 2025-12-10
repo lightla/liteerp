@@ -9,7 +9,7 @@ class UpdateStockOutRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'status' => 'required|in:pending,shipped,cancelled,completed',
+            'status' => 'required|in:pending,shipped,completed',
             'order_id'  => 'required|numeric|exists:orders,id'
         ];
     }

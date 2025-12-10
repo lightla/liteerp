@@ -27,11 +27,9 @@ export default function StockOutDetail() {
     const [showForm, setShowForm] = useState(false);
     const tableInventory = useTable();
     const form = useForm();
-    const table = useTable();
     const { openPopup } = usePopup();
     const [searchParams] = useSearchParams();
     const navigate = useState();
-    const [summary, setSummary] = useState(null);
     const [detail, setDetail] = useState(null);
     const getDetail = useCallback(() => {
         setLoading(true)
@@ -111,24 +109,6 @@ export default function StockOutDetail() {
             }
         })
     }, [form]);
-    const confirmCancel = useCallback(() => {
-        openPopup({
-            type: 'warning',
-            message: 'Are you sure to wanna confirm cancel',
-            onConfirm: () => {
-                //update();
-                form.handleChangeByKey('status', 'cancelled')
-            }
-        })
-    }, [form]);
-    const getSummary = useCallback((order_id = 0) => {
-        OrderItemService.summary({
-            order_id: order_id
-        })
-            .then((resp) => {
-                setSummary(resp.message);
-            })
-    }, []);
     const getInventories = useCallback((keywords = '') => {
         StockMovementOut.list({
             page: 0,
@@ -138,6 +118,7 @@ export default function StockOutDetail() {
         .then((resp) => {
             tableInventory.setData(resp.message.data);
             tableInventory.setLinks(resp.message.links);
+            tableInventory.setTotal(resp.message.total)
         })
         .catch((error) => {
 
@@ -148,13 +129,8 @@ export default function StockOutDetail() {
             return;
         }
 
-        if (detail?.order_id) {
-            getSummary(detail?.order_id);
-            return;
-        } else {
-            getDetail();
-            getInventories();
-        }
+        getDetail();
+        getInventories();
     }, [detail?.order_id]);
     useEffect(() => {
         if (detail?.status !== form.formData?.status) {
@@ -172,10 +148,19 @@ export default function StockOutDetail() {
                 label: 'Sku', key: 'sku'
             },
             {
-                label: 'Price', key: 'price'
+                label: 'Price', key: 'price',render: (value) => {
+                    return formatMoney(value)
+                }
             },
             {
-                label: 'Total tax', key: 'total_tax'
+                label: 'Total tax', key: 'total_tax',render: (value) => {
+                    return formatMoney(value)
+                }
+            },
+            {
+                label: 'Discount', key: 'discount',render: (value) => {
+                    return formatMoney(value)
+                }
             },
             {
                 label: 'Subtotal', key: 'subtotal',
@@ -195,10 +180,11 @@ export default function StockOutDetail() {
     return (
         <div className="min-vh-100">
             <PageHead
+            containerClass="m-4"
             title="Detail stock out"
             subtitle="Manage and track details of the process of exporting goods from the warehouse"
             />
-            <div className="container mt-3">
+            <div className="m-4 mt-3">
 
                 {loading ? <LoadingBox/> : <div>
                     <div className="row g-3 mb-4">
@@ -235,7 +221,7 @@ export default function StockOutDetail() {
                         <div className="rounded mt-4 mb-5">
                             <div className="d-flex justify-content-between mb-3">
                                 <h5 className="fw-semibold">Inventories</h5>
-                                <div className="theme-title small">{table.total} products</div>
+                                <div className="theme-title small">{tableInventory.total} products</div>
                             </div>
 
                             {/** Table */}
@@ -262,26 +248,26 @@ export default function StockOutDetail() {
                                     </div>
                                     <div className="d-flex justify-content-between theme-title">
                                         <span>Subtotal</span>
-                                        <span>{formatMoney(summary?.subtotal)}</span>
+                                        <span>{formatMoney(detail?.subtotal)}</span>
                                     </div>
 
                                     <div className="d-flex justify-content-between theme-title">
                                         <span>Shipping fee</span>
-                                        <span>{formatMoney(summary?.shipping_fee)}</span>
+                                        <span>{formatMoney(detail?.shipping_fee)}</span>
                                     </div>
 
                                     <div className="d-flex justify-content-between theme-title">
                                         <span>VAT</span>
-                                        <span>{formatMoney(summary?.total_tax)}</span>
+                                        <span>{formatMoney(detail?.total_tax)}</span>
                                     </div>
                                     <div className="d-flex justify-content-between theme-title">
                                         <span>Discount</span>
-                                        <span>{formatMoney(summary?.discount)}</span>
+                                        <span>{formatMoney(detail?.discount)}</span>
                                     </div>
 
                                     <div className="d-flex justify-content-between mt-3 fs-5 fw-semibold">
-                                        <span className="theme-title">Tổng cộng:</span>
-                                        <span className="text-primary">{formatMoney(summary?.total)}</span>
+                                        <span className="theme-title">Total:</span>
+                                        <span className="text-primary">{formatMoney(detail?.total_adjusted)}</span>
                                     </div>
                                 </div>
                             </div>
@@ -306,11 +292,6 @@ export default function StockOutDetail() {
                                 <SecondaryButton 
                                 disabled={detail?.status !== 'pending'}
                                 onClick={() => setShowForm(true)} width={'100%'} label="Modifiner" />
-                            </div>
-                            <div>
-                                <DangerButton 
-                                disabled={detail?.status === 'completed'}
-                                onClick={confirmCancel} label="Cancel" />
                             </div>
                         </div> : null}
 

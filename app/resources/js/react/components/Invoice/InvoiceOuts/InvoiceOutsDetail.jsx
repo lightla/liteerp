@@ -24,7 +24,6 @@ export default function InvoiceOutDetail() {
     const table = useTable();
     const [detail, setDetail] = useState(null);
     const [showEdit, setShowEdit] = useState(false);
-    const [summary, setSummary] = useState(null);
     const columns = useMemo(() => {
         return [
             { label: "Name", key: "name" },
@@ -77,14 +76,6 @@ export default function InvoiceOutDetail() {
                 setLoading(false)
             })
     }, []);
-    const getSummary = useCallback((order_id = 0) => {
-        OrderItemService.summary({
-            order_id: order_id
-        })
-            .then((resp) => {
-                setSummary(resp.message);
-            })
-    }, []);
 
     const getOrderItems = useCallback((order_id = 0) => {
         table.setLoading(true)
@@ -106,7 +97,6 @@ export default function InvoiceOutDetail() {
     useEffect(() => {
         if (detail?.order_id) {
             getOrderItems(detail?.order_id);
-            getSummary(detail?.order_id);
         }
     }, [detail?.order_id])
     const update = useCallback(() => {
@@ -361,26 +351,27 @@ export default function InvoiceOutDetail() {
                                         </div>
                                         <div className="d-flex justify-content-between theme-title">
                                             <span>Subtotal</span>
-                                            <span>{formatMoney(summary?.subtotal)}</span>
+                                            <span>{formatMoney(detail?.subtotal)}</span>
                                         </div>
 
                                         <div className="d-flex justify-content-between theme-title">
                                             <span>Shipping fee</span>
-                                            <span>{formatMoney(summary?.shipping_fee)}</span>
+                                            <span>{formatMoney(detail?.shipping_fee)}</span>
                                         </div>
 
                                         <div className="d-flex justify-content-between theme-title">
                                             <span>VAT</span>
-                                            <span>{formatMoney(summary?.total_tax)}</span>
+                                            <span>{formatMoney(detail?.total_tax)}</span>
                                         </div>
                                         <div className="d-flex justify-content-between theme-title">
                                             <span>Discount</span>
-                                            <span>{formatMoney(summary?.discount)}</span>
+                                            <span>{formatMoney(detail?.discount)}</span>
                                         </div>
 
                                         <div className="d-flex justify-content-between mt-3 fs-5 fw-semibold">
-                                            <span className="theme-title">Tổng cộng:</span>
-                                            <span className="text-primary">{formatMoney(summary?.total)}</span>
+                                            <span className="theme-title">Total:</span>
+                                            <span className="text-primary">
+                                                {formatMoney(detail?.total_adjusted)}</span>
                                         </div>
 
                                         {/* Buttons */}

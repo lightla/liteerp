@@ -40,7 +40,9 @@ export default function ProductAdded({ table = null, orderType = 'retail', moveP
         {
             label: "Discount",
             key: "discount",
-            render: (value) => formatMoney(value)
+            render: (value) => {
+                return <span>{value}%</span>
+            }
         },
 
         { label: "Tax (%)", key: "tax" },
