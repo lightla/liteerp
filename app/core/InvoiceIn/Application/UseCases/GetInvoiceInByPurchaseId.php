@@ -6,7 +6,7 @@ use Core\InvoiceIn\Application\DTOs\CreateInvoiceInRequest;
 use Core\InvoiceIn\Domain\Entities\InvoiceIn;
 use Core\InvoiceIn\Domain\Services\InvoiceInService;
 
-class GetInvoiceInBYPurchaseId
+class GetInvoiceInByPurchaseId
 {
     public function __construct(private InvoiceInService $service) {}
 
