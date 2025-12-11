@@ -8,7 +8,9 @@ class ShowInvoiceInRequest extends FormRequest
 {
     public function rules(): array
     {
-        return [];
+        return [
+
+        ];
     }
 
     public function authorize(): bool

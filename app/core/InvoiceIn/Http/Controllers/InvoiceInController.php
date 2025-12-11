@@ -5,6 +5,7 @@ namespace Core\InvoiceIn\Http\Controllers;
 use Core\InvoiceIn\Application\UseCases\CreateInvoiceIn;
 use Core\InvoiceIn\Application\DTOs\CreateInvoiceInRequest;
 use Core\InvoiceIn\Application\DTOs\IndexInvoiceInRequest as DTOsIndexInvoiceInRequest;
+use Core\InvoiceIn\Application\DTOs\ShowInvoiceInRequest as DTOsShowInvoiceInRequest;
 use Core\InvoiceIn\Application\UseCases\IndexInvoiceIn;
 use Core\InvoiceIn\Application\UseCases\ShowInvoiceIn;
 use Core\InvoiceIn\Application\UseCases\UpdateInvoiceIn;
@@ -34,7 +35,8 @@ class InvoiceInController
     }
     public function show(ShowInvoiceInRequest $request,ShowInvoiceIn $useCase,string $id) {
         $request->merge(['id' => $id]);
-        $entity = $useCase->handle($request->all());
+        $dto = DTOsShowInvoiceInRequest::fromArray($request->all());
+        $entity = $useCase->handle($dto);
         return response()->json(['message' => $entity]);
     }
 }
