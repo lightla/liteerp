@@ -10,8 +10,10 @@ import { Select } from '../UI/Input/Select';
 import { usePopup } from '../popups/PopupContext'
 import { useNavigate } from 'react-router-dom';
 import Currencies from '../Currencies';
+import SearchInput from '../UI/Input/SearchInput';
 export default function InvoiceOuts() {
     const navigate = useNavigate();
+    const search = useForm();
     const form = useForm();
     const table = useTable();
     const { openPopup } = usePopup();
@@ -37,17 +39,17 @@ export default function InvoiceOuts() {
         {
             label: "Subtotal",
             key: "subtotal",
-            render: (value) => <span><Currencies amount={value}/></span>,
+            render: (value) => <span><Currencies amount={value} /></span>,
         },
         {
             label: "Tax",
             key: "tax",
-            render: (value) => <span><Currencies amount={value}/></span>,
+            render: (value) => <span><Currencies amount={value} /></span>,
         },
         {
             label: "Total paid",
             key: "total_adjusted",
-            render: (value) => <strong><Currencies amount={value}/></strong>,
+            render: (value) => <strong><Currencies amount={value} /></strong>,
         },
         {
             label: "Status",
@@ -71,27 +73,27 @@ export default function InvoiceOuts() {
                 value ? isoToDateTime(value) : "",
         },
     ];
-    const getInvoices = useCallback(() => {
+    const getInvoices = useCallback((page = 0) => {
         table.setLoading(true);
         InvoiceOutService.list({
-            page: 0,
-            keywords: '',
-            status: 1
+            page: page,
+            keywords: search?.formData?.keywords ?? '',
+            payment_status: search?.formData?.payment_status ?? ''
         })
             .then((resp) => {
                 table.setData(resp.message.data)
                 table.setLinks(resp.message.links)
                 table.setLoading(false);
             })
-            .catch((error) => { 
-                if(error.response.data?.message) {
+            .catch((error) => {
+                if (error.response.data?.message) {
                     openPopup({
                         type: 'error',
                         message: error.response.data?.message
                     })
                 }
             })
-    }, [table]);
+    }, [table,search.formData]);
     const update = useCallback(() => {
         form.setFormErrors(null);
         InvoiceOutService.update(form.formData)
@@ -104,10 +106,10 @@ export default function InvoiceOuts() {
                 setShowForm(false)
             })
             .catch((error) => {
-                if(error.response.data?.errors) {
+                if (error.response.data?.errors) {
                     form.setFormErrors(error.response.data?.errors);
                 }
-                if(error.response.data?.message) {
+                if (error.response.data?.message) {
                     openPopup({
                         type: 'error',
                         message: error.response.data?.message
@@ -122,14 +124,41 @@ export default function InvoiceOuts() {
     }
     useEffect(() => {
         getInvoices();
-    }, [])
+    }, [search.formData?.payment_status])
     return <div>
         <CommonDataTable
+            filter={<div className="d-flex">
+                <div className="col-4">
+                    <label>Payment status</label>
+                    <Select
+                        name="payment_status"
+                        value={search.formData?.payment_status}
+                        handleChange={search.handleChange}
+                        options={[
+                            { value: '', label: 'All' },
+                            { value: 'partial_payment', label: 'Partial' },
+                            { value: 'paid', label: 'Paid' },
+                            { value: 'pending', label: 'Pending' }
+                        ]}
+                    />
+                </div>
+                <div className="col-4 mx-2">
+                    <label>Search</label>
+                    <SearchInput
+                        placeholder="Search by document"
+                        submit={getInvoices}
+                        value={search.formData?.keywords}
+                        name="keywords"
+                        handleChange={search.handleChange}
+                    />
+                </div>
+            </div>}
             loading={table.loading}
             columns={columns}
             data={table.data}
             links={table.links}
             onEdit={onEdit}
+            movePage={getInvoices}
         />
         {showForm ? <PopupLayout
             onClose={() => setShowForm(false)}
