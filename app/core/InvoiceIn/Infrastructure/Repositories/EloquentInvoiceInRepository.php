@@ -32,11 +32,11 @@ class EloquentInvoiceInRepository implements InvoiceInRepositoryInterface
             ->join("purchases", "purchases.id", "=", "invoice_ins.purchase_id")
             ->join("suppliers", "suppliers.id", "=", "purchases.supplier_id")
             ->where('invoice_ins.business_id', $data['business_id']);
-            if(!empty($data['document_no'])) {
-                $list = $list->where('invoice_ins.document_no','like','%'. ($data['document_no'] ?? NULL) .'%');
+            if(!empty($data['keywords'])) {
+                $list = $list->where('invoice_ins.document_no','like','%'. ($data['keywords'] ?? NULL) .'%');
             }
-            if(!empty($data['status'])) {
-                $list = $list->where('purchases.status',$data['status']);
+            if(!empty($data['payment_status'])) {
+                $list = $list->where('invoice_ins.payment_status',$data['payment_status']);
             }
             return $list->paginate(15)->toArray();
     }

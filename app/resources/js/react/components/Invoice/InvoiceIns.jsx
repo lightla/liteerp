@@ -98,7 +98,7 @@ export default function InvoiceIns() {
         InvoiceInService.list({
             page: page,
             keywords: search.formData?.keywords ?? '',
-            status: search.formData?.status ?? ''
+            payment_status: search.formData?.payment_status ?? ''
         })
             .then((resp) => {
                 table.setData(resp.message.data);
@@ -140,23 +140,22 @@ export default function InvoiceIns() {
 
     useEffect(() => {
         listInvoice();
-    }, [search.formData?.status]);
+    }, [search.formData?.payment_status]);
     return <div>
         <CommonDataTable
             loading={table.loading}
             filter={<div className="d-flex">
                 <div className="col-4">
-                    <label>Status</label>
+                    <label>Payment status</label>
                     <Select
-                        name="status"
-                        value={search.formData?.status}
+                        name="payment_status"
+                        value={search.formData?.payment_status}
                         handleChange={search.handleChange}
                         options={[
-                            { value: 'draf', label: 'Draf' },
-                            { value: 'requested', label: 'Approved' },
+                            { value: '', label: 'All' },
+                            { value: 'partial_payment', label: 'Partial' },
                             { value: 'paid', label: 'Paid' },
-                            { value: 'received', label: 'Received' },
-                            { value: 'cancelled', label: 'Cancelled' }
+                            { value: 'pending', label: 'Pending' }
                         ]}
                     />
                 </div>

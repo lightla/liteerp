@@ -20,13 +20,7 @@ export default function Sidebar() {
     <div className="erp-sidebar d-flex flex-column p-3 px-5">
       {/* Header */}
       <div className="d-flex align-items-center mb-4">
-        <div className="erp-logo rounded-3 d-flex align-items-center justify-content-center me-2">
-          <HouseDoor size={20} color="#fff" />
-        </div>
-        <div>
-          <h5 className="mb-0 fw-bold erp-sidebar-title">LiteERP</h5>
-          <small className="theme-title">Simple and Pure</small>
-        </div>
+        <img src="/assets/logo-full.png" height={80} alt=''/>
       </div>
 
       {/* Menu */}
