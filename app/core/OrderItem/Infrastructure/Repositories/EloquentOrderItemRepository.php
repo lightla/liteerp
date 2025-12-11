@@ -25,8 +25,12 @@ class EloquentOrderItemRepository implements OrderItemRepositoryInterface
             "products.wholesale_price",
             "products.image"
         )
-            ->join("inventories","inventories.id",
-                "=","order_items.inventory_id")
+            ->join(
+                "inventories",
+                "inventories.id",
+                "=",
+                "order_items.inventory_id"
+            )
             ->join("products", "products.id", "=", "inventories.product_id")
             ->where('order_items.id', $data['id'])
             ->where('products.business_id', $data['business_id'])
@@ -74,14 +78,41 @@ class EloquentOrderItemRepository implements OrderItemRepositoryInterface
             "order_items.price as price",
             "warehouses.name as warehouse",
             "order_items.tax as tax",
-            DB::raw("ROUND((order_items.price * order_items.buy_quantity) 
+            DB::raw("
+                ROUND(
+                (order_items.price * order_items.buy_quantity) * (order_items.discount / 100)
+                ,2)
+                as total_discount 
+            "),
+            DB::raw("ROUND(
+                (
+                    (order_items.price * order_items.buy_quantity)
+                    -
+                    (
+                        (order_items.price * order_items.buy_quantity) * (order_items.discount / 100)
+                    )
+                ) 
                 * (order_items.tax / 100),2) as total_tax"),
             DB::raw("ROUND(order_items.price * order_items.buy_quantity,2) as subtotal"),
-            DB::raw("ROUND((order_items.price * order_items.buy_quantity) 
-                + (order_items.price * order_items.buy_quantity) 
-                * (order_items.tax / 100),2) as total")
-        )   
-            ->join("inventories","inventories.id","=","order_items.inventory_id")
+            DB::raw("ROUND(
+                (order_items.price * order_items.buy_quantity)
+                -
+                (order_items.price * order_items.buy_quantity * order_items.discount / 100)
+                + 
+                (
+                    (
+                        (order_items.price * order_items.buy_quantity)
+                        -
+                        (
+                            (order_items.price * order_items.buy_quantity
+                                * order_items.discount / 100)
+                        )
+                    ) 
+                    * (order_items.tax / 100)
+                )
+                ,2) as total")
+        )
+            ->join("inventories", "inventories.id", "=", "order_items.inventory_id")
             ->join("warehouses", "warehouses.id", "=", "inventories.warehouse_id")
             ->join("products", "products.id", "=", "inventories.product_id")
             ->join("category_product", "category_product.id", "=", "products.category_id")
@@ -101,15 +132,15 @@ class EloquentOrderItemRepository implements OrderItemRepositoryInterface
                 + order_items.gift_quantity
                 + order_items.compensation_quantity
                 + order_items.conversion_quantity),2) as reserved_qty")
-        )   
-            ->join("orders","orders.id","=","order_items.order_id")
-            ->join("inventories","inventories.id","=","order_items.inventory_id")
+        )
+            ->join("orders", "orders.id", "=", "order_items.order_id")
+            ->join("inventories", "inventories.id", "=", "order_items.inventory_id")
             ->where('orders.business_id', $data['business_id'])
             ->where('order_items.order_id', $data['order_id'])
             ->limit(300)
             ->get()->toArray();
     }
-    
+
     public function summary(array $data): ?array
     {
         return OrderItemModel::selectRaw("
@@ -128,11 +159,12 @@ class EloquentOrderItemRepository implements OrderItemRepositoryInterface
                 ) * (order_items.tax / 100)
             ),2) AS tax,
             ROUND(SUM(
-                (
+                
                     (order_items.price * order_items.buy_quantity)
                     -
                     (
-                        (order_items.price * order_items.buy_quantity) * (order_items.discount / 100)
+                        (order_items.price * order_items.buy_quantity) 
+                            * order_items.discount / 100
                     )
                     +
                     (
@@ -153,7 +185,7 @@ class EloquentOrderItemRepository implements OrderItemRepositoryInterface
                             ELSE shippings.shipping_fee_estimated
                         END
                     )
-                )
+                
             ),2) AS total,
             ROUND( 
             CASE
@@ -163,11 +195,8 @@ class EloquentOrderItemRepository implements OrderItemRepositoryInterface
             END
             ,2) AS shipping_fee
         ")
-            // ->join("products", "products.id", "=", "order_items.product_id")
-            // ->join("orders", "orders.id", "=", "order_items.order_id")
-            // ->join("shippings", "shippings.order_id", "=", "orders.id")
             ->join("orders", "orders.id", "=", "order_items.order_id")
-            ->join("inventories","inventories.id","=","order_items.inventory_id")
+            ->join("inventories", "inventories.id", "=", "order_items.inventory_id")
             ->join("products", "products.id", "=", "inventories.product_id")
             ->join("category_product", "category_product.id", "=", "products.category_id")
             ->join("customers", "customers.id", "=", "orders.customer_id")

@@ -363,7 +363,7 @@ export default function InvoiceOutDetail() {
 
                                         <div className="d-flex justify-content-between theme-title">
                                             <span>VAT</span>
-                                            <Currencies amount={detail?.total_tax}/>
+                                            <Currencies amount={detail?.tax}/>
                                         </div>
                                         <div className="d-flex justify-content-between theme-title">
                                             <span>Discount</span>
