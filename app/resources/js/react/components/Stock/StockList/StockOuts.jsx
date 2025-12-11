@@ -34,7 +34,7 @@ export default function StockOuts() {
                     })
                 }
             })
-    }, [table]);
+    }, [table,search.formData]);
 
     const columns = [
         { label: "ID", key: "id", render: (id) => <Link to={'/stock?id=' + id}>{id}</Link> },
@@ -104,14 +104,16 @@ export default function StockOuts() {
                         handleChange={search.handleChange}
                         value={search.formData?.status}
                         options={[
-                            {value: 'invoiced', label: 'Waiting for shipping'},
-                            {value: 'shipped', label: 'Shipped'}
+                            {value: 'pending', label: 'Pending'},
+                            {value: 'shipped', label: 'Shipped'},
+                            {value: 'completed', label: 'Completed'}
                         ]}
                         />
                     </div>
                     <div className='col-4 mx-2'>
                         <label>Search</label>
                         <SearchInput
+                        submit={getListStockIn}
                         name='keywords'
                         value={search.formData?.keywords}
                         handleChange={search.handleChange}
