@@ -6,8 +6,6 @@ import { usePopup } from '../popups/PopupContext';
 import { Select } from '../UI/Input/Select';
 import SearchInput from '../UI/Input/SearchInput';
 import { PopupLayout } from '../../layouts/PopupLayout';
-import { InputForm } from '../UI/Input/InputForm';
-import TextArea from '../UI/Input/Textarea';
 import CustomerService from '../../services/CustomerService';
 import CustomerForm from './ListCustomer/CustomerForm';
 export default function ListCustomer() {
@@ -39,9 +37,7 @@ export default function ListCustomer() {
         setShowAdd(true)
     };
 
-    const handleDelete = (row) => {
-        console.log("Delete clicked:", row);
-    };
+    
     const submit = useCallback(() => {
         form.setLoading(true)
         form.setFormErrors(null);
@@ -94,6 +90,33 @@ export default function ListCustomer() {
                 form.setLoading(false)
             })
     }, [form.formData]);
+    const destroy = useCallback((row) => {
+        CustomerService.delete(row)
+            .then((resp) => {
+                openPopup({
+                    type: 'success',
+                    message: 'You has been deleted'
+                });
+                getCustomers();
+            })
+            .catch((error) => {
+                if (error.response.data?.message) {
+                    openPopup({
+                        type: 'error',
+                        message: error.response.data?.message
+                    })
+                }
+            })
+    }, [])
+    const handleDelete = (row) => {
+        openPopup({
+            type: 'warning',
+            message: 'Are your sure to delete?',
+            onConfirm: () => {
+                destroy(row);
+            }
+        })
+    };
     const getCustomers = useCallback((page = 0) => {
         table.setLoading(true)
         CustomerService.list({
@@ -156,7 +179,7 @@ export default function ListCustomer() {
                     setShowAdd(false);
                     form.setIsEdit(false);
                 }} title={form.isEdit ? 'Update customer' : 'Add customer'}>
-                <CustomerForm form={form}/>
+                <CustomerForm form={form} />
             </PopupLayout> : null}
 
         </div>

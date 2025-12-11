@@ -56,4 +56,10 @@ class EloquentCustomerRepository implements CustomerRepositoryInterface
         ->update($entity->toArray());
         return $entity;
     }
+    public function delete(Customer $entity): Customer
+    {
+        CustomerModel::where('id',$entity->id)
+        ->delete();
+        return $entity;
+    }
 }

@@ -14,23 +14,24 @@ class CustomerServiceImpl implements CustomerService
     public function create(array $data): Customer | BadException
     {
         $row = $this->repo->findByPhone($data);
-        if($row) {
+        if ($row) {
             throw new BadException(__("Number phone has been used"));
         }
         $entity = Customer::fromArray($data);
         return $this->repo->create($entity);
     }
-    public function index(array $data): array {
+    public function index(array $data): array
+    {
         return $this->repo->all($data);
     }
     public function update(array $data): Customer
     {
         $entity = $this->repo->findByPhone($data);
-        if($entity && $entity->id !== $data['id']) {
+        if ($entity && $entity->id !== $data['id']) {
             throw new BadException(__("Number phone has been used"));
         } else {
             $entity = $this->repo->findById($data);
-            if(!$entity) {
+            if (!$entity) {
                 throw new BadException(__("Not found data"));
             }
             $entity->name = $data['name'] ?? $entity->name;
@@ -52,9 +53,17 @@ class CustomerServiceImpl implements CustomerService
     public function show(array $data): Customer|BadException
     {
         $entity = $this->repo->findById($data);
-        if(!$entity) {
+        if (!$entity) {
             throw new BadException(__("Not found data"));
         }
         return $entity;
+    }
+    public function delete(array $data): Customer|BadException
+    {
+        $entity = $this->repo->findById($data);
+        if (!$entity) {
+            throw new BadException(__("Not found data"));
+        }
+        return $this->repo->delete($entity);
     }
 }
