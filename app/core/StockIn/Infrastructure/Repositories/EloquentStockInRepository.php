@@ -31,10 +31,12 @@ class EloquentStockInRepository implements StockInRepositoryInterface
         ->join("suppliers","suppliers.id","=","purchases.supplier_id")
         ->groupBy("stock_ins.id")
         ->where('purchases.deleted_at', NULL)
-        ->where('stock_ins.business_id', $data['business_id'])
-        ->where('suppliers.unit_name','like','%'. ($data['keywords'] ?? '') .'%');
+        ->where('stock_ins.business_id', $data['business_id']);
         if(!empty($data['status'])) {
-            $list = $list->where('purchases.status',$data['status']);
+            $list = $list->where('stock_ins.status',$data['status']);
+        }
+        if(!empty($data['keywords'])) {
+            $list = $list->where('invoice_ins.document_no','like','%'. $data['keywords'] .'%');
         }
         return $list->paginate(15)->toArray();
     }

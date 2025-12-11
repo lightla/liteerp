@@ -13,6 +13,9 @@ class IndexStockInRequest extends FormRequest
 
     public function rules(): array
     {
-        return [];
+        return [
+            'keywords' => 'nullable|string|max:150',
+            'status' => 'nullable|in:received,pending,cancelled'
+        ];
     }
 }

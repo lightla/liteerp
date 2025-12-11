@@ -4,6 +4,7 @@ namespace Core\StockIn\Http\Controllers;
 
 use Core\StockIn\Application\UseCases\CreateStockIn;
 use Core\StockIn\Application\DTOs\CreateStockInRequest;
+use Core\StockIn\Application\DTOs\IndexStockInRequest as DTOsIndexStockInRequest;
 use Core\StockIn\Application\UseCases\IndexStockIn;
 use Core\StockIn\Application\UseCases\ShowStockIn;
 use Core\StockIn\Application\UseCases\UpdateStockIn;
@@ -21,7 +22,8 @@ class StockInController
         return response()->json(['message' => $entity]);
     }
     public function index(IndexStockInRequest $request, IndexStockIn $useCase){
-        $entity = $useCase->handle($request->all());
+        $dto = DTOsIndexStockInRequest::fromArray($request->all());
+        $entity = $useCase->handle($dto);
         return response()->json(['message' => $entity]);
     }
     public function show(string $id,ShowStockInRequest $request, ShowStockIn $useCase){
