@@ -1,5 +1,6 @@
 import React from 'react'
 import BootstrapAlert from '../../BootstrapAlert'
+import Currencies from '../../Currencies'
 export default function ShippingInformation({
     form = {
         formData: null
