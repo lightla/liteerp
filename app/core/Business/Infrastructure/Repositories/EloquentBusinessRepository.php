@@ -18,17 +18,14 @@ class EloquentBusinessRepository implements BusinessRepositoryInterface
     {
         $list = BusinessModel::select("business.*","business_role.role as role")
         ->join("business_role","business_role.business_id","=","business.id")
-        ->where('business_role.user_id',$user_id)
         ->limit(50)->get()->toArray();
         return $list;
     }
     public function checkExists(Business $entity): bool
     {
-        $row = BusinessModel::select("business.*","business_role.role as role")->join("business_role","business_role.business_id","=","business.id")
+        $row = BusinessModel::select("business.*")
         ->where('business.name',$entity->name)
-        ->where('business.address',$entity->address)
-        ->where('business_role.role','admin')
-        ->where('business_role.user_id',$entity->user_id);
+        ->where('business.address',$entity->address);
         return $row->count() ?? true;
     }
     public function findByIdWithFullData(array $data) : ?array
@@ -41,11 +38,28 @@ class EloquentBusinessRepository implements BusinessRepositoryInterface
     public function findById(array $data) : ?Business
     {
        $row = BusinessModel::select("business.*")
-        ->where('business.id',$data['business_id'])
+        ->where('business.id',$data['id'])
         ->where('business_role.user_id',$data['user_id'])->first()?->toArray();
         if(!$row) {
             return null;
         }
         return Business::fromArray($row);
+    }
+    public function findByName(array $data) : ?Business
+    {
+       $row = BusinessModel::select("business.*")
+        ->where('business.id',$data['id'])
+        ->where('business.name',$data['name'])
+        ->first()?->toArray();
+        if(!$row) {
+            return null;
+        }
+        return Business::fromArray($row);
+    }
+    public function update(Business $entity): Business
+    {
+        BusinessModel::where('business.id',$entity->id)
+        ->update($entity->toArray());
+        return $entity;
     }
 }

@@ -8,20 +8,18 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Event;
 
-class CreateBusiness
+class UpdateBusiness
 {
     public function __construct(private BusinessService $service) {}
 
     public function handle(CreateBusinessRequest $dto)
     {
         DB::beginTransaction();
-        $user = Auth::guard('sanctum')->user();
-        $business = $this->service->create($dto->toArray());
-        Event::dispatch('erp.business.create',[
-            'id' => $user->id,
+        $business = $this->service->update($dto->toArray());
+        Event::dispatch('erp.business.update',[
+            'id' => $dto->id,
             'business_id' => $business->id,
-            'role' => 'admin',
-            'user_id' => $user->id
+            'user_id' => $dto->user_id
         ]);
         DB::commit();
         return $business;

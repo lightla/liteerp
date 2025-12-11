@@ -4,7 +4,7 @@ namespace Core\Business\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class CreateBusinessRequest extends FormRequest
+class UpdateBusinessRequest extends FormRequest
 {
     public function rules(): array
     {

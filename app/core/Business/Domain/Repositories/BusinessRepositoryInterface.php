@@ -10,5 +10,7 @@ interface BusinessRepositoryInterface
     public function index(int $user_id): array;
     public function checkExists(Business $entity): bool;
     public function findById(array $data): ?Business;
+    public function findByName(array $data): ?Business;
     public function findByIdWithFullData(array $data): ?array;
+    public function update(Business $entity): Business;
 }

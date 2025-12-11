@@ -175,6 +175,9 @@ return [
             // REPORT
             'erp.report.index',
             'erp.report.show',
+
+            // BUSINESS SETTING
+            'erp.business.update'
         ],
 
 
@@ -342,7 +345,7 @@ return [
 
             // REPORT
             'erp.report.index',
-            'erp.report.show',
+            'erp.report.show'
         ],
 
 

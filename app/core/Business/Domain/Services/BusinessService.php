@@ -11,4 +11,5 @@ interface BusinessService
     public function create(array $data): Business;
     public function index(int $user_id): array;
     public function show(array $data): array | BadException;
+    public function update(array $data): Business;
 }

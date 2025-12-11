@@ -7,36 +7,43 @@ class Business
     public function __construct(
         public string $name,
         public string $address,
-        public ?bool $active = false,
-        public ?int $user_id = null,
-        public ?int $id = null
+        public string $tax_code,
+        public string $phone,
+        public string $email,
+        public ?string $logo_url = null,
+        public string $bank_name,
+        public string $bank_account_number,
+        public string $bank_account_name,
+        public ?int $id = null 
     ) {}
 
-    /**
-     * Create Business entity from array (hydration).
-     */
     public static function fromArray(array $data): self
     {
         return new self(
-            name:     $data['name'],
-            address:  $data['address'],
-            active:   $data['active'] ?? false,
-            user_id:  $data['user_id'] ?? null,
-            id:       $data['id'] ?? null
+            name: $data['name'],
+            address: $data['address'],
+            tax_code: $data['tax_code'],
+            phone: $data['phone'],
+            email: $data['email'],
+            logo_url: $data['logo_url'] ?? null,
+            bank_name: $data['bank_name'],
+            bank_account_number: $data['bank_account_number'],
+            bank_account_name: $data['bank_account_name'],
+            id: $data['id'] ?? null 
         );
     }
-
-    /**
-     * Convert entity to array (serialization).
-     */
-    public function toArray(): array
-    {
+    public function toArray() : array{
         return [
-            'id'       => $this->id,
-            'name'     => $this->name,
-            'address'  => $this->address,
-            'active'   => $this->active,
-            'user_id'  => $this->user_id,
+            'name' => $this->name,
+            'address' => $this->address,
+            'tax_code'  => $this->tax_code,
+            'phone' => $this->phone,
+            'email' => $this->email,
+            'logo_url'  => $this->logo_url,
+            'bank_name' => $this->bank_name,
+            'bank_account_number'   => $this->bank_account_number,
+            'bank_account_name' => $this->bank_account_name,
+            'id'    => $this->id
         ];
     }
 }
