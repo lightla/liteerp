@@ -168,10 +168,9 @@ export default function ListPurchases() {
                             handleChange={search.handleChange}
                             errorMessage={search.formErrors?.status}
                             options={[
-                                { value: 'draf', label: 'Draf' },
-                                { value: 'requested', label: 'Approved' },
-                                { value: 'paid', label: 'Paid' },
-                                { value: 'received', label: 'Received' },
+                                { value: 'draft', label: 'Draft' },
+                                { value: 'requested', label: 'Requested' },
+                                { value: 'approved', label: 'Approved' },
                                 { value: 'cancelled', label: 'Cancelled' }
                             ]} />
                     </div>

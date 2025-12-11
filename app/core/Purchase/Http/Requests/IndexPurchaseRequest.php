@@ -10,7 +10,7 @@ class IndexPurchaseRequest extends FormRequest
     {
         return [
             'keywords' => 'nullable|string|max:150',
-            'status' => 'nullable|in:draf,requested,approved,paid,received,cancelled',
+            'status' => 'nullable|in:draft,requested,approved,cancelled',
             'page' => 'nullable|numeric|min:0'
         ];
     }

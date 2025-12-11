@@ -92,9 +92,6 @@ export default function ListOrder() {
                             options={[
                                 {value:'pending',label: 'Pending'},
                                 {value:'approved',label: 'Approved'},
-                                {value:'invoiced',label: 'Invoiced'},
-                                {value:'shipped',label: 'Shipped'},
-                                {value:'completed',label: 'Completed'},
                                 {value:'cancelled',label: 'Cancelled'}
                             ]}
                             />
