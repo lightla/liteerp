@@ -4,6 +4,7 @@ namespace Core\InvoiceOut\Http\Controllers;
 
 use Core\InvoiceOut\Application\UseCases\CreateInvoiceOut;
 use Core\InvoiceOut\Application\DTOs\CreateInvoiceOutRequest;
+use Core\InvoiceOut\Application\DTOs\IndexInvoiceOutRequest as DTOsIndexInvoiceOutRequest;
 use Core\InvoiceOut\Application\DTOs\ShowInvoiceOutRequest as DTOsShowInvoiceOutRequest;
 use Core\InvoiceOut\Application\UseCases\IndexInvoiceOut;
 use Core\InvoiceOut\Application\UseCases\ShowInvoiceOut;
@@ -22,7 +23,8 @@ class InvoiceOutController
         return response()->json(['message' => $entity]);
     }
     public function index(IndexInvoiceOutRequest $request,IndexInvoiceOut $useCase){
-        $entity = $useCase->handle($request->all());
+        $dto = DTOsIndexInvoiceOutRequest::fromArray($request->all());
+        $entity = $useCase->handle($dto);
         return response()->json(['message' => $entity]);
     }
     public function update(UpdateInvoiceOut $useCase,

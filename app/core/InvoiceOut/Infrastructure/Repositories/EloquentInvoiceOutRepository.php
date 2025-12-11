@@ -29,7 +29,7 @@ class EloquentInvoiceOutRepository implements InvoiceOutRepositoryInterface
         return $row ? InvoiceOut::fromArray($row) : null;
     }
     public function index(array $data): array {
-        return InvoiceOutModel::select("invoice_outs.*",
+        $list = InvoiceOutModel::select("invoice_outs.*",
         "customers.name as customer_name",
         DB::raw("
         CASE
@@ -48,7 +48,14 @@ class EloquentInvoiceOutRepository implements InvoiceOutRepositoryInterface
         ->join('orders','orders.id','=','invoice_outs.order_id')
         ->join('shippings','shippings.order_id','=','orders.id')
         ->join('customers','customers.id','=','orders.customer_id')
-        ->where('invoice_outs.business_id',$data['business_id'])->paginate(15)->toArray();
+        ->where('invoice_outs.business_id',$data['business_id']);
+        if(!empty($data['payment_status'])) {
+            $list = $list->where('invoice_outs.payment_status',$data['payment_status']);
+        }
+        if(!empty($data['keywords'])) {
+            $list = $list->where('invoice_outs.document_no',$data['keywords']);
+        }
+        return $list->paginate(15)->toArray();
     }
     public function update(InvoiceOut $entity): InvoiceOut
     {

@@ -2,15 +2,21 @@
 
 namespace Core\InvoiceOut\Application\UseCases;
 
-use Core\InvoiceOut\Application\DTOs\CreateInvoiceOutRequest;
+use Core\InvoiceOut\Application\DTOs\IndexInvoiceOutRequest;
 use Core\InvoiceOut\Domain\Services\InvoiceOutService;
+use Illuminate\Support\Facades\Event;
 
 class IndexInvoiceOut
 {
     public function __construct(private InvoiceOutService $service) {}
 
-    public function handle(array $dto)
+    public function handle(IndexInvoiceOutRequest $dto)
     {
-        return $this->service->index($dto);
+        Event::dispatch('erp.invoiceout.index',[
+            ...$dto->toArray(),
+            'user_id' => $dto->created_by
+        ]);
+        $index = $this->service->index($dto->toArray());
+        return $index;
     }
 }
