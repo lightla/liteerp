@@ -6,5 +6,6 @@ import api from "../common/api";
   list: (data) => api.get("/business-access/price-lists" 
       + `?keywords=${data.keywords}&page=${data.page}`),
   update: (data) => api.put("/business-access/price-lists/" + data.id,data),
+  delete: (data) => api.delete("/business-access/price-lists/" + data.id),
 };
 export default PriceListService;

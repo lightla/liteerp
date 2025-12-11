@@ -4,13 +4,11 @@ namespace Core\PriceList\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class IndexPriceListRequest extends FormRequest
+class DeletePriceListRequest extends FormRequest
 {
     public function rules(): array
     {
-        return [
-            'keywords' => 'nullable|string|max:150'
-        ];
+        return [];
     }
 
     public function authorize(): bool

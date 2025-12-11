@@ -22,7 +22,18 @@ class EloquentPriceListRepository implements PriceListRepositoryInterface
     }
     public function findByProductAndGroup(array $data): ?PriceList
     {
-        $row = PriceListModel::where('id',$data['id'])->first()?->toArray();
+        $row = PriceListModel::where('customer_group_id',$data['customer_group_id'])
+        ->where('product_id',$data['product_id'])
+        ->first()?->toArray();
+        if(!$row) {
+            return null;
+        }
+        return PriceList::fromArray($row);
+    }
+    public function findById(array $data): ?PriceList
+    {
+        $row = PriceListModel::where('id',$data['id'])
+        ->first()?->toArray();
         if(!$row) {
             return null;
         }
@@ -39,5 +50,11 @@ class EloquentPriceListRepository implements PriceListRepositoryInterface
             $rows = $rows->where('products.name','like','%'.$data['keywords'].'%');
         }
         return $rows->paginate(15)->toArray();
+    }
+    public function delete(PriceList $entity): PriceList
+    {
+        PriceListModel::where('id',$entity->id)
+        ->delete();
+        return $entity;
     }
 }

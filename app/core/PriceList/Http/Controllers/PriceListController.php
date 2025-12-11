@@ -4,9 +4,13 @@ namespace Core\PriceList\Http\Controllers;
 
 use Core\PriceList\Application\UseCases\CreatePriceList;
 use Core\PriceList\Application\DTOs\CreatePriceListRequest;
+use Core\PriceList\Application\DTOs\DeletePriceListRequest as DTOsDeletePriceListRequest;
+use Core\PriceList\Application\DTOs\IndexPriceListRequest as DTOsIndexPriceListRequest;
+use Core\PriceList\Application\UseCases\DeletePriceList;
 use Core\PriceList\Application\UseCases\IndexPriceList;
 use Core\PriceList\Application\UseCases\UpdatePriceList;
 use Core\PriceList\Http\Requests\CreatePriceListRequest as FormRequest;
+use Core\PriceList\Http\Requests\DeletePriceListRequest;
 use Core\PriceList\Http\Requests\IndexPriceListRequest;
 use Core\PriceList\Http\Requests\UpdatePriceListRequest;
 
@@ -27,7 +31,15 @@ class PriceListController
     }
     public function index(IndexPriceListRequest $request, IndexPriceList $useCase)
     {
-        $entity = $useCase->handle($request->all());
+        $dto = DTOsIndexPriceListRequest::fromArray($request->all());
+        $entity = $useCase->handle($dto);
+        return response()->json(['message' => $entity]);
+    }
+    public function destroy(DeletePriceListRequest $request, DeletePriceList $useCase,string $id)
+    {
+        $request->merge(['id' => $id]);
+        $dto = DTOsDeletePriceListRequest::fromArray($request->all());
+        $entity = $useCase->handle($dto);
         return response()->json(['message' => $entity]);
     }
 }

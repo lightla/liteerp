@@ -21,7 +21,7 @@ class CreatePriceList
     {
         DB::beginTransaction();
         $create = $this->service->create($dto->toArray());
-        Event::dispatch("erp.product.create", [
+        Event::dispatch("erp.pricelist.create", [
             ...$create->toArray(),
             'user_id' => $dto->created_by,
             'business_id' => $dto->business_id

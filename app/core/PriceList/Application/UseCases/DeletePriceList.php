@@ -2,25 +2,25 @@
 
 namespace Core\PriceList\Application\UseCases;
 
-use Core\PriceList\Application\DTOs\CreatePriceListRequest;
+use Core\PriceList\Application\DTOs\DeletePriceListRequest;
 use Core\PriceList\Domain\Services\PriceListService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Event;
 
-class UpdatePriceList
+class DeletePriceList
 {
     public function __construct(private PriceListService $service) {}
 
-    public function handle(CreatePriceListRequest $dto)
+    public function handle(DeletePriceListRequest $dto)
     {
         DB::beginTransaction();
-        $update = $this->service->update($dto->toArray());
-        Event::dispatch("erp.pricelist.update", [
-            ...$update->toArray(),
+        $delete = $this->service->delete($dto->toArray());
+        Event::dispatch("erp.pricelist.delete", [
+            ...$delete->toArray(),
             'user_id' => $dto->created_by,
             'business_id' => $dto->business_id
         ]);
         DB::commit();
-        return $update;
+        return $delete;
     }
 }

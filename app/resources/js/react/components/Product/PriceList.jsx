@@ -127,6 +127,33 @@ export default function PriceList() {
         } },
         { label: "Customer Group", key: "group" }
     ];
+    const destroy = useCallback((row) => {
+        PriceListService.delete(row)
+            .then((resp) => {
+                openPopup({
+                        type: 'success',
+                        message: 'You has been deleted'
+                    });
+                    getPriceList();
+            })
+            .catch((error) => {
+                if (error.response.data?.message) {
+                    openPopup({
+                        type: 'error',
+                        message: error.response.data?.message
+                    })
+                }
+            })
+    }, [form.formData]);
+    const handleDelete = (row) => {
+        openPopup({
+            type: 'warning',
+            message: 'Are you sure to delete?',
+            onConfirm:() => {
+                destroy(row)
+            }
+        })
+    }
     useEffect(() => {
         getPriceList();
     },[])
@@ -161,9 +188,7 @@ export default function PriceList() {
                     form.setFormData(row);
                     setShowAdd(true)
                 }}
-                onDelete={(row) => {
-
-                }}
+                onDelete={!hasPermission ? null : handleDelete}
             />
             {showAdd ? <PopupLayout
                 loading={form.loading}

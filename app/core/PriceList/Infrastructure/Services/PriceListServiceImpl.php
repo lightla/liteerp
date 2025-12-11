@@ -37,4 +37,12 @@ class PriceListServiceImpl implements PriceListService
     {
         return $this->repo->index($data);
     }
+    public function delete(array $data): PriceList|BadException
+    {
+        $entity = $this->repo->findById($data);
+        if(!$entity) {
+            throw new BadException(__("Not found data"));
+        }
+        return $this->repo->delete($entity);
+    }
 }
