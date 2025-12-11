@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import CommonDataTable from '../CommonDataTable';
 import ProductService from '../../services/ProductService';
 import SearchInput from '../UI/Input/SearchInput';
@@ -8,7 +8,9 @@ import {PopupLayout} from '../../layouts/PopupLayout'
 import { InputForm } from '../UI/Input/InputForm';
 import TextArea from '../UI/Input/Textarea';
 import {usePopup} from '../popups/PopupContext'
+import { useSelector } from 'react-redux';
 export default function Category() {
+    const business = useSelector((state) => state.business.data);
     const {openPopup} = usePopup();
     const [showAdd, setShowAdd] = useState(false);
     const search = useForm();
@@ -97,6 +99,10 @@ export default function Category() {
             }
         }
     ];
+    const hasPermission = useMemo(() => {
+            return business.role === 'manager'
+                || business.role === 'admin' ? true : false
+        },[business]);
     return <div>
         <div className='mt-3'>
             <CommonDataTable
@@ -111,7 +117,7 @@ export default function Category() {
                     placeholder='Search by name' />
                     </div>
                 </div>}
-                add={() => {
+                add={!hasPermission ? null :() => {
                     setShowAdd(true);
                     form.setIsEdit(false);
                 }}
@@ -119,7 +125,7 @@ export default function Category() {
                 columns={columns}
                 data={tableCategory?.data}
                 links={tableCategory?.links}
-                onEdit={(row) => { 
+                onEdit={!hasPermission ? null :(row) => { 
                     form.setIsEdit(true);
                     form.setFormData(row);
                     setShowAdd(true)

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import ProductService from '../../services/ProductService';
 import CommonDataTable from '../CommonDataTable';
 import { Select } from '../UI/Input/Select'
@@ -10,7 +10,9 @@ import { PopupLayout } from '../../layouts/PopupLayout';
 import { usePopup } from '../popups/PopupContext';
 import SearchSelect from '../UI/Input/SearchSelect'
 import TextArea from '../UI/Input/Textarea';
+import { useSelector } from 'react-redux';
 export default function ListProducts() {
+    const business = useSelector((state) => state.business.data);
     const { openPopup } = usePopup();
     const [showForm, setShowForm] = useState(false);
     const form = useForm();
@@ -125,9 +127,13 @@ export default function ListProducts() {
     useEffect(() => {
         getProducts();
     }, [search.formData?.active]);
+    const hasPermission = useMemo(() => {
+        return business.role === 'manager'
+            || business.role === 'admin' ? true : false
+    },[business]);
     return <div className='mt-3'>
         <CommonDataTable
-            add={() => {
+            add={ !hasPermission ? null : () => {
                 setShowForm(true);
                 form.setIsEdit(false);
             }}
@@ -162,7 +168,7 @@ export default function ListProducts() {
             columns={columns}
             data={table?.data}
             links={table?.links}
-            onEdit={handEdit}
+            onEdit={ !hasPermission ? null : handEdit}
         //onDelete={(row) => {}}
         />
         <div>

@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import CommonDataTable from '../CommonDataTable';
 import ProductService from '../../services/ProductService';
 import SearchInput from '../UI/Input/SearchInput';
@@ -11,7 +11,9 @@ import PriceListService from '../../services/PriceListService';
 import SearchSelect from '../UI/Input/SearchSelect';
 import CustomerGroupService from '../../services/CustomerGroupService'
 import Currency from '../../components/Currencies';
+import { useSelector } from 'react-redux';
 export default function PriceList() {
+    const business = useSelector((state) => state.business.data);
     const { openPopup } = usePopup();
     const [showAdd, setShowAdd] = useState(false);
     const search = useForm();
@@ -128,6 +130,10 @@ export default function PriceList() {
     useEffect(() => {
         getPriceList();
     },[])
+    const hasPermission = useMemo(() => {
+                return business.role === 'manager'
+                    || business.role === 'admin' ? true : false
+            },[business]);
     return <div>
         <div className='mt-3'>
             <CommonDataTable
@@ -142,7 +148,7 @@ export default function PriceList() {
                             placeholder='Search by name' />
                     </div>
                 </div>}
-                add={() => {
+                add={!hasPermission ? null : () => {
                     setShowAdd(true);
                     form.setIsEdit(false);
                 }}
@@ -150,7 +156,7 @@ export default function PriceList() {
                 columns={columns}
                 data={table?.data}
                 links={table?.links}
-                onEdit={(row) => {
+                onEdit={!hasPermission ? null : (row) => {
                     form.setIsEdit(true);
                     form.setFormData(row);
                     setShowAdd(true)

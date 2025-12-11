@@ -4,7 +4,6 @@ import {
   Cart,
   Box,
   People,
-  Archive,
   FiletypeDocx,
   BarChart,
   BuildingGear,
@@ -32,89 +31,99 @@ export default function Sidebar() {
 
       {/* Menu */}
       <ul className="nav nav-pills flex-column mb-auto">
-        <li className="nav-item mb-2">
+        {business?.role === 'admin' || business?.role === 'accountanter'
+        || business?.role === 'manager' ? <li className="nav-item mb-2">
           <NavLink to="/" className="erp-link">
             <BarChart className="me-2" /> Overview
           </NavLink>
-        </li>
-
+        </li> : null}
+        {business?.role === 'admin' || business?.role === 'manager'
+        || business?.role === 'purchaser' ?  
         <li className="nav-item mb-2">
           <NavLink to="/purchases" className="erp-link">
             <CurrencyDollar className="me-2" /> Purchases
           </NavLink>
-        </li>
-
+        </li> : null}
+        {business?.role === 'admin' || business?.role === 'seller'
+        || business?.role === 'manager' ?   
         <li className="nav-item mb-2">
           <NavLink to="/orders" className="erp-link">
             <Cart className="me-2" /> Orders
           </NavLink>
-        </li>
-
+          
+        </li> : null}
         <li className="nav-item mb-2">
           <NavLink to="/products" className="erp-link">
             <Box className="me-2" /> Products
           </NavLink>
         </li>
-
+        {business?.role === 'admin' || business?.role === 'purchaser'
+        || business?.role === 'manager' ?   
         <li className="nav-item mb-2">
           <NavLink to="/suppliers" className="erp-link">
             <People className="me-2" /> Suppliers
           </NavLink>
-        </li>
-
+        </li> : null}
+        {business?.role === 'admin' || business?.role === 'seller'
+        || business?.role === 'manager' ?
         <li className="nav-item mb-2">
           <NavLink to="/customers" className="erp-link">
             <People className="me-2" /> Customers
           </NavLink>
-        </li>
-
+        </li> : null}
+        {business?.role === 'admin' || business?.role === 'warehouseman'
+        || business?.role === 'manager' ?
         <li className="nav-item mb-2">
           <NavLink to="/warehouses" className="erp-link">
             <Building className="me-2" /> Warehouses
           </NavLink>
-        </li>
-
+        </li> : null}
+        {business?.role === 'admin' || business?.role === 'warehouseman'
+        || business?.role === 'manager' ?
         <li className="nav-item mb-2">
           <NavLink to="/stocks" className="erp-link">
             <FiletypeDocx className="me-2" /> Stocks
           </NavLink>
-        </li>
-
+        </li> : null}
+          {business?.role === 'admin' || business?.role === 'warehouseman'
+        || business?.role === 'manager' ?
         <li className="nav-item mb-2">
           <NavLink to="/inventories" className="erp-link">
             <FiletypeDocx className="me-2" /> Inventories
           </NavLink>
-        </li>
-
+        </li> : null}
+        {business?.role === 'admin' || business?.role === 'accountanter'
+        || business?.role === 'manager' ?
         <li className="nav-item mb-2">
           <NavLink to="/invoices" className="erp-link">
             <FiletypeDocx className="me-2" /> Invoices
           </NavLink>
-        </li>
-
+        </li> : null}
+        {business?.role === 'admin' || business?.role === 'warehouseman'
+        || business?.role === 'manager' ?
         <li className="nav-item mb-2">
           <NavLink to="/shippings" className="erp-link">
             <FiletypeDocx className="me-2" /> Shipping Providers
           </NavLink>
-        </li>
-
+        </li> : null}
+          {business?.role === 'admin' ?
         <li className="nav-item mb-2">
           <NavLink to="/settings" className="erp-link">
             <BuildingGear className="me-2" /> Settings
           </NavLink>
-        </li>
+        </li> : null}
         {business.role === 'admin' ? <li className="nav-item mb-2">
           <NavLink to="/users" className="erp-link">
             <People className="me-2" /> Employees
           </NavLink>
         </li> : null }
-        
-
+        {business?.role === 'admin'
+        || business?.role === 'manager' ?
         <li className="nav-item mb-2">
           <NavLink to="/activity-logs" className="erp-link">
             <Diagram2 className="me-2" /> Logs
           </NavLink>
-        </li>
+        </li> : null}
       </ul>
     </div>
   );
