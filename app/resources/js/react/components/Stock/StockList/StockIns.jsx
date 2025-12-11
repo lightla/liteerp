@@ -104,10 +104,8 @@ export default function StockIns() {
                         handleChange={search.handleChange}
                         value={search.formData?.status}
                         options={[
-                            {value: 'draf', label: 'Draf'},
-                            {value: 'requested', label: 'Approved'},
-                            {value: 'paid', label: 'Paid'},
                             {value: 'received', label: 'Received'},
+                            {value: 'pending', label: 'Pending'},
                             {value: 'cancelled', label: 'Cancelled'}
                         ]}
                         />
@@ -115,7 +113,8 @@ export default function StockIns() {
                     <div className='col-6 mx-2'>
                         <label>Search</label>
                         <SearchInput
-                        placeholder='Search by supplier'
+                        submit={getListStockIn}
+                        placeholder='Search by invoice no'
                         name='keywords'
                         value={search.formData?.keywords}
                         handleChange={search.handleChange}
