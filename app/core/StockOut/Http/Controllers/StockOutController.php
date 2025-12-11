@@ -4,6 +4,7 @@ namespace Core\StockOut\Http\Controllers;
 
 use Core\StockOut\Application\UseCases\CreateStockOut;
 use Core\StockOut\Application\DTOs\CreateStockOutRequest;
+use Core\StockOut\Application\DTOs\IndexStockOutRequest as DTOsIndexStockOutRequest;
 use Core\StockOut\Application\UseCases\IndexStockOut;
 use Core\StockOut\Application\UseCases\ShowStockOut;
 use Core\StockOut\Application\UseCases\UpdateStockOut;
@@ -22,7 +23,8 @@ class StockOutController
     }
     public function index(IndexStockOutRequest $request, IndexStockOut $useCase)
     {
-        $entity = $useCase->handle($request->all());
+        $dto = DTOsIndexStockOutRequest::fromArray($request->all());
+        $entity = $useCase->handle($dto);
         return response()->json(['message' => $entity]);
     }
     public function update(string $id, UpdateStockOut $useCase, UpdateStockOutRequest $request)

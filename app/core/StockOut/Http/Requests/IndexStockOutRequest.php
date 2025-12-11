@@ -10,7 +10,7 @@ class IndexStockOutRequest extends FormRequest
     {
         return [
             'keywords' => 'nullable|string|max:150',
-            'status' => 'nullable|in:invoiced,shipped'
+            'status' => 'nullable|in:pending,shipped,cancelled,completed'
         ];
     }
 

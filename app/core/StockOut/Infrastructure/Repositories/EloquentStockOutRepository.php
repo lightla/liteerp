@@ -44,7 +44,7 @@ class EloquentStockOutRepository implements StockOutRepositoryInterface
     }
     public function index(array $data): array
     {
-        return StockOutModel::select("stock_outs.*",
+        $index = StockOutModel::select("stock_outs.*",
         DB::raw("SUM(order_items.buy_quantity) + SUM(order_items.gift_quantity) 
             + SUM(order_items.compensation_quantity) 
             + SUM(order_items.conversion_quantity) as quantity"),
@@ -68,8 +68,15 @@ class EloquentStockOutRepository implements StockOutRepositoryInterface
         ->join("products","products.id","=","inventories.product_id")
         ->join("customers","customers.id","=","orders.customer_id")
         ->groupBy("stock_outs.id")
-        ->where('stock_outs.business_id',$data['business_id'])
-        ->paginate(15)->toArray();
+        ->where('stock_outs.business_id',$data['business_id']);
+        if(!empty($data['keywords'])) {
+            $index = $index->where('invoice_outs.document_no','like'
+                ,'%'.$data['keywords'].'%');
+        }
+        if(!empty($data['status'])) {
+            $index = $index->where('stock_outs.status',$data['status']);
+        }
+        return $index->paginate(15)->toArray();
     }
     public function findByIdWithFullData(array $data): array
     {
