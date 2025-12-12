@@ -45,10 +45,6 @@ export default function ListOrder() {
     const handleEdit = (row) => {
         navigate('/orders?form=edit&id=' + row.id)
     };
-
-    const handleDelete = (row) => {
-        console.log("Delete clicked:", row);
-    };
     const getOrders = useCallback((page = 0) => {
         table.setLoading(true);
         OrderService.list({
@@ -112,7 +108,6 @@ export default function ListOrder() {
                     data={table?.data}
                     links={table?.links}
                     onEdit={handleEdit}
-                    onDelete={handleDelete}
                     loading={table.loading}
                     movePage={getOrders}
                 />
