@@ -11,4 +11,5 @@ interface CategoryProductService
     public function index(array $data): array;
     public function show(array $data) : CategoryProduct | BadException;
     public function update(array $data): CategoryProduct | BadException;
+    public function delete(array $data): CategoryProduct | BadException;
 }

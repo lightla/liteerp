@@ -13,4 +13,5 @@ interface CategoryProductRepositoryInterface
     public function index(array $data) : array;
     public function findById(array $data) : ?CategoryProduct;
     public function update(CategoryProduct $entity) : CategoryProduct;
+    public function delete(CategoryProduct $entity) : CategoryProduct;
 }

@@ -21,11 +21,13 @@ class EloquentCategoryProductRepository implements CategoryProductRepositoryInte
     }
     public function index(array $data): array
     {
-        return CategoryProductModel::select("category_product.*","users.name as created_by_name")
+        $index = CategoryProductModel::select("category_product.*","users.name as created_by_name")
         ->join("users","users.id","=","category_product.created_by")
-        ->where('category_product.business_id',$data['business_id'])
-        ->where('category_product.name','like','%' . $data['keywords'] . '%')
-        ->paginate(15)->toArray();
+        ->where('category_product.business_id',$data['business_id']);
+        if(!empty($data['keywords'])) {
+            $index = $index->where('category_product.name','like','%' . $data['keywords'] . '%');
+        }
+        return $index->paginate(15)->toArray();
     }
     public function findById(array $data): ?CategoryProduct
     {
@@ -47,6 +49,12 @@ class EloquentCategoryProductRepository implements CategoryProductRepositoryInte
         CategoryProductModel::where('id',$entity->id)
         ->where('business_id',$entity->business_id)
         ->update($entity->toArray());
+        return $entity;
+    }
+    public function delete(CategoryProduct $entity) : CategoryProduct {
+        CategoryProductModel::where('id',$entity->id)
+        ->where('business_id',$entity->business_id)
+        ->delete();
         return $entity;
     }
 }

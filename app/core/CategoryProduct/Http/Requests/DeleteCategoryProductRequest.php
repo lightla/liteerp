@@ -4,13 +4,11 @@ namespace Core\CategoryProduct\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class IndexCategoryProductRequest extends FormRequest
+class DeleteCategoryProductRequest extends FormRequest
 {
     public function rules(): array
     {
-        return [
-            'keywords' => 'nullable|string|max:150'
-        ];
+        return [];
     }
     public function authorize(): bool
     {

@@ -41,4 +41,12 @@ class CategoryProductServiceImpl implements CategoryProductService
         $entity->description = $data['description'] ?? $entity->description;
         return $this->repo->update($entity);
     }
+    public function delete(array $data): CategoryProduct|BadException
+    {
+        $entity = $this->repo->findById($data);
+        if(!$entity) {
+            throw new BadException(__("not found data"));
+        }
+        return $this->repo->delete($entity);
+    }
 }

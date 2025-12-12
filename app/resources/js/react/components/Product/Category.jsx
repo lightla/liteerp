@@ -83,6 +83,33 @@ export default function Category() {
                 form.setLoading(false)
             })
     }, [form.formData]);
+    const destroy = useCallback((row) => {
+        ProductService.deleteCategory(row)
+            .then((resp) => {
+                openPopup({
+                    type: 'success',
+                    message: 'You has been deleted'
+                })
+                getCategorires();
+            })
+            .catch((error) => {
+                if (error.response.data?.message) {
+                    openPopup({
+                        type: 'error',
+                        message: error.response.data?.message
+                    })
+                }
+            })
+    },[]);
+    const handleDelete = useCallback((row)=>{
+        openPopup({
+            type: 'warning',
+            message: 'Are you sure to delete?',
+            onConfirm: () => {
+                destroy(row)
+            }
+        })
+    },[])
     useEffect(() => {
         getCategorires();
     }, [])
@@ -130,9 +157,7 @@ export default function Category() {
                     form.setFormData(row);
                     setShowAdd(true)
                 }}
-                onDelete={(row) => { 
-
-                }}
+                onDelete={!hasPermission ? null : handleDelete}
             />
             {showAdd ? <PopupLayout
                 loading={form.loading}

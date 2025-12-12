@@ -9,18 +9,8 @@ class UpdateCategoryProductRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => [
-                'required',
-                'string',
-                'max:150',
-                'regex:/^[\p{L}\p{N}\s]+$/u' 
-            ],
-            'description' => [
-                'nullable',
-                'string',
-                'max:150',
-                'regex:/^[\p{L}\p{N}\s]+$/u' 
-            ],
+            'name' => 'required|string|max:150',
+            'description' => 'required|string|max:250',
             'tax' => 'required|numeric|min:0|max:100'
         ];
     }
