@@ -18,6 +18,7 @@ class EloquentBusinessRepository implements BusinessRepositoryInterface
     {
         $list = BusinessModel::select("business.*","business_role.role as role")
         ->join("business_role","business_role.business_id","=","business.id")
+        ->where('business_role.user_id',$user_id)
         ->limit(50)->get()->toArray();
         return $list;
     }
@@ -48,7 +49,6 @@ class EloquentBusinessRepository implements BusinessRepositoryInterface
     public function findByName(array $data) : ?Business
     {
        $row = BusinessModel::select("business.*")
-        ->where('business.id',$data['id'])
         ->where('business.name',$data['name'])
         ->first()?->toArray();
         if(!$row) {
