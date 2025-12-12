@@ -7,8 +7,6 @@ import { Select } from '../UI/Input/Select';
 import SearchInput from '../UI/Input/SearchInput';
 import { PopupLayout } from '../../layouts/PopupLayout';
 import { InputForm } from '../UI/Input/InputForm';
-import TextArea from '../UI/Input/Textarea';
-import CustomerService from '../../services/CustomerService';
 import CustomerGroupService from '../../services/CustomerGroupService';
 export default function ListGroup() {
     const table = useTable();
@@ -28,9 +26,7 @@ export default function ListGroup() {
         setShowAdd(true)
     };
 
-    const handleDelete = (row) => {
-        console.log("Delete clicked:", row);
-    };
+    
     const submit = useCallback(() => {
         form.setFormErrors(null);
         form.setLoading(true);
@@ -64,7 +60,7 @@ export default function ListGroup() {
             .then((resp) => {
                 openPopup({
                     type: 'success',
-                    message: 'You has been created'
+                    message: 'You has been updated'
                 });
                 setShowAdd(false);
                 getGroup();
@@ -99,24 +95,40 @@ export default function ListGroup() {
 
             })
     }, [search.formData]);
+    const destroy = useCallback((row) => {
+        CustomerGroupService.delete(row)
+            .then((resp) => {
+                openPopup({
+                    type: 'success',
+                    message: 'You has been deleted'
+                });
+                getGroup();
+            })
+            .catch((error) => {
+                if (error.response.data?.message) {
+                    openPopup({
+                        type: 'error',
+                        message: error.response.data?.message
+                    })
+                }
+            })
+    }, []);
+    const handleDelete = (row) => {
+        openPopup({
+            type: 'warning',
+            message: 'Are you sure to delete?',
+            onConfirm: () => {
+                destroy(row)
+            }
+        })
+    };
     useEffect(() => {
         getGroup();
-    }, [search.formData?.type]);
+    }, []);
     return <div>
         <CommonDataTable
             add={() => setShowAdd(true)}
             filter={<div className='d-flex'>
-                <div className='col-4'>
-                    <label>Type</label>
-                    <Select
-                        value={search.formData?.type}
-                        name='type'
-                        handleChange={search.handleChange}
-                        options={[
-                            { value: 'individual', label: 'Individual' },
-                            { value: 'company', label: 'Company' }
-                        ]} />
-                </div>
                 <div className='mx-2 col-4'>
                     <label>Search</label>
                     <SearchInput

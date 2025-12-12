@@ -35,4 +35,11 @@ class EloquentCustomerGroupRepository implements CustomerGroupRepositoryInterfac
         ->where('business_id',$entity->business_id)->update($entity->toArray());
         return $entity;
     }
+    public function delete(CustomerGroup $entity): CustomerGroup
+    {
+        CustomerGroupModel::where('id',$entity->id)
+        ->where('business_id',$entity->business_id)
+        ->delete();
+        return $entity;
+    }
 }

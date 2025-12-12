@@ -33,4 +33,12 @@ class CustomerGroupServiceImpl implements CustomerGroupService
         $entity->name = $data['name'] ?? $entity->name;
         return $this->repo->update($entity);
     }
+    public function delete(array $data): CustomerGroup|BadException
+    {
+        $entity = $this->repo->findById($data);
+        if(!$entity) {
+            throw new BadException(__("Not found data"));
+        }
+        return $this->repo->delete($entity);
+    }
 }

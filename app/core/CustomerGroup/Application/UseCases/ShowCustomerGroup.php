@@ -2,15 +2,15 @@
 
 namespace Core\CustomerGroup\Application\UseCases;
 
-use Core\CustomerGroup\Application\DTOs\CreateCustomerGroupRequest;
+use Core\CustomerGroup\Application\DTOs\ShowCustomerGroupRequest;
 use Core\CustomerGroup\Domain\Services\CustomerGroupService;
 
 class ShowCustomerGroup
 {
     public function __construct(private CustomerGroupService $service) {}
 
-    public function handle(array $dto)
+    public function handle(ShowCustomerGroupRequest $dto)
     {
-        return $this->service->show($dto);
+        return $this->service->show($dto->toArray());
     }
 }

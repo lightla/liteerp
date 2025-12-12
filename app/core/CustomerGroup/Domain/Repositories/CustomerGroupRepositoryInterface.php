@@ -10,4 +10,5 @@ interface CustomerGroupRepositoryInterface
     public function findById(array $data) : ?CustomerGroup;
     public function update(CustomerGroup $entity): CustomerGroup;
     public function index(array $data) : array;
+    public function delete(CustomerGroup $entity): CustomerGroup;
 }

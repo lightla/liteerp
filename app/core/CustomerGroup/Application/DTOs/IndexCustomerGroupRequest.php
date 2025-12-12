@@ -1,0 +1,30 @@
+<?php
+
+namespace Core\CustomerGroup\Application\DTOs;
+
+class IndexCustomerGroupRequest
+{
+    public function __construct(
+        public int $business_id,
+        public ?string $keywords = null,
+        public int $created_by,
+    ) {}
+
+    public static function fromArray(array $data): self
+    {
+        return new self(
+            business_id: $data['business_id'],
+            keywords: $data['keywords'] ?? null,
+            created_by: $data['user_id'],
+        );
+    }
+
+    public function toArray(): array
+    {
+        return [
+            'business_id' => $this->business_id,
+            'keywords' => $this->keywords,
+            'created_by' => $this->created_by
+        ];
+    }
+}

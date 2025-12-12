@@ -11,4 +11,5 @@ interface CustomerGroupService
     public function show(array $data) : CustomerGroup | BadException;
     public function update(array $data) : CustomerGroup | BadException;
     public function index(array $data) : array;
+    public function delete(array $data) : CustomerGroup | BadException;
 }
