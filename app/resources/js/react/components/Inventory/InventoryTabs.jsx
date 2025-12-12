@@ -42,8 +42,6 @@ export default function InventoryTabs() {
             ]}
             data={table.data}
             links={table.links}
-            onEdit={(row) => { }}
-            onDelete={(row) => { }}
             movePage={getInventory}
             loading={table.loading}
         />
