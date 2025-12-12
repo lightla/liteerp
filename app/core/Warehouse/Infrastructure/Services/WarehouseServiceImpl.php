@@ -3,7 +3,6 @@
 namespace Core\Warehouse\Infrastructure\Services;
 
 use App\Exceptions\BadException;
-use Core\Warehouse\Application\DTOs\CreateWarehouseRequest;
 use Core\Warehouse\Domain\Services\WarehouseService;
 use Core\Warehouse\Domain\Repositories\WarehouseRepositoryInterface;
 use Core\Warehouse\Domain\Entities\Warehouse;
@@ -12,7 +11,7 @@ class WarehouseServiceImpl implements WarehouseService
 {
     public function __construct(private WarehouseRepositoryInterface $repo) {}
 
-    public function create(array $data): Warehouse
+    public function create(array $data): Warehouse | BadException
     {
 
         $entity = Warehouse::fromArray($data);
@@ -33,7 +32,7 @@ class WarehouseServiceImpl implements WarehouseService
         }
         return $data;
     }
-    public function update(array $data): Warehouse
+    public function update(array $data): Warehouse | BadException
     {
         $entity = $this->repo->findById($data);
         if(!$entity) {
@@ -48,5 +47,13 @@ class WarehouseServiceImpl implements WarehouseService
         $entity->address = $data['address'];
         $entity->active = $data['active'];
         return $this->repo->update($entity);
+    }
+    public function delete(array $data): Warehouse | BadException
+    {
+        $entity = $this->repo->findById($data);
+        if(!$entity) {
+            throw new BadException(__("Not found data"));
+        }
+        return $this->repo->delete($entity);
     }
 }

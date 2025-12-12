@@ -5,7 +5,6 @@ namespace Core\Warehouse\Infrastructure\Repositories;
 use App\Models\WarehouseModel;
 use Core\Warehouse\Domain\Repositories\WarehouseRepositoryInterface;
 use Core\Warehouse\Domain\Entities\Warehouse;
-use Illuminate\Support\Facades\DB;
 
 class EloquentWarehouseRepository implements WarehouseRepositoryInterface
 {
@@ -24,12 +23,14 @@ class EloquentWarehouseRepository implements WarehouseRepositoryInterface
     }
     public function index(array $data) : array {
         $exists = WarehouseModel::select("warehouses.*")
-        ->where('warehouses.business_id',$data['business_id'])
-        ->where('warehouses.active',$data['active'] ?? false);
+        ->where('warehouses.business_id',$data['business_id']);
         if(!empty($data['keywords'])) {
             $exists = $exists->where('warehouses.name','like','%'.$data['keywords'].'%');
         }
-        return $exists->paginate($data['limit'] ?? 15)->toArray();
+        if(isset($data['active'])) {
+            $exists = $exists->where('warehouses.active',$data['active'] ?? false);
+        }
+        return $exists->paginate(15)->toArray();
     }
     public function findById(array $data): ?Warehouse
     {
@@ -47,6 +48,13 @@ class EloquentWarehouseRepository implements WarehouseRepositoryInterface
         WarehouseModel::where('id',$entity->id)
         ->where('business_id',$entity->business_id)
         ->update($entity->toArray());
+        return $entity;
+    }
+    public function delete(Warehouse $entity): Warehouse
+    {
+        WarehouseModel::where('id',$entity->id)
+        ->where('business_id',$entity->business_id)
+        ->delete();
         return $entity;
     }
 }

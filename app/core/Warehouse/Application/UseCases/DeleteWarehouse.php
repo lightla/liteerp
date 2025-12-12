@@ -2,22 +2,25 @@
 
 namespace Core\Warehouse\Application\UseCases;
 
-use Core\Warehouse\Application\DTOs\IndexWarehouseRequest;
+use Core\Warehouse\Application\DTOs\DeleteWarehouseRequest;
 use Core\Warehouse\Domain\Services\WarehouseService;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Event;
 
-class IndexWarehouse
+class DeleteWarehouse
 {
     public function __construct(private WarehouseService $service) {}
 
-    public function handle(IndexWarehouseRequest $dto)
+    public function handle(DeleteWarehouseRequest $dto)
     {
-        Event::dispatch("erp.warehouse.index", [
+        DB::beginTransaction();
+        Event::dispatch("erp.warehouse.delete", [
             ...$dto->toArray(),
             'business_id' => $dto->business_id,
             'user_id' => $dto->created_by
         ]);
-        $index = $this->service->index($dto->toArray());
-        return $index;
+        $delete = $this->service->delete($dto->toArray());
+        DB::commit();
+        return $delete;
     }
 }

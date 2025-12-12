@@ -4,14 +4,11 @@ namespace Core\Warehouse\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class IndexWarehouseRequest extends FormRequest
+class DeleteWarehouseRequest extends FormRequest
 {
     public function rules(): array
     {
-        return [
-            'active' => 'nullable|numeric|min:0|max:1',
-            'keywords' => 'nullable|string|max:150'
-        ];
+        return [];
     }
 
     public function authorize(): bool

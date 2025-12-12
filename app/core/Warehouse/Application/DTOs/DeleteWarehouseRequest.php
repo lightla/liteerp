@@ -2,26 +2,23 @@
 
 namespace Core\Warehouse\Application\DTOs;
 
-class IndexWarehouseRequest
+class DeleteWarehouseRequest
 {
     public function __construct(
-        public ?string $keywords = null,
-        public ?int $active = null,
+        public int $id,
         public int $created_by,
         public int $business_id 
     ) {}
     public static function fromArray(array $data) : self {
         return new self(
-            keywords: $data['keywords'] ?? null,
-            active: $data['active'] ?? null,
+            id: $data['id'],
             created_by: $data['user_id'],
             business_id: $data['business_id']
         );
     }
     public function toArray(): array {
         return [
-            'keywords' => $this->keywords,
-            'active' => $this->active,
+            'id' => $this->id,
             'created_by' => $this->created_by,
             'business_id'   => $this->business_id
         ];

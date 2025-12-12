@@ -11,4 +11,5 @@ interface WarehouseRepositoryInterface
     public function index(array $data): array;
     public function findById(array $data) : ?Warehouse;
     public function update(Warehouse $entity): Warehouse;
+    public function delete(Warehouse $entity): Warehouse;
 }

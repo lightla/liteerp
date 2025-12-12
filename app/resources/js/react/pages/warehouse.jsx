@@ -45,7 +45,7 @@ export default function Warehouse() {
   const getList = useCallback((page = 0) => {
     table.setLoading(true);
     WarehouseService.list({
-      active: search.formData?.active ?? 0,
+      active: search.formData?.active ?? '',
       keywords: search.formData?.keywords ?? '',
       page: page
     })
@@ -101,15 +101,48 @@ export default function Warehouse() {
         if (error.response.data?.errors) {
           form.setFormErrors(error.response.data?.errors)
         }
+        if (error.response.data?.message) {
+          openPopup({
+            type: 'error',
+            message: error.response.data?.message
+          })
+        }
         form.setLoading(false)
       })
-  }, [form,table]);
+  }, [form, table]);
+  const destroy = useCallback((row) => {
+    WarehouseService.delete(row)
+      .then((resp) => {
+        getList();
+        openPopup({
+          type: 'success',
+          message: 'You has been deleted'
+        })
+      })
+      .catch((error) => {
+        if (error.response.data?.message) {
+          openPopup({
+            type: 'error',
+            message: error.response.data?.message
+          })
+        }
+      })
+  }, []);
+  const handleDelete = useCallback((row) => {
+    openPopup({
+      type: 'warning',
+      message: 'Are you sure to delete?',
+      onConfirm: () => {
+        destroy(row)
+      }
+    })
+  }, []);
   return <DashboardLayout>
     <div>
       <PageHead
-      containerClass='mx-4'
-      title='Warehouse'
-      subtitle='Manager warehouse, To better good you 
+        containerClass='mx-4'
+        title='Warehouse'
+        subtitle='Manager warehouse, To better good you 
         can use category product as areas on the warehouse for easy.'
       />
       <div className="m-4">
@@ -117,27 +150,27 @@ export default function Warehouse() {
           <CommonDataTable
             add={() => {
               setShowPopup(true);
-                  form.setIsEdit(false);
+              form.setIsEdit(false);
             }}
             loading={table.loading}
             filter={<div className=''>
               <div className='d-flex'>
                 <div className='col-6'>
                   <label>Status</label>
-                  <Select name='active' value={search.formData?.active ?? 0} 
-                  handleChange={search.handleChange} options={[
-                    { value: 0, label: 'Inactive' },
-                    { value: 1, label: 'Active' }
-                  ]} />
+                  <Select name='active' value={search.formData?.active ?? ''}
+                    handleChange={search.handleChange} options={[
+                      { value: 0, label: 'Inactive' },
+                      { value: 1, label: 'Active' }
+                    ]} />
                 </div>
                 <div className='col-6 mx-2'>
                   <label>Search</label>
-                  <SearchInput 
-                  name='keywords'
-                  submit={getList}
-                  placeholder='Search by name' 
-                  value={search.formData?.keywords} 
-                  handleChange={search.handleChange} />
+                  <SearchInput
+                    name='keywords'
+                    submit={getList}
+                    placeholder='Search by name'
+                    value={search.formData?.keywords}
+                    handleChange={search.handleChange} />
                 </div>
               </div>
             </div>}
@@ -150,7 +183,7 @@ export default function Warehouse() {
               form.setFormData(row);
               form.setIsEdit(true);
             }}
-            onDelete={form.setFormData}
+            onDelete={handleDelete}
           />
         </div>
 
@@ -177,15 +210,15 @@ export default function Warehouse() {
           </div>
           <div className='form-group mt-3 text-left'>
             <label className=''>Active</label>
-            
+
             <div className='d-flex'>
               <InputForm
                 width={10}
                 errorMessage={form.formErrors?.active} name="active" className='input-checkbox'
-                value={form.formData?.active} handleChange={form.handleChange} 
+                value={form.formData?.active} handleChange={form.handleChange}
                 type="checkbox" />
-                <span className='mx-2'>If you don't active then warehouse will status not working 
-              and you can not move products to this warehouse</span>
+              <span className='mx-2'>If you don't active then warehouse will status not working
+                and you can not move products to this warehouse</span>
             </div>
           </div>
 
