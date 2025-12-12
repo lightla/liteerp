@@ -2,10 +2,9 @@
 
 namespace Core\Supplier\Application\DTOs;
 
-class IndexSupplierRequest {
+class DeleteSupplierRequest {
     public function __construct(
-        public ?string $keywords = null,
-        public ?int $active = null,
+        public int $id,
         public int $business_id,
         public int $created_by
     )
@@ -14,16 +13,14 @@ class IndexSupplierRequest {
     }
     public static function fromArray(array $data): self{
         return new self(
-            keywords: $data['keywords'] ?? null,
-            active: $data['active'] ?? null,
+            id: $data['id'],
             business_id: $data['business_id'],
             created_by: $data['user_id']  
         );
     }
     public function toArray(){
         return [
-            'keywords' => $this->keywords,
-            'active' => $this->active,
+            'id' => $this->id,
             'business_id'   => $this->business_id,
             'created_by'    => $this->created_by
         ];

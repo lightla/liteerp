@@ -4,10 +4,13 @@ namespace Core\Supplier\Http\Controllers;
 
 use Core\Supplier\Application\UseCases\CreateSupplier;
 use Core\Supplier\Application\DTOs\CreateSupplierRequest;
+use Core\Supplier\Application\DTOs\DeleteSupplierRequest as DTOsDeleteSupplierRequest;
 use Core\Supplier\Application\DTOs\IndexSupplierRequest as DTOsIndexSupplierRequest;
+use Core\Supplier\Application\UseCases\DeleteSupplier;
 use Core\Supplier\Application\UseCases\IndexSupplier;
 use Core\Supplier\Application\UseCases\UpdateSupplier;
 use Core\Supplier\Http\Requests\CreateSupplierRequest as FormRequest;
+use Core\Supplier\Http\Requests\DeleteSupplierRequest;
 use Core\Supplier\Http\Requests\IndexSupplierRequest;
 use Core\Supplier\Http\Requests\UpdateSupplierRequest;
 
@@ -27,6 +30,13 @@ class SupplierController
     public function update(UpdateSupplierRequest $request,UpdateSupplier $useCase,string $id) {
         $request->merge(['id' => $id]);
         $dto = CreateSupplierRequest::fromArray($request->all()); 
+        $entity = $useCase->handle($dto);
+        return response()->json(['message' => $entity]);
+    }
+    public function destroy(DeleteSupplierRequest $request,
+        DeleteSupplier $useCase,string $id) {
+        $request->merge(['id' => $id]);
+        $dto = DTOsDeleteSupplierRequest::fromArray($request->all()); 
         $entity = $useCase->handle($dto);
         return response()->json(['message' => $entity]);
     }

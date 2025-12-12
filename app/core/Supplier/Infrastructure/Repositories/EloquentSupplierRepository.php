@@ -15,10 +15,12 @@ class EloquentSupplierRepository implements SupplierRepositoryInterface
         return $entity;
     }
     public function index(array $data): array {
-        $list = SupplierModel::where('business_id',$data['business_id'])
-        ->where('unit_name','like','%'.($data['keywords'] ?? '').'%');
+        $list = SupplierModel::where('business_id',$data['business_id']);
         if(isset($data['active'])) {
             $list = $list->where('active',$data['active']);
+        }
+        if(!empty($data['keywords'])) {
+            $list = $list->where('unit_name','like','%'.($data['keywords'] ?? '').'%');
         }
         return $list->paginate(15)->toArray();
     }
@@ -44,6 +46,13 @@ class EloquentSupplierRepository implements SupplierRepositoryInterface
     {
         SupplierModel::where('id',$entity->id)
         ->where('business_id',$entity->business_id)->update($entity->toArray());
+        return $entity;
+    }
+    public function delete(Supplier $entity): Supplier
+    {
+        SupplierModel::where('id',$entity->id)
+        ->where('business_id',$entity->business_id)
+        ->delete();
         return $entity;
     }
 }

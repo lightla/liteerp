@@ -11,4 +11,5 @@ interface SupplierRepositoryInterface
     public function update(Supplier $entity): Supplier;
     public function findById(array $data) : ?Supplier;
     public function findByName(array $data) : ?Supplier;
+    public function delete(Supplier $entity): Supplier;
 }

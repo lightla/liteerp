@@ -11,7 +11,7 @@ class SupplierServiceImpl implements SupplierService
 {
     public function __construct(private SupplierRepositoryInterface $repo) {}
 
-    public function create(array $data): Supplier
+    public function create(array $data): Supplier | BadException
     {
         $entity = $this->repo->findByName($data);
         if($entity) {
@@ -25,7 +25,7 @@ class SupplierServiceImpl implements SupplierService
     {
         return $this->repo->index($data);
     }
-    public function update(array $data) : Supplier {
+    public function update(array $data) : Supplier | BadException {
         $entity = $this->repo->findByName($data);
         if($entity && $entity->id !== $data['id']) {
             throw new BadException(__("Name has been used"));
@@ -45,5 +45,12 @@ class SupplierServiceImpl implements SupplierService
         $entity->note = $data['note'] ?? $entity->note;
         $entity->active = $data['active'] ?? $entity->active;
         return $this->repo->update($entity);
+    }
+    public function delete(array $data) : Supplier | BadException {
+        $entity = $this->repo->findById($data);
+        if(!$entity) {
+            throw new BadException(__("Not found data"));
+        }
+        return $this->repo->delete($entity);
     }
 }

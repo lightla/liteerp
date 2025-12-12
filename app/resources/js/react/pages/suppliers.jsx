@@ -66,10 +66,7 @@ export default function Suppliers() {
         form.setIsEdit(true);
         setAddShow(true);
     };
-
-    const handleDelete = (row) => {
-        console.log("Delete clicked:", row);
-    };
+    
     const getSupliers = useCallback((page = 0) => {
         table.setLoading(true);
         SupplierService.list({
@@ -83,9 +80,43 @@ export default function Suppliers() {
                 table.setLoading(false);
             })
             .catch((error) => {
-
+                if (error.response.data?.message) {
+                    openPopup({
+                        type: 'error',
+                        message: error.response.data?.message
+                    })
+                }
             })
     }, [search.formData]);
+    const destroy = useCallback((row) => {
+        SupplierService.delete(row)
+            .then((resp) => {
+
+                openPopup({
+                    type: 'success',
+                    message: 'You has been updated'
+                })
+                getSupliers();
+            })
+            .catch((error) => {
+
+                if (error.response.data?.message) {
+                    openPopup({
+                        type: 'error',
+                        message: error.response.data?.message
+                    })
+                }
+            })
+    }, [form.formData]);
+    const handleDelete = (row) => {
+        openPopup({
+            type: 'warning',
+            message: 'Are your sure to delete?',
+            onConfirm: () => {
+                destroy(row)
+            }
+        })
+    };
     const submit = useCallback(() => {
         form.setLoading(true)
         form.setFormErrors(null)
@@ -95,9 +126,9 @@ export default function Suppliers() {
                 getSupliers();
                 form.setLoading(false)
                 openPopup({
-                        type: 'success',
-                        message: 'You has been added'
-                    })
+                    type: 'success',
+                    message: 'You has been added'
+                })
             })
             .catch((error) => {
                 if (error.response.data?.errors) {
@@ -122,9 +153,9 @@ export default function Suppliers() {
                 getSupliers();
                 form.setLoading(false);
                 openPopup({
-                        type: 'success',
-                        message: 'You has been updated'
-                    })
+                    type: 'success',
+                    message: 'You has been updated'
+                })
             })
             .catch((error) => {
                 if (error.response.data?.errors) {
