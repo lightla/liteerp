@@ -190,7 +190,6 @@ export default function ListPurchases() {
                 data={table.data}
                 links={table.links}
                 onEdit={handleEdit}
-                onDelete={handleDelete}
                 movePage={getPurchases}
                 loading={table.loading}
             />
