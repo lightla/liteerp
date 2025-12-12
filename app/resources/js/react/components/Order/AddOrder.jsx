@@ -1,12 +1,7 @@
 import React, { useCallback, useState } from 'react'
 import PageHead from '../PageHead'
 import FormStep from '../FormStep'
-import CustomerService from '../../services/CustomerService';
 import { useForm } from '../../libraries/handleInput';
-import SearchSelect from '../UI/Input/SearchSelect';
-import { Select } from '../UI/Input/Select';
-import { InputForm } from '../UI/Input/InputForm';
-import TextArea from '../UI/Input/Textarea';
 import SecondaryButton from '../UI/Buttons/SecondaryButton';
 import PrimaryButton from '../UI/Buttons/PrimaryButton';
 import OrderService from '../../services/OrderService';

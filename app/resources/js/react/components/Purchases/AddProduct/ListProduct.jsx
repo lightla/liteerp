@@ -195,7 +195,7 @@ export default function ListProducts({
 
             });
     }, [searchParams]);
-    const getProducts = useCallback((keywords = '') => {
+    const getProducts = useCallback((keywords = '',callback = null) => {
         ProductService.list({
             keywords: keywords,
             page: 0,
@@ -203,6 +203,9 @@ export default function ListProducts({
         })
             .then((resp) => {
                 setProducts(resp.message.data)
+                if(callback) {
+                    callback();
+                }
             })
             .catch((error) => {
 

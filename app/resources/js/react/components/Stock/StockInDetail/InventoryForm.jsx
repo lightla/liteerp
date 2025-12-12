@@ -11,15 +11,17 @@ export default function InventoryForm({
         formErrors: null
     }
 }){
-    const {openPopup} = usePopup();
     const [warehouse,setWarehouse] = useState([]);
-    const getWarehouses = useCallback((keywords)=>{
+    const getWarehouses = useCallback((keywords = '',callback = null)=>{
         WarehouseService.list({
             keywords: keywords,
             page: 0,
         })
         .then((resp) => {
             setWarehouse(resp.message.data)
+            if(callback) {
+                callback();
+            }
         })
         .catch((error) => {
 

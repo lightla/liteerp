@@ -26,13 +26,16 @@ export default function ShippingForm({
         const { name, value } = e.target;
         setFormDataShipping((prev) => ({ ...prev, [name]: value }));
     };
-    const getShippings = useCallback((keywords = '') => {
+    const getShippings = useCallback((keywords = '',callback = null) => {
         ShippingService.list({
             page: 0,
             keywords: keywords
         })
             .then((resp) => {
                 setShippings(resp.message);
+                if(callback) {
+                    callback();
+                }
             })
             .catch((error) => {
                 if (error.response.data?.message) {

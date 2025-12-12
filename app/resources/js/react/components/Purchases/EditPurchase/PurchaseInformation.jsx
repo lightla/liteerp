@@ -14,7 +14,7 @@ export default function PurchaseInformation({
     } 
 }) {
     const [supplierData, setSupplierData] = useState([]);
-    const getSuppliers = useCallback((keywords = '') => {
+    const getSuppliers = useCallback((keywords = '',callback = null) => {
         SupplierService.list({
             page: 0,
             keywords: keywords,
@@ -22,6 +22,9 @@ export default function PurchaseInformation({
         })
             .then((resp) => {
                 setSupplierData(resp.message?.data);
+                if(callback) {
+                    callback();
+                }
             })
             .catch((error) => {
                 navigate('/')

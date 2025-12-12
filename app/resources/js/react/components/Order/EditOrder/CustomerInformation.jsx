@@ -11,7 +11,7 @@ export default function CustomerInformation({
     }
 }) {
     const [customers, setCustomers] = useState([]);
-    const getCustomers = useCallback((keywords = '') => {
+    const getCustomers = useCallback((keywords = '',callback = null) => {
         CustomerService.list({
             keywords: keywords,
             page: 1,
@@ -19,6 +19,9 @@ export default function CustomerInformation({
         })
             .then((resp) => {
                 setCustomers(resp.message.data);
+                if(callback) {
+                    callback();
+                }
             })
             .catch((error) => {
 

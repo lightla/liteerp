@@ -12,13 +12,16 @@ export default function FormUpdate({
     }
 }) {
     const [shippings,setShippings] = useState([]);
-    const getShippings = useCallback((keywords = '') => {
+    const getShippings = useCallback((keywords = '',callback = null) => {
         ShippingService.list({
             page: 0,
             keywords: keywords
         })
             .then((resp) => {
                 setShippings(resp.message.data);
+                if(callback) {
+                    callback();
+                }
             })
             .catch((error) => {
                 if (error.response.data?.message) {

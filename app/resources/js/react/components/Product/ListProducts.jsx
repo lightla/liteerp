@@ -44,14 +44,16 @@ export default function ListProducts() {
                 }
             })
     }, [search]);
-    const getCategories = useCallback((keywords = '') => {
+    const getCategories = useCallback((keywords = '',callback = null) => {
         ProductService.listCategory({
             page: 0,
             keywords: keywords,
         })
             .then((resp) => {
                 setCategory(resp.message.data);
-
+                if(callback) {
+                    callback();
+                }
             })
             .catch((error) => {
 

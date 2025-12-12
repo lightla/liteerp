@@ -36,13 +36,16 @@ export default function PriceList() {
 
             })
     }, [search.formData?.keywords]);
-    const getProducts = useCallback((keywords = '') => {
+    const getProducts = useCallback((keywords = '',callback = null) => {
         ProductService.list({
             page: 0,
             keywords: keywords
         })
             .then((resp) => {
                 setProducts(resp.message.data);
+                if(callback) {
+                    callback();
+                }
             })
             .catch((error) => {
                 if (error.response.data?.message) {
@@ -53,13 +56,16 @@ export default function PriceList() {
                 }
             })
     }, []);
-    const getGroup = useCallback((keywords = '') => {
+    const getGroup = useCallback((keywords = '',callback = null) => {
         CustomerGroupService.list({
             keywords: keywords,
             page: 0
         })
             .then((resp) => {
                 setGroups(resp.message.data)
+                if(callback) {
+                    callback();
+                }
             })
             .catch((error) => {
 

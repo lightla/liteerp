@@ -1,13 +1,9 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import CommonDataTable from '../CommonDataTable';
-import { PopupLayout } from '../../layouts/PopupLayout';
-import { InputForm } from '../UI/Input/InputForm';
 import PurchaseService from '../../services/PurchaseService';
-import SupplierService from '../../services/SupplierService';
 import { Select } from '../UI/Input/Select'
 import { Link, useNavigate } from 'react-router-dom';
 import { usePopup } from '../popups/PopupContext';
-import SearchSelect from '../UI/Input/SearchSelect';
 import SearchInput from '../UI/Input/SearchInput';
 import useTable from '../../libraries/handleTable'
 import { useForm } from '../../libraries/handleInput'
@@ -17,9 +13,6 @@ import { isoToDateTime } from '../../libraries/common';
 export default function ListPurchases() {
     const navigate = useNavigate();
     const { openPopup } = usePopup();
-    const [addShow, setAddShow] = useState(false);
-    const [supplierData, setSupplierData] = useState([]);
-    const form = useForm();
     const search = useForm();
     const table = useTable();
 
@@ -80,49 +73,6 @@ export default function ListPurchases() {
     const handleEdit = (row) => {
         navigate('/purchases?form=edit&id=' + row.id)
     };
-
-    const handleDelete = (row) => {
-        console.log("Delete clicked:", row);
-    };
-    const getSuppliers = useCallback((keywords = '') => {
-        SupplierService.list({
-            page: 0,
-            keywords: keywords,
-            active: ''
-        })
-            .then((resp) => {
-                setSupplierData(resp.message.data)
-            })
-            .catch((error) => {
-                navigate('/')
-            });
-    }, [SupplierService]);
-    const submit = useCallback(() => {
-        form.setFormErrors(null);
-        PurchaseService.add({
-            ...form.formData,
-            supplier_id: form.formData?.supplier_id?.value
-        })
-            .then((resp) => {
-                setAddShow(false);
-                getSuppliers();
-                openPopup({
-                    type: 'success',
-                    message: "You has been created"
-                })
-            })
-            .catch((error) => {
-                if (error.response.data?.errors) {
-                    form.setFormErrors(error.response.data?.errors);
-                }
-                if (error.response.data?.message) {
-                    openPopup({
-                        type: 'error',
-                        message: error.response.data?.message
-                    })
-                }
-            });
-    }, [form, getSuppliers]);
     const getPurchases = useCallback((page = 0) => {
         table.setLoading(true);
         PurchaseService.list({
@@ -194,85 +144,7 @@ export default function ListPurchases() {
                 loading={table.loading}
             />
 
-            {addShow ? (
-                <PopupLayout
-                    onClose={() => setAddShow(false)}
-                    title="Thêm phiếu nhập hàng"
-                    onConfirm={submit}
-                >
-                    <div className="space-y-2">
-                        <div>
-                            <label>Nhà cung cấp</label>
-                            <SearchSelect
-                                search={getSuppliers}
-                                value={form.formData?.supplier_id}
-                                changeValue={(item) => form.handleChangeByKey('supplier_id', item)}
-                                options={supplierData?.map((item) => {
-                                    return {
-                                        value: item.id,
-                                        label: item.unit_name
-                                    }
-                                })} />
-                        </div>
-                        <div>
-                            <label>Ngày mua</label>
-                            <InputForm
-                                type="date"
-                                handleChange={form.handleChange}
-                                value={form.formData?.purchase_date}
-                                errorMessage={form.formErrors?.purchase_date}
-                                name="purchase_date"
-                            />
-                        </div>
-                        <div>
-                            <label>Ngày dự kiến</label>
-                            <InputForm
-                                type="date"
-                                handleChange={form.handleChange}
-                                value={form.formData?.expected_date}
-                                errorMessage={form.formErrors?.expected_date}
-                                name="expected_date"
-                            />
-                        </div>
-                        <div>
-                            <label>Phương thức thanh toán</label>
-                            <Select
-                                name="payment_method"
-                                value={form.formData?.payment_method}
-                                handleChange={form.handleChange}
-                                errorMessage={form.formErrors?.payment_method}
-                                options={[
-                                    { value: 'cash', label: 'Cash' },
-                                    { value: 'bank', label: 'Bank' },
-                                    { value: 'transfer', label: 'Transfer' },
-                                    { value: 'other', label: 'Other' }
-                                ]}
-                            />
-                        </div>
-                        <div>
-                            <label>Phí vận chuyển</label>
-                            <InputForm
-                                type="number"
-                                handleChange={form.handleChange}
-                                value={form.formData?.shipping_fee}
-                                errorMessage={form.formErrors?.shipping_fee}
-                                name="shipping_fee"
-                                placeholder="Nhập phí vận chuyển"
-                            />
-                        </div>
-                        <div>
-                            <label>Ghi chú</label>
-                            <InputForm
-                                handleChange={form.handleChange}
-                                value={form.formData?.note}
-                                errorMessage={form.formErrors?.note}
-                                name="note"
-                                placeholder="Ghi chú thêm"
-                            />
-                        </div>
-                    </div>
-                </PopupLayout>
-            ) : null}
+            
         </div>
     </div>
 }

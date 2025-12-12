@@ -13,13 +13,16 @@ export default function CustomerForm({
     }
 }) {
     const [group,setGroup] = useState([]);
-    const getCustomers = useCallback((keywords = '') => {
+    const getCustomers = useCallback((keywords = '',calblack = null) => {
         CustomerGroupService.list({
             keywords: keywords,
             page: 0
         })
             .then((resp) => {
-                setGroup(resp.message.data)
+                setGroup(resp.message.data);
+                if(calblack) {
+                    calblack();
+                }
             })
             .catch((error) => {
 

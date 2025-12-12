@@ -33,23 +33,29 @@ export default function AdjustmentTabs() {
             })
     }, [search]);
 
-    const getProducts = useCallback((keywords = '') => {
+    const getProducts = useCallback((keywords = '',callback = null) => {
         ProductService.list({
             keywords: keywords,
             page: 0
         }).then((resp) => {
             setProducts(resp.message.data);
+            if(callback) {
+                callback();
+            }
         })
             .catch((error) => {
 
             })
     }, []);
-    const getWarehouses = useCallback((keywords = '') => {
+    const getWarehouses = useCallback((keywords = '',callback = null) => {
         WarehouseService.list({
-            keywords: '',
+            keywords: keywords,
             page: 0
         }).then((resp) => {
             setWarehouses(resp.message.data);
+            if(callback) {
+                callback();
+            }
         })
             .catch((error) => {
 

@@ -17,15 +17,19 @@ export default function SearchSelect({
   const keywords = useRef('');
   const [wait, setWait] = useState(false);
   const [localValue,setLocalValue] = useState(null);
-  useMemo(() => {
+  const [loading,setLoading] = useState(false);
+  useEffect(() => {
     if (wait || historyKeyword.current === keywords.current) {
       return;
     }
-    search(keywords.current);
+    setLoading(true);
+    search(keywords.current,() => {
+      setLoading(false);
+    });
     historyKeyword.current = keywords.current;
     
   }, [keywords.current, search, wait,historyKeyword]);
-  useMemo(() => {
+  useEffect(() => {
     if(options.length === 0 && defaultKeywords !== '') {
         keywords.current = defaultKeywords;
     }
@@ -40,7 +44,7 @@ export default function SearchSelect({
     disabled ? <div>
       <InputForm disabled={true} value={localValue?.label} />
     </div> :
-      <div>
+      <div className="erp-search-select">
         <Select
           disabled={disabled}
           value={localValue}
@@ -57,7 +61,7 @@ export default function SearchSelect({
             }
             setTimeout(() => {
               setWait(false);
-            }, 1000);
+            }, 500);
           }}
           onChange={(item) => {
             setLocalValue(item);
@@ -72,6 +76,10 @@ export default function SearchSelect({
             return <p key={index}>{mess}</p>
           })}
         </div> : null}
+        {loading ?<div class="spinner-border text-primary" role="status">
+          <span class="visually-hidden">Loading...</span>
+        </div>: null }
+        
       </div>
   );
 }
