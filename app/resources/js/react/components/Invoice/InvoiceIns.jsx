@@ -89,10 +89,6 @@ export default function InvoiceIns() {
     const handleEdit = useCallback((row) => {
         navigate('/invoices?form=invoicein&id=' + row.id)
     }, []);
-
-    const handleDelete = (row) => {
-        console.log("Delete clicked:", row);
-    };
     const listInvoice = useCallback((page = 0) => {
         table.setLoading(true);
         InvoiceInService.list({
@@ -174,7 +170,6 @@ export default function InvoiceIns() {
             data={table.data}
             links={table.links}
             onEdit={handleEdit}
-            onDelete={handleDelete}
         />
         {showEdit ? <PopupLayout title="Purchase information" onClose={() => setShowEdit(false)} onConfirm={submit} confirmText="Update">
             <div>
