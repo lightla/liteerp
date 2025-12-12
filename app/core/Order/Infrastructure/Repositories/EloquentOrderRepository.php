@@ -77,14 +77,16 @@ class EloquentOrderRepository implements OrderRepositoryInterface
             DB::raw("SUM(order_items.conversion_quantity) as total_convert"),
             DB::raw("SUM(order_items.discount) as total_discount"),
             DB::raw("COUNT(order_items.id) as total_product")
-        )
-            ->where('orders.order_no', 'like', '%' . ($data['keywords'] ?? '') . '%');
+        )->join("customers", "customers.id", "=", "orders.customer_id")
+            ->leftJoin("order_items", "order_items.order_id", "=", "orders.id")
+            ->groupBy("orders.id")
+            ->where('orders.business_id',$data['business_id']);
         if (!empty($data['status'])) {
             $list = $list->where('orders.status', $data['status']);
         }
-        return $list->join("customers", "customers.id", "=", "orders.customer_id")
-            ->leftJoin("order_items", "order_items.order_id", "=", "orders.id")
-            ->groupBy("orders.id")
-            ->paginate(15)->toArray();
+        if (!empty($data['keywords'])) {
+            $list = $list->where('orders.order_no', 'like', '%' . ($data['keywords'] ?? '') . '%');
+        }
+        return $list->paginate(15)->toArray();
     }
 }
