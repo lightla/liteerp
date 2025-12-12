@@ -68,7 +68,9 @@ export default function CommonDataTable({
                   ))}
 
                   {(onEdit || onDelete) && (
-                    <td>
+                    <td style={{
+                      width: onEdit && onDelete ? 100 : 50
+                    }}>
                       <div className="d-flex gap-2">
                         {onEdit && (
                           <button
