@@ -32,7 +32,14 @@ class EloquentShippingRepository implements ShippingRepositoryInterface
     }
     public function index(array $data): array
     {
-        return ShippingProviderModel::where('business_id',$data['business_id'])->where('name','like','%' . (!empty($data) ? $data['keywords'] : '') . '%')->paginate(15)->toArray();
+        $index = ShippingProviderModel::where('business_id',$data['business_id']);
+        if(!empty($data['keywords'])) {
+            $index->where('name','like','%' . $data['keywords'] . '%');
+        }
+        if(isset($data['active'])) {
+            $index->where('name',$data['active']);
+        }
+        return $index->paginate(15)->toArray();
     }
     public function findByName(array $data): ?Shipping
     {
@@ -42,5 +49,11 @@ class EloquentShippingRepository implements ShippingRepositoryInterface
             return null;
         }
         return Shipping::fromArray($row);
+    }
+    public function delete(Shipping $entity): Shipping
+    {
+        ShippingProviderModel::where('business_id',$entity->business_id)
+        ->where('id',$entity->id)->delete();
+        return $entity;
     }
 }

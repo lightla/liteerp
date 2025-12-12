@@ -4,14 +4,11 @@ namespace Core\Shipping\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class IndexShippingRequest extends FormRequest
+class DeleteShippingRequest extends FormRequest
 {
      public function rules(): array
     {
-        return [
-            'keywords' => 'nullable|string|max:150',
-            'active'   => 'nullable|numeric|min:0|max:1'
-        ];
+        return [];
     }
 
     public function authorize(): bool

@@ -22,7 +22,7 @@ export default function Shipping() {
         {
             label: "Logo", key: "logo", render: (value) => {
                 return value ? <img width={45} height={45} src={value} alt='' /> :
-                    <FlatIcon32/>
+                    <FlatIcon32 />
             }
         },
         { label: "ID", key: "id" },
@@ -43,9 +43,7 @@ export default function Shipping() {
         form.setIsEdit(true);
         setShowAdd(true);
     }
-    const handDelete = (row) => {
 
-    }
     const submit = useCallback(() => {
         form.setLoading(true)
         form.setFormErrors(null);
@@ -120,6 +118,33 @@ export default function Shipping() {
                 }
             })
     }, [table, form.formData?.keywords]);
+    const destroy = useCallback((row) => {
+        ShippingService.delete(row)
+            .then((resp) => {
+                openPopup({
+                    type: 'success',
+                    message: 'You has been deleted'
+                })
+                getShippings();
+            })
+            .catch((error) => {
+                if (error.response.data?.message) {
+                    openPopup({
+                        type: 'error',
+                        message: error.response.data?.message
+                    })
+                }
+            })
+    }, []);
+    const handleDelete = (row) => {
+        openPopup({
+            type: 'warning',
+            message: 'Are your sure to delete?',
+            onConfirm: () => {
+                destroy(row);
+            }
+        })
+    }
     useEffect(() => {
         getShippings();
     }, []);
@@ -151,7 +176,8 @@ export default function Shipping() {
                     data={table.data}
                     links={table.links}
                     columns={columns}
-                    onEdit={handEdit} onDelete={handEdit} />
+                    onEdit={handEdit}
+                    onDelete={handleDelete} />
             </div>
             <div>
                 {showAdd ? <PopupLayout

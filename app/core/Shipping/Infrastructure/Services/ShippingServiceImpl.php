@@ -44,4 +44,12 @@ class ShippingServiceImpl implements ShippingService
         $entity->active = $data['active'];
         return $this->repo->update($entity);
     }
+    public function delete(array $data): Shipping | BadException
+    {
+        $entity = $this->repo->findById($data);
+        if(!$entity) {
+            throw new BadException(__("Not found data"));
+        }
+        return $this->repo->delete($entity);
+    }
 }

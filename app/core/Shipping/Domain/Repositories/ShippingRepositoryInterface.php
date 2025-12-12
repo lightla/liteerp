@@ -10,5 +10,6 @@ interface ShippingRepositoryInterface
     public function findById(array $data) : ?Shipping;
     public function findByName(array $data) : ?Shipping;
     public function update(Shipping $entity) : Shipping;
+    public function delete(Shipping $entity) : Shipping;
     public function index(array $data) : array;
 }
