@@ -3,13 +3,14 @@ import { useCallback, useEffect, useState } from "react";
 import StockInService from "../../../services/StockInService";
 import useTable from '../../../libraries/handleTable'
 import CommonDataTable from '../../CommonDataTable';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { isoToDateTime } from '../../../libraries/common';
 import {useForm} from '../../../libraries/handleInput'
 import {Select} from '../../UI/Input/Select';
 import SearchInput from '../../UI/Input/SearchInput'
 import { usePopup } from '../../popups/PopupContext';
 export default function StockIns() {
+    const navigate = useNavigate();
     const search = useForm();
     const table = useTable();
     const {openPopup} = usePopup();
@@ -79,13 +80,6 @@ export default function StockIns() {
             render: (date) => {
                 return date ? isoToDateTime(date) : '-'
             }
-        },
-        {
-            label: "View",
-            key: "id",
-            render: (id) => {
-                return <Link to={'/stocks?stockin=' + id}>View</Link>
-            }
         }
     ];
 
@@ -125,6 +119,10 @@ export default function StockIns() {
             columns={columns}
             data={table.data}
             links={table.links}
+            iconEdit={<i className="bi bi-eye"></i>}
+            onEdit={(row) => {
+                navigate('/stocks?stockin=' + row.id)
+            }}
         />
     </div>
 }
