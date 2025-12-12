@@ -11,6 +11,7 @@ import api from "../common/api";
   updateCategory: (data) => api.put("/business-access/category-product/" + data.id,data),
   listCategory: (data) => api.get("/business-access/category-product?keywords=" + `${data.keywords}&page=${data.page}`),
   update: (data) => api.put("/business-access/products/" + data.id,data),
+  delete: (data) => api.delete("/business-access/products/" + data.id),
   deleteCategory: (data) => api.delete("/business-access/category-product/" + data.id),
 };
 export default ProductService;

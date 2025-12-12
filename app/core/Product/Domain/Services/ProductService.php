@@ -11,4 +11,5 @@ interface ProductService
     public function index(array $data) : array;
     public function show(array $data) : array | BadException;
     public function update(array $data): Product;
+    public function delete(array $data): Product;
 }

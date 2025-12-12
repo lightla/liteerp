@@ -39,4 +39,12 @@ class ProductServiceImpl implements ProductService
         $entity->image     = $data['image	'] ?? null;
         return $this->repo->update($entity);
     }
+    public function delete(array $data): Product
+    {
+        $entity = $this->repo->findById($data);
+        if (!$entity) {
+            throw new BadException(__("Not found data for update"));
+        }
+        return $this->repo->delete($entity);
+    }
 }

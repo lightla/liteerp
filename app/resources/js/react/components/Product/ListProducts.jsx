@@ -19,16 +19,14 @@ export default function ListProducts() {
     const search = useForm();
     const table = useTable();
     const [category, setCategory] = useState([]);
-    const [selectCategory, setSelectCategory] = useState(null);
     const columns = [
         { label: "ID", key: "id" },
         { label: "Name", key: "name" },
-        { label: "Category", key: "category.name" }
+        { label: "Category", key: "category" }
     ];
     const getProducts = useCallback((page = 0) => {
         table.setLoading(true)
         ProductService.list({
-            active: search.formData?.active ?? 0,
             page: page,
             keywords: search.formData?.keywords ?? ''
         })
@@ -63,8 +61,7 @@ export default function ListProducts() {
         form.setLoading(true)
         form.setFormErrors(null);
         ProductService.update({
-            ...form.formData,
-            category_id: selectCategory.value
+            ...form.formData
         })
             .then((resp) => {
                 openPopup({
@@ -87,7 +84,7 @@ export default function ListProducts() {
                 }
                 form.setLoading(false)
             })
-    }, [form.formData, selectCategory]);
+    }, [form.formData]);
     const create = useCallback(() => {
         form.setLoading(true)
         form.setFormErrors(null);
@@ -113,15 +110,38 @@ export default function ListProducts() {
                 }
                 form.setLoading(false)
             })
-    }, [form.formData, selectCategory]);
+    }, [form.formData]);
     const handEdit = (row) => {
         setShowForm(true);
         form.setIsEdit(true);
         form.setFormData(row);
         getCategories(row.category.name);
-        setSelectCategory({
-            value: row.category.id,
-            label: row.category.name
+    }
+    const destroy = useCallback((row) => {
+        ProductService.delete(row)
+            .then((resp) => {
+                openPopup({
+                    type: 'success',
+                    message: 'You has been deleted'
+                })
+                getProducts();
+            })
+            .catch((error) => {
+                if (error.response.data?.message) {
+                    openPopup({
+                        type: 'error',
+                        message: error.response.data?.message
+                    })
+                }
+            })
+    }, []);
+    const handleDelete = (row) => {
+        openPopup({
+            type: 'warning',
+            message: 'Are you sure delete?',
+            onConfirm: () => {
+                destroy(row)
+            }
         })
     }
     useEffect(() => {
@@ -140,18 +160,6 @@ export default function ListProducts() {
             filter={<div>
                 <div className='d-flex'>
                     <div className='col-4'>
-                        <label>Status</label>
-                        <Select
-                            name='active'
-                            handleChange={search.handleChange}
-                            errorMessage={search.formErrors?.active}
-                            value={search.formData?.active ?? 0}
-                            options={[
-                                { value: 0, label: 'Waiting for sale' },
-                                { value: 1, label: 'Ready for sale' }
-                            ]} />
-                    </div>
-                    <div className='col-4 mx-2'>
                         <label>Search</label>
                         <SearchInput
                             submit={getProducts}
@@ -169,7 +177,7 @@ export default function ListProducts() {
             data={table?.data}
             links={table?.links}
             onEdit={ !hasPermission ? null : handEdit}
-        //onDelete={(row) => {}}
+            onDelete={!hasPermission ? null : handleDelete}
         />
         <div>
             {showForm ? <PopupLayout
@@ -229,7 +237,9 @@ export default function ListProducts() {
                                     value: item.id,
                                     label: item.name
                                 }
-                            })} />
+                            })} 
+                            defaultKeywords={form.formData?.category}
+                            />
                     </div>
                     <div className='form-group mt-3'>
                         <label>Description</label>

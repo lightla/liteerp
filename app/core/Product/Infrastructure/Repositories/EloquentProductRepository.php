@@ -42,8 +42,9 @@ class EloquentProductRepository implements ProductRepositoryInterface
     }
     public function index(array $data): array
     {
-        $rows = ProductModel::select("products.*")
-            ->with(['category'])
+        $rows = ProductModel::select("products.*",
+            "category_product.name as category")
+            ->join("category_product","category_product.id","=","products.category_id")
             ->where(function ($query) use ($data) {
                 return $query->where('products.business_id', $data['business_id'])
                     ->where('products.name', 'like', '%' . ($data['keywords'] ?? '') . '%');
@@ -56,9 +57,15 @@ class EloquentProductRepository implements ProductRepositoryInterface
     }
     public function update(Product $entity): Product
     {
-        // TODO: Add actual database logic
         ProductModel::where('id', $entity->id)
-        ->where('products.business_id', $entity->business_id)->update($entity->toArray());
+        ->where('business_id', $entity->business_id)->update($entity->toArray());
+        return $entity;
+    }
+    public function delete(Product $entity): Product
+    {
+        ProductModel::where('id', $entity->id)
+        ->where('business_id', $entity->business_id)
+        ->delete();
         return $entity;
     }
 }

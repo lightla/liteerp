@@ -11,5 +11,6 @@ interface ProductRepositoryInterface
     public function index(array $data) : array;
     public function findOneWithFullData(array $data) : ?array;
     public function update(Product $entity): Product;
+    public function delete(Product $entity): Product;
     public function findById(array $data): ?Product;
 }

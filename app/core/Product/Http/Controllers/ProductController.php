@@ -4,10 +4,14 @@ namespace Core\Product\Http\Controllers;
 
 use Core\Product\Application\UseCases\CreateProduct;
 use Core\Product\Application\DTOs\CreateProductRequest;
+use Core\Product\Application\DTOs\DeleteProductRequest as DTOsDeleteProductRequest;
+use Core\Product\Application\DTOs\IndexProductRequest as DTOsIndexProductRequest;
+use Core\Product\Application\UseCases\DeleteProduct;
 use Core\Product\Application\UseCases\IndexProduct;
 use Core\Product\Application\UseCases\ShowProduct;
 use Core\Product\Application\UseCases\UpdateProduct;
 use Core\Product\Http\Requests\CreateProductRequest as FormRequest;
+use Core\Product\Http\Requests\DeleteProductRequest;
 use Core\Product\Http\Requests\IndexProductRequest;
 use Core\Product\Http\Requests\ShowProductRequest;
 use Core\Product\Http\Requests\UpdateProductRequest;
@@ -21,7 +25,8 @@ class ProductController
         return response()->json(['message' => $entity]);
     }
     public function index(IndexProductRequest $request, IndexProduct $useCase) {
-        $entity = $useCase->handle($request->all());
+        $dto = DTOsIndexProductRequest::fromArray($request->all());
+        $entity = $useCase->handle($dto);
         return response()->json(['message' => $entity]);
     }
     public function show(ShowProductRequest $request, string $id, ShowProduct $useCase){
@@ -38,6 +43,16 @@ class ProductController
             'id' => $id
         ]);
         $dto = CreateProductRequest::fromArray($request->all());
+        $entity = $useCase->handle($dto);
+        return response()->json(['message' => $entity]);
+    }
+    public function destroy(string $id, 
+            DeleteProductRequest $request, 
+            DeleteProduct $useCase) {
+        $request->merge([
+            'id' => $id
+        ]);
+        $dto = DTOsDeleteProductRequest::fromArray($request->all());
         $entity = $useCase->handle($dto);
         return response()->json(['message' => $entity]);
     }
