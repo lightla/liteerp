@@ -3,13 +3,14 @@ import { useCallback, useEffect, useState } from "react";
 import StockOutService from "../../../services/StockOutService";
 import useTable from '../../../libraries/handleTable'
 import CommonDataTable from '../../CommonDataTable';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import {useForm} from '../../../libraries/handleInput'
 import {Select} from '../../UI/Input/Select';
 import SearchInput from '../../UI/Input/SearchInput'
 import { usePopup } from '../../popups/PopupContext';
 import Currencies from '../../Currencies';
 export default function StockOuts() {
+    const navigate = useNavigate();
     const search = useForm();
     const table = useTable();
     const {openPopup} = usePopup();
@@ -80,13 +81,6 @@ export default function StockOuts() {
             render: (date) => {
                 return <span>{date}</span>
             }
-        },
-        {
-            label: "View",
-            key: "id",
-            render: (id) => {
-                return <Link to={'/stocks?stockout=' + id}>View</Link>
-            }
         }
     ];
     useEffect(() => {
@@ -125,6 +119,10 @@ export default function StockOuts() {
             columns={columns}
             data={table.data}
             links={table.links}
+            iconEdit={<i className="bi bi-eye"></i>}
+            onEdit={(row) => {
+                navigate('/stocks?stockin=' + row.id)
+            }}
         />
         
     </div>
