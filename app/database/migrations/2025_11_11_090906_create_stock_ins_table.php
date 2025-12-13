@@ -18,6 +18,7 @@ return new class extends Migration
             $table->foreignId('approved_by')->nullable()->constrained('users')->nullOnDelete();
             $table->date('import_date')->nullable();
             $table->enum('status',['received','pending','cancelled'])->default('pending');
+            $table->string('image')->nullable();
             $table->softDeletes();
             $table->timestamps();
         });

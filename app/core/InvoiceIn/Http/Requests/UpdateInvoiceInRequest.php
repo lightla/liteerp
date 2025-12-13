@@ -18,7 +18,8 @@ class UpdateInvoiceInRequest extends FormRequest
             'invoice_date'  => 'required|date_format:Y-m-d',
             'due_date'      => 'required|date_format:Y-m-d|after_or_equal:invoice_date',
             'approved'      => 'required|boolean',
-            'payment_status' => 'required|in:paid,pending,partial_payment'
+            'payment_status' => 'required|in:paid,pending,partial_payment',
+            'image'         => 'nullable|string|max:250'
         ];
     }
 

@@ -18,7 +18,8 @@ class CreateInvoiceInRequest
         public ?bool $approved = null,
         public ?string $payment_status,
         public ?int $id = null,
-        public ?int $created_by
+        public ?int $created_by,
+        public ?string $image = null
     ) {}
 
     public static function fromArray(array $data): self
@@ -37,7 +38,8 @@ class CreateInvoiceInRequest
             approved: $data['approved'] ?? null,
             payment_status : $data['payment_status'] ?? null,
             id: $data['id'] ?? null,
-            created_by: $data['user_id'] ?? null 
+            created_by: $data['user_id'] ?? null,
+            image: $data['image'] ?? null  
         );
     }
 
@@ -57,7 +59,8 @@ class CreateInvoiceInRequest
             'approved' => $this->approved,
             'payment_status' => $this->payment_status,
             'id'    => $this->id,
-            'created_by'    => $this->created_by
+            'created_by'    => $this->created_by,
+            'image' => $this->image
         ];
     }
 }

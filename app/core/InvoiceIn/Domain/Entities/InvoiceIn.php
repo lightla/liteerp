@@ -19,7 +19,8 @@ class InvoiceIn
         public ?string $invoice_date = null,
         public ?string $due_date = null,
         public bool $approved,
-        public string $payment_status
+        public string $payment_status,
+        public ?string $image = null 
     ) {}
 
     public static function fromArray(array $data): self
@@ -37,7 +38,8 @@ class InvoiceIn
             invoice_date: !empty($data['invoice_date']) ? Carbon::parse($data['invoice_date'])->format('Y-m-d') : null,
             due_date: !empty($data['due_date']) ? Carbon::parse($data['due_date'])->format('Y-m-d') : null,
             approved: $data['approved'] ?? false,
-            payment_status : $data['payment_status'] ?? 'pending'
+            payment_status : $data['payment_status'] ?? 'pending',
+            image: $data['image'] ?? null 
         );
     }
 
@@ -56,7 +58,8 @@ class InvoiceIn
             'invoice_date' => $this->invoice_date,
             'due_date' => $this->due_date,
             'approved' => $this->approved,
-            'payment_status' => $this->payment_status
+            'payment_status' => $this->payment_status,
+            'image' => $this->image
         ];
     }
     public function markApproved(){

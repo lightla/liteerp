@@ -24,7 +24,8 @@ class InvoiceInModel extends Model
         'invoice_date',
         'due_date',
         'approved',
-        'payment_status'
+        'payment_status',
+        'image'
     ];
 
     protected $casts = [

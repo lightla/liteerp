@@ -40,6 +40,7 @@ class InvoiceInServiceImpl implements InvoiceInService
         $entity->due_date = $data['due_date'] ?? $entity->due_date;
         $entity->approved = $data['approved'] ?? $entity->approved;
         $entity->payment_status = $data['payment_status'] ?? $entity->payment_status;
+        $entity->image = $data['image'] ?? $entity->image;
         $update = $this->repo->update($entity);
         return $update;
     }

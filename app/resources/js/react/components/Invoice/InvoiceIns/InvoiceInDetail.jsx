@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import SecondaryButton from '../../UI/Buttons/SecondaryButton'
 import PrimaryButton from '../../UI/Buttons/PrimaryButton'
 import InvoiceInService from '../../../services/InvoiceInService'
-import { useSearchParams } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { useForm } from "../../../libraries/handleInput";
 import { usePopup } from "../../popups/PopupContext";
 import PurchaseItemService from '../../../services/PurchaseItemService'
@@ -14,6 +14,7 @@ import { Select } from "../../UI/Input/Select";
 import PageHead from "../../PageHead";
 import LoadingBox from "../../LoadingBox";
 import Currencies from "../../Currencies";
+import UploadImage from "../../UI/Input/UploadImage";
 export default function InvoiceInDetail() {
     const [loading, setLoading] = useState(false);
     const { openPopup } = usePopup();
@@ -41,13 +42,13 @@ export default function InvoiceInDetail() {
             {
                 label: 'Unit cost', key: 'unit_cost',
                 render: (value) => {
-                    return <span><Currencies amount={value}/></span>
+                    return <span><Currencies amount={value} /></span>
                 }
             },
             {
                 label: 'Total', key: 'total',
                 render: (value) => {
-                    return <span><Currencies amount={value}/></span>
+                    return <span><Currencies amount={value} /></span>
                 }
             }
         ];
@@ -270,26 +271,26 @@ export default function InvoiceInDetail() {
                                         <h5 className="fw-semibold mb-3">Summary</h5>
                                         <div className="d-flex justify-content-between theme-title">
                                             <span>Subtotal</span>
-                                            <Currencies amount={form.formData?.subtotal}/>
+                                            <Currencies amount={form.formData?.subtotal} />
                                         </div>
 
                                         <div className="d-flex justify-content-between theme-title">
                                             <span>Shipping fee</span>
-                                            <Currencies amount={form.formData?.shipping_fee}/>
+                                            <Currencies amount={form.formData?.shipping_fee} />
                                         </div>
 
                                         <div className="d-flex justify-content-between theme-title">
                                             <span>VAT</span>
-                                            <Currencies amount={form.formData?.total_tax}/>
+                                            <Currencies amount={form.formData?.total_tax} />
                                         </div>
                                         <div className="d-flex justify-content-between theme-title">
                                             <span>Discount</span>
-                                            <Currencies amount={form.formData?.discount}/>
+                                            <Currencies amount={form.formData?.discount} />
                                         </div>
 
                                         <div className="d-flex justify-content-between mt-3 fs-5 fw-semibold">
                                             <span>Tổng cộng:</span>
-                                            <Currencies amount={form.formData?.total}/>
+                                            <Currencies amount={form.formData?.total} />
                                         </div>
 
                                         {/* Buttons */}
@@ -312,6 +313,7 @@ export default function InvoiceInDetail() {
                 </div>}
             </div>
             {showEdit ? <PopupLayout
+                confirmText="Save change"
                 loading={form.loading}
                 onClose={() => setShowEdit(false)}
                 title="Update invoice" onConfirm={() => {
@@ -351,6 +353,17 @@ export default function InvoiceInDetail() {
                                 { value: 'paid', label: 'Paid' },
                                 { value: 'partial_payment', label: 'Partial payment' }
                             ]} />
+                    </div>
+                    <div className="form-group mt-3">
+                        <label>Invoice image 
+                            <a target="_blank" href={form.formData?.image}>View full</a>
+                        </label>
+                        <UploadImage
+                            name="image"
+                            errorMessage={form.formErrors?.image}
+                            handleChangeByKey={form.handleChangeByKey}
+                            value={form.formData?.image}
+                        />
                     </div>
                 </div>
             </PopupLayout> : null}
