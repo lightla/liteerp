@@ -83,3 +83,11 @@ button[disabled] {
     height: 20px;
     right: 55px;
 }
+.uploadimage-component {
+  position: relative;
+}
+.uploadimage-component img{
+  max-width: 100%;
+  max-height: 100%;
+  position: absolute;
+}
