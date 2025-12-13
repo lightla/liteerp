@@ -1,16 +1,13 @@
 import axios from "axios";
-import { store } from "../redux/store";
 
-// 👇 Tạo instance axios
 const api = axios.create({
-  baseURL: "/api", // Laravel API route prefix
+  baseURL: "/api", 
   timeout: 10000,
   headers: {
     "Content-Type": "application/json",
   },
 });
 
-// 🧠 Request Interceptor
 api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("token");
@@ -22,15 +19,12 @@ api.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// ⚡ Response Interceptor
 api.interceptors.response.use(
   (response) => response.data,
   (error) => {
     const status = error.response?.status;
     if (status === 401) {
-      console.warn("Token hết hạn, đăng xuất...");
       localStorage.removeItem("token");
-      // Reload hoặc chuyển hướng về login
       window.location.href = "/dashboard/login";
     }
 

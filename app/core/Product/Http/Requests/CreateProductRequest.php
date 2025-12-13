@@ -15,7 +15,7 @@ class CreateProductRequest extends FormRequest
             'unit'               => 'required|in:pcs,set,box,carton,bag,pack,roll',
 
             'description'        => 'required|string|max:255',
-            'image'              => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048',
+            'image'              => 'nullable|string|max:255',
             // attributes
             'length' => 'nullable|string|max:150',
             'width' => 'nullable|string|max:150',

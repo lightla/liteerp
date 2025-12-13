@@ -12,6 +12,7 @@ import { useForm } from '../libraries/handleInput';
 import SearchInput from '../components/UI/Input/SearchInput';
 import PageHead from '../components/PageHead';
 import FlatIcon32 from '../components/UI/FlatIcons/FlatIcon32'
+import UploadImage from '../components/UI/Input/UploadImage';
 export default function Shipping() {
     const { openPopup } = usePopup();
     const table = useTable();
@@ -211,10 +212,9 @@ export default function Shipping() {
                         </div>
                         <div className='form-group mt-3'>
                             <label>Logo</label>
-                            <InputForm
-                                type='file'
+                            <UploadImage
                                 name='logo'
-                                handleChange={form.handleChange}
+                                handleChangeByKey={form.handleChangeByKey}
                                 errorMessage={form.formErrors?.logo}
                                 value={form.formData?.logo} />
                         </div>

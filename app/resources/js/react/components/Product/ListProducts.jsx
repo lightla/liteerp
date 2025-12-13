@@ -11,6 +11,8 @@ import { usePopup } from '../popups/PopupContext';
 import SearchSelect from '../UI/Input/SearchSelect'
 import TextArea from '../UI/Input/Textarea';
 import { useSelector } from 'react-redux';
+import UploadImage from '../UI/Input/UploadImage';
+import LoadImage from '../LoadImage';
 export default function ListProducts() {
     const business = useSelector((state) => state.business.data);
     const { openPopup } = usePopup();
@@ -21,7 +23,12 @@ export default function ListProducts() {
     const [category, setCategory] = useState([]);
     const columns = [
         { label: "ID", key: "id" },
+        { label: "Thumbnail", key: 'image', render: (url) => {
+            return <LoadImage width={35} height={35} url={url}/>
+        }},
         { label: "Name", key: "name" },
+        { label: "Sku", key: "sku" },
+        { label: "Unit", key: "unit" },
         { label: "Category", key: "category" }
     ];
     const getProducts = useCallback((page = 0) => {
@@ -241,6 +248,15 @@ export default function ListProducts() {
                                 }
                             })} 
                             defaultKeywords={form.formData?.category}
+                            />
+                    </div>
+                    <div className='form-group mt-3'>
+                        <label>Thumbnail</label>
+                        <UploadImage
+                            name='image'
+                            handleChangeByKey={form.handleChangeByKey}
+                            value={form.formData?.image}
+                            errorMessage={form.formErrors?.image}
                             />
                     </div>
                     <div className='form-group mt-3'>

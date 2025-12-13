@@ -7,7 +7,7 @@ use Core\Product\Domain\Entities\Product;
 interface ProductRepositoryInterface
 {
     public function create(Product $entity): Product;
-    public function checkExists(Product $entity) : bool;
+    public function checkExists(array $data) : ?Product;
     public function index(array $data) : array;
     public function findOneWithFullData(array $data) : ?array;
     public function update(Product $entity): Product;

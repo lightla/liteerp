@@ -16,8 +16,8 @@ class ProductServiceImpl implements ProductService
     public function create(array $data): Product
     {
         $entity = Product::fromArray($data);
-        if ($this->repo->checkExists($entity)) {
-            throw new BadException(__("You have a product same sku,warehouse on this ticket. If you wanna update quantity please select option"));
+        if ($this->repo->checkExists($data)) {
+            throw new BadException(__("Sku has been used"));
         }
         return $this->repo->create($entity);
     }
@@ -35,8 +35,18 @@ class ProductServiceImpl implements ProductService
         if (!$entity) {
             throw new BadException(__("Not found data for update"));
         }
+        $check = $this->repo->checkExists($data);
+        if ($check) {
+            if($check->id !== $entity->id) {
+                throw new BadException(__("Sku has been used"));
+            }
+        }
         $entity->description = $data['description'];
-        $entity->image     = $data['image	'] ?? null;
+        $entity->image     = $data['image'] ?? null;
+        $entity->category_id     = $data['category_id'] ?? null;
+        $entity->unit     = $data['unit'] ?? null;
+        $entity->name     = $data['name'] ?? null;
+        $entity->sku     = $data['sku'] ?? null;
         return $this->repo->update($entity);
     }
     public function delete(array $data): Product

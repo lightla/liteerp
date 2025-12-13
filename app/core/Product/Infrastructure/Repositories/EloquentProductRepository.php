@@ -15,13 +15,14 @@ class EloquentProductRepository implements ProductRepositoryInterface
         $entity->id = $create['id'];
         return $entity;
     }
-    public function checkExists(Product $entity): bool
+    public function checkExists(array $data): ?Product
     {
-        $update = ProductModel::where('sku', $entity->sku);
-        if ($entity->id) {
-            $update = $update->where('id', '!=', $entity->id);
+        $row = ProductModel::where('sku', $data['sku'])
+        ->where('business_id',$data['business_id'])?->first();
+        if(!$row) {
+            return null;
         }
-        return $update->count() == false ? false : true;
+        return Product::fromArray($row->toArray());
     }
     public function findOneWithFullData(array $data): ?array
     {

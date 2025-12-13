@@ -8,7 +8,8 @@ export function InputForm({
     value = '',
     name = 'input',
     width = null,
-    disabled = false
+    disabled = false,
+    ref = null
 }) {
     return <div>
         {type === 'checkbox' ? <input
@@ -22,6 +23,7 @@ export function InputForm({
             name={name}
             className={(className !== '' ? className : 'checkbox-default') + (errorMessage ? 'is-invalid' : '')}
             placeholder={placeholder} /> : <input
+            ref={ref}
             disabled={disabled}
             value={value ?? ''}
             style={{

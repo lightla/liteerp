@@ -11,7 +11,7 @@ class UpdateProductRequest extends FormRequest
         return [
             'category_id'        => 'required|exists:category_product,id,deleted_at,NULL',
             'description'        => 'required|string|max:255',
-            'image'              => 'nullable|image|mimes:jpg,jpeg,png,webp|max:2048'
+            'image'              => 'nullable|string|max:255',
         ];
     }
 
