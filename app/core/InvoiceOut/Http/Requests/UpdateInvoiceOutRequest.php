@@ -17,7 +17,8 @@ class UpdateInvoiceOutRequest extends FormRequest
 
             'invoice_date' => 'required|date_format:Y-m-d',
             'due_date'     => 'nullable|date_format:Y-m-d',
-            'approved'     => 'required|boolean' 
+            'approved'     => 'required|boolean',
+            'image'        => 'nullable|string|max:255' 
         ];
     }
 

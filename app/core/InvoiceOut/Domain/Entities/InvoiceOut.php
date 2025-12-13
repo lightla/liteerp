@@ -18,7 +18,8 @@ class InvoiceOut
         public ?string $invoice_date,
         public ?string $due_date,
         public ?string $payment_status,
-        public bool $approved
+        public bool $approved,
+        public ?string $image = null
     ) {}
 
     public static function fromArray(array $data): self
@@ -35,7 +36,8 @@ class InvoiceOut
             invoice_date: $data['invoice_date'] ?? null,
             due_date: $data['due_date'] ?? null,
             payment_status: $data['payment_status'] ?? null,
-            approved: $data['approved']
+            approved: $data['approved'],
+            image: $data['image']
         );
     }
 
@@ -53,7 +55,8 @@ class InvoiceOut
             'invoice_date' => $this->invoice_date,
             'due_date'     => $this->due_date,
             'payment_status'    => $this->payment_status,
-            'approved'     => $this->approved
+            'approved'     => $this->approved,
+            'image'        => $this->image
         ];
     }
     public function setDocumentNo(){

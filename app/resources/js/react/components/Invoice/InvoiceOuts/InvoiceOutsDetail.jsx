@@ -15,6 +15,7 @@ import OrderItemService from "../../../services/OrderItemService";
 import PageHead from "../../PageHead";
 import LoadingBox from "../../LoadingBox";
 import Currencies from "../../Currencies";
+import UploadImage from '../../UI/Input/UploadImage'
 export default function InvoiceOutDetail() {
     const [loading, setLoading] = useState(false)
     const { openPopup } = usePopup();
@@ -42,13 +43,13 @@ export default function InvoiceOutDetail() {
             {
                 label: 'Subtotal', key: 'subtotal',
                 render: (value) => {
-                    return <span><Currencies amount={value}/></span>
+                    return <span><Currencies amount={value} /></span>
                 }
             },
             {
                 label: 'Total', key: 'total',
                 render: (value) => {
-                    return <span><Currencies amount={value}/></span>
+                    return <span><Currencies amount={value} /></span>
                 }
             },
             { label: "Warehouse", key: "warehouse" },
@@ -100,6 +101,7 @@ export default function InvoiceOutDetail() {
     }, [detail?.order_id])
     const update = useCallback(() => {
         form.setFormErrors(null)
+        form.setLoading(true)
         InvoiceOutService.update(form.formData)
             .then((resp) => {
                 setShowEdit(false);
@@ -108,6 +110,7 @@ export default function InvoiceOutDetail() {
                     message: 'You has been updated'
                 });
                 setDetail(form.formData);
+                form.setLoading(false)
             })
             .catch((error) => {
                 if (error.response?.data?.errors) {
@@ -119,6 +122,7 @@ export default function InvoiceOutDetail() {
                         message: error.response.data?.message
                     })
                 }
+                form.setLoading(false)
             })
     }, [form.formData]);
     const confirmApproved = useCallback(() => {
@@ -147,7 +151,7 @@ export default function InvoiceOutDetail() {
                 subtitle="Check and manage detailed order invoice information"
             />
             <div className="mx-4 mt-3">
-                {loading ? <LoadingBox/> : <div>
+                {loading ? <LoadingBox /> : <div>
                     <div className="row g-3 mb-4">
                         <div className="col-md-3">
                             <div className="p-3 rounded border">
@@ -276,8 +280,8 @@ export default function InvoiceOutDetail() {
                                         <div className="mb-2">
                                             <div className="theme-title small">Shipping fee actual</div>
                                             <div className="theme-title">
-                                                <Currencies amount={form.formData?.shipping_fee_actual}/>
-                                                </div>
+                                                <Currencies amount={form.formData?.shipping_fee_actual} />
+                                            </div>
                                         </div>
                                         {/* <SupplierRow label="Mã số thuế" value="0987654321" /> */}
                                     </div>
@@ -286,8 +290,8 @@ export default function InvoiceOutDetail() {
                                         <div className="mb-2">
                                             <div className="theme-title small">Shipping fee estimated</div>
                                             <div className="theme-title">
-                                                <Currencies amount={form.formData?.shipping_fee_estimated}/>
-                                                </div>
+                                                <Currencies amount={form.formData?.shipping_fee_estimated} />
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -352,29 +356,29 @@ export default function InvoiceOutDetail() {
                                         </div>
                                         <div className="d-flex justify-content-between theme-title">
                                             <span>Subtotal</span>
-                                            <Currencies amount={detail?.subtotal}/>
-                                            
+                                            <Currencies amount={detail?.subtotal} />
+
                                         </div>
 
                                         <div className="d-flex justify-content-between theme-title">
                                             <span>Shipping fee</span>
-                                            <Currencies amount={detail?.shipping_fee}/>
+                                            <Currencies amount={detail?.shipping_fee} />
                                         </div>
 
                                         <div className="d-flex justify-content-between theme-title">
                                             <span>VAT</span>
-                                            <Currencies amount={detail?.tax}/>
+                                            <Currencies amount={detail?.tax} />
                                         </div>
                                         <div className="d-flex justify-content-between theme-title">
                                             <span>Discount</span>
-                                            <Currencies amount={detail?.discount}/>
+                                            <Currencies amount={detail?.discount} />
                                         </div>
 
                                         <div className="d-flex justify-content-between mt-3 fs-5 fw-semibold">
                                             <span className="theme-title">Total:</span>
                                             <span className="text-primary">
-                                                <Currencies amount={detail?.total_adjusted}/></span>
-                                                
+                                                <Currencies amount={detail?.total_adjusted} /></span>
+
                                         </div>
 
                                         {/* Buttons */}
@@ -395,6 +399,7 @@ export default function InvoiceOutDetail() {
                 </div>}
             </div>
             {showEdit ? <PopupLayout
+                loading={form.loading}
                 onClose={() => setShowEdit(false)}
                 title="Update invoice" onConfirm={() => {
                     update();
@@ -433,6 +438,14 @@ export default function InvoiceOutDetail() {
                                 { value: 'paid', label: 'Paid' },
                                 { value: 'partial_payment', label: 'Partial payment' }
                             ]} />
+                    </div>
+                    <div className="form-group mt-3">
+                        <UploadImage
+                            name="image"
+                            errorMessage={form.formErrors?.image}
+                            handleChangeByKey={form.handleChangeByKey}
+                            value={form.formData?.image}
+                        />
                     </div>
                 </div>
             </PopupLayout> : null}

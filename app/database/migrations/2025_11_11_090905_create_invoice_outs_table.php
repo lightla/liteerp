@@ -25,6 +25,7 @@ return new class extends Migration
             $table->foreignId('approved_by')->nullable()->constrained('users')->onDelete('cascade');
             $table->enum('payment_status',['paid','partial_payment','pending'])->default('pending');
             $table->boolean('approved')->default(false);
+            $table->string('image')->nullable(); 
             $table->softDeletes();
             $table->timestamps();
         });

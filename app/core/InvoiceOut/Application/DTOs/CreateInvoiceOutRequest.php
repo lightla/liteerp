@@ -17,7 +17,8 @@ class CreateInvoiceOutRequest
         public ?int $id = null,
         public ?string $payment_status = null,
         public bool $approved,
-        public ?int $created_by 
+        public ?int $created_by,
+        public ?string $image = null  
     ) {}
 
     public static function fromArray(array $data): self
@@ -35,7 +36,8 @@ class CreateInvoiceOutRequest
             id: $data['id'] ?? null,
             payment_status: $data['payment_status'] ?? 'pending',
             approved: $data['approved'] ?? false,
-            created_by: $data['user_id'] ?? null
+            created_by: $data['user_id'] ?? null,
+            image: $data['image']
         );
     }
 
@@ -54,7 +56,8 @@ class CreateInvoiceOutRequest
             'id' => $this->id,
             'payment_status' => $this->payment_status,
             'approved'     => $this->approved,
-            'created_by'   => $this->created_by 
+            'created_by'   => $this->created_by,
+            'image' => $this->image 
         ];
     }
 }

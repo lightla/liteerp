@@ -28,7 +28,8 @@ class InvoiceOutModel extends Model
         'due_date',
         'payment_status',
         'approved',
-        'payment_method'
+        'payment_method',
+        'image'
     ];
 
     /**
