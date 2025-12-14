@@ -18,6 +18,7 @@ class UpdateOrder
     {
         DB::beginTransaction();
         $update = $this->service->update($dto->toArray());
+        $notificationStatus = 'update';
         if($update->isApproved()) {
             Event::dispatch("erp.order.approved", [
                 'user_id' => $dto->created_by,
@@ -25,6 +26,7 @@ class UpdateOrder
                 'id' => $update->id,
                 'order_id'     => $update->id,
             ]);  
+            $notificationStatus = "approved";
         } else if($update->isCancelled()) {
             Event::dispatch("erp.order.cancelled", [
                 'user_id' => $dto->created_by,
@@ -32,6 +34,7 @@ class UpdateOrder
                 'id' => $update->id,
                 'order_id'     => $update->id,
             ]);
+            $notificationStatus = "cancelled";
         } else {
             Event::dispatch("erp.order.update", [
                 'user_id' => $dto->created_by,
@@ -40,7 +43,23 @@ class UpdateOrder
                 'order_id'     => $update->id,
             ]);
         }
-        
+        Event::dispatch("erp.notification.many", [
+            'user_id' => $dto->created_by,
+            'business_id' => $dto->business_id,
+            'type' => $notificationStatus,
+            'entity_type' => 'order',
+            'entity_id' => $update->id,
+            'chanels' => ['db'],
+            'roles' => ['admin','manager']
+        ]);
+        Event::dispatch("erp.notification.create", [
+            'user_id' => $dto->created_by,
+            'business_id' => $dto->business_id,
+            'type' => $notificationStatus,
+            'entity_type' => 'order',
+            'entity_id' => $update->id,
+            'chanels' => ['db']
+        ]);
         DB::commit();
         return $update;
     }
