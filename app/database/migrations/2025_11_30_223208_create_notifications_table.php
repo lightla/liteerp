@@ -21,6 +21,7 @@ return new class extends Migration
             $table->string('entity_type')->nullable();
             $table->unsignedBigInteger('entity_id')->nullable();
             $table->boolean('is_read')->default(false);
+            $table->foreignId('business_id')->constrained('business')->onDelete('cascade');
             $table->softDeletes();
             $table->timestamps();
         });

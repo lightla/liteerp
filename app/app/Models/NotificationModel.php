@@ -25,7 +25,8 @@ class NotificationModel extends Model
         'entity_type',
         'is_read',
         'link',
-        'entity_id'
+        'entity_id',
+        'business_id'
     ];
     public function getCreatedAtHumanAttribute(): ?string
     {

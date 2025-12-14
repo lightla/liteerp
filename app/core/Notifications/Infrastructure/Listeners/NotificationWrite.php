@@ -24,7 +24,7 @@ class NotificationWrite
                     entity_type: $data['title'] ?? null,
                     entity_id: $data['entity_id'],
                     chanels: $data['chanels'] ?? ['db'],
-                    business_id: $data['business_id'] ?? null,
+                    business_id: $data['business_id'],
                     link: $data['link'] ?? URL::to('/dashboard'),
                     role: $data['role'] ?? ['admin', 'manager'],
                     created_by: $data['user_id'],
@@ -44,7 +44,8 @@ class NotificationWrite
                     entity_id: $data['entity_id'] ?? null,
                     queue: $data['queue'] ?? null,
                     type: $data['type'],
-                    chanels: $data['chanels']
+                    chanels: $data['chanels'],
+                    business_id: $data['business_id'],
                 );
                 Log::info(json_encode($notiAdapter));
                 $CreateNotification->handle($notiAdapter);

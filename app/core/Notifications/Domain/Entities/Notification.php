@@ -15,7 +15,8 @@ class Notification
         public ?int $entity_id,
         public ?int $id = null,
         public string $type = 'default',
-        public ?bool $is_read = null
+        public ?bool $is_read = false,
+        public int $business_id
     ) {}
 
     public static function fromArray(array $data): self
@@ -29,7 +30,8 @@ class Notification
             entity_id: $data['entity_id'] ?? null,
             id : $data['id'] ?? null,
             type: $data['type'] ?? 'default',
-            is_read: $data['is_read'] ?? null    
+            is_read: $data['is_read'] ?? false,
+            business_id: $data['business_id']    
         );
     }
     
@@ -44,7 +46,8 @@ class Notification
             'entity_id' => $this->entity_id,
             'id'    => $this->id,
             'type'  => $this->type,
-            'is_read'   => $this->is_read
+            'is_read'   => $this->is_read,
+            'business_id'   => $this->business_id
         ];
     }
     public function markRead(){
