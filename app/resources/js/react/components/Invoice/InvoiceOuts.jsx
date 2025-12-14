@@ -11,6 +11,7 @@ import { usePopup } from '../popups/PopupContext'
 import { useNavigate } from 'react-router-dom';
 import Currencies from '../Currencies';
 import SearchInput from '../UI/Input/SearchInput';
+import StatusBadge from '../StatusBadge';
 export default function InvoiceOuts() {
     const navigate = useNavigate();
     const search = useForm();
@@ -53,24 +54,23 @@ export default function InvoiceOuts() {
         },
         {
             label: "Status",
-            key: "status",
+            key: "approved",
             render: (value) => {
-                return value === 'approved' ? <span
-                    className={`badge rounded-pill px-3 py-2 bg-warning text-uppercase`}
-                >
-                    Waiting
-                </span> : <span
-                    className={`badge rounded-pill px-3 py-2 bg-primary text-uppercase`}
-                >
-                    Approved
-                </span>
-            },
+                return <StatusBadge status={value ? 'approved' : 'unapproved'} />
+            }
         },
         {
             label: "Invoice date",
             key: "invoice_date",
             render: (value) =>
                 value ? isoToDateTime(value) : "",
+        },
+        {
+            label: "Payment",
+            key: "payment_status",
+            render: (value) => {
+                return <StatusBadge status={value} />
+            }
         },
     ];
     const getInvoices = useCallback((page = 0) => {
@@ -93,7 +93,7 @@ export default function InvoiceOuts() {
                     })
                 }
             })
-    }, [table,search.formData]);
+    }, [table, search.formData]);
     const update = useCallback(() => {
         form.setFormErrors(null);
         InvoiceOutService.update(form.formData)

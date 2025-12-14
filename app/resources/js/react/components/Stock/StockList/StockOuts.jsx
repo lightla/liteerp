@@ -4,16 +4,17 @@ import StockOutService from "../../../services/StockOutService";
 import useTable from '../../../libraries/handleTable'
 import CommonDataTable from '../../CommonDataTable';
 import { Link, useNavigate } from 'react-router-dom';
-import {useForm} from '../../../libraries/handleInput'
-import {Select} from '../../UI/Input/Select';
+import { useForm } from '../../../libraries/handleInput'
+import { Select } from '../../UI/Input/Select';
 import SearchInput from '../../UI/Input/SearchInput'
 import { usePopup } from '../../popups/PopupContext';
 import Currencies from '../../Currencies';
+import StatusBadge from '../../StatusBadge';
 export default function StockOuts() {
     const navigate = useNavigate();
     const search = useForm();
     const table = useTable();
-    const {openPopup} = usePopup();
+    const { openPopup } = usePopup();
 
     const getListStockIn = useCallback((page = 0) => {
         table.setLoading(true)
@@ -28,14 +29,14 @@ export default function StockOuts() {
                 table.setLoading(false)
             })
             .catch((error) => {
-                if(error.response.message?.errors) {
+                if (error.response.message?.errors) {
                     openPopup({
                         type: 'error',
                         message: error.response.message?.errors
                     })
                 }
             })
-    }, [table,search.formData]);
+    }, [table, search.formData]);
 
     const columns = [
         { label: "ID", key: "id", render: (id) => <Link to={'/stock?id=' + id}>{id}</Link> },
@@ -45,14 +46,8 @@ export default function StockOuts() {
             }
         },
         {
-            label: "Status", key: "status", render: (status) => {
-                return <div className='theme-title'>
-                    {status === 'invoiced' 
-                    ? <span className='bg-warning badge'>Waiting for Shipping</span> 
-                    : status === 'shipped' 
-                    ? <span className='bg-primary badge'>Shipped</span>
-                    : <span className='bg-success badge'>Completed</span>}
-                </div>
+            label: "Status", key: "status", render: (value) => {
+                return <StatusBadge status={value} />
             }
         },
 
@@ -72,7 +67,7 @@ export default function StockOuts() {
             label: "Shipping fee",
             key: "shipping_fee",
             render: (name) => {
-                return <span><Currencies amount={name}/></span>
+                return <span><Currencies amount={name} /></span>
             }
         },
         {
@@ -94,24 +89,24 @@ export default function StockOuts() {
                     <div className='col-4'>
                         <label>Status</label>
                         <Select
-                        name='status'
-                        handleChange={search.handleChange}
-                        value={search.formData?.status}
-                        options={[
-                            {value: 'pending', label: 'Pending'},
-                            {value: 'shipped', label: 'Shipped'},
-                            {value: 'completed', label: 'Completed'}
-                        ]}
+                            name='status'
+                            handleChange={search.handleChange}
+                            value={search.formData?.status}
+                            options={[
+                                { value: 'pending', label: 'Pending' },
+                                { value: 'shipped', label: 'Shipped' },
+                                { value: 'completed', label: 'Completed' }
+                            ]}
                         />
                     </div>
                     <div className='col-4 mx-2'>
                         <label>Search</label>
                         <SearchInput
-                        submit={getListStockIn}
-                        name='keywords'
-                        value={search.formData?.keywords}
-                        handleChange={search.handleChange}
-                        placeholder='Search by invoice'
+                            submit={getListStockIn}
+                            name='keywords'
+                            value={search.formData?.keywords}
+                            handleChange={search.handleChange}
+                            placeholder='Search by invoice'
                         />
                     </div>
                 </div>
@@ -124,6 +119,6 @@ export default function StockOuts() {
                 navigate('/stocks?stockout=' + row.id)
             }}
         />
-        
+
     </div>
 }

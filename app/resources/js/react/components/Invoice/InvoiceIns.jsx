@@ -9,6 +9,7 @@ import { usePopup } from "../popups/PopupContext";
 import { Select } from '../UI/Input/Select';
 import { useNavigate } from 'react-router-dom';
 import Currencies from '../../components/Currencies'
+import StatusBadge from '../StatusBadge'
 export default function InvoiceIns() {
     const navigate = useNavigate();
     const { openPopup } = usePopup();
@@ -54,14 +55,9 @@ export default function InvoiceIns() {
         {
             label: "Status",
             key: "approved",
-            render: (value) => (
-                <span
-                    className={`badge rounded-pill 
-                        px-3 py-2 text-uppercase ` + (value ? 'bg-success' : 'bg-primary')}
-                >
-                    {value ? 'Approved' : 'Wait'}
-                </span>
-            ),
+            render: (value) => {
+                return <StatusBadge status={value ? 'approved' : 'unapproved'}/>
+            },
         },
         {
             label: "Invoice date",
@@ -73,11 +69,7 @@ export default function InvoiceIns() {
             label: "Payment",
             key: "payment_status",
             render: (value) => {
-                return <div className='text-uppercase'>
-                    {value === 'pending' ? <span className='badge bg-warning'>{value}</span> : null}
-                    {value === 'paid' ? <span className='badge bg-success'>{value}</span> : null}
-                    {value === 'partial_payment' ? <span className='badge bg-primary'>{value}</span> : null}
-                </div>
+                return <StatusBadge status={value}/>
             }
         },
     ];
@@ -106,28 +98,6 @@ export default function InvoiceIns() {
                 }
             });
     }, [search.formData]);
-    const submit = useCallback(() => {
-        form.setFormErrors(null)
-        InvoiceInService.update(form.formData)
-            .then((resp) => {
-                openPopup({
-                    type: 'success',
-                    message: 'You has been updated'
-                });
-                listInvoice();
-            })
-            .catch((error) => {
-                if (error.response.data?.errors) {
-                    form.setFormErrors(error.response.data?.errors)
-                }
-                if (error.response.data?.message) {
-                    openPopup({
-                        type: 'error',
-                        message: error.response.data?.message
-                    })
-                }
-            })
-    }, [form.formData, listInvoice]);
 
     useEffect(() => {
         listInvoice();
@@ -165,6 +135,7 @@ export default function InvoiceIns() {
             data={table.data}
             links={table.links}
             onEdit={handleEdit}
+            movePage={listInvoice}
         />
     </div>
 }

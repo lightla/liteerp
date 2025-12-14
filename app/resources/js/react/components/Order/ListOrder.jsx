@@ -8,6 +8,7 @@ import { useForm } from '../../libraries/handleInput';
 import useTable from '../../libraries/handleTable'
 import SearchInput from '../UI/Input/SearchInput';
 import PageHead from '../PageHead';
+import StatusBadge from '../StatusBadge';
 export default function ListOrder() {
     const navigate = useNavigate();
     const { openPopup } = usePopup();
@@ -33,12 +34,9 @@ export default function ListOrder() {
         {
             label: "Status",
             key: "status",
-            render: (value) => (
-                <span
-                    className={`badge text-uppercase rounded-pill px-3 py-2 ${value === 'pending' ? 'bg-secondary' : 'bg-success'}`}>
-                    {value}
-                </span>
-            ),
+            render: (value) => {
+                return <StatusBadge status={value}/>
+            },
         }
     ];
 

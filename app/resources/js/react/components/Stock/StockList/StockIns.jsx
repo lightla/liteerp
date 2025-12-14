@@ -9,6 +9,7 @@ import {useForm} from '../../../libraries/handleInput'
 import {Select} from '../../UI/Input/Select';
 import SearchInput from '../../UI/Input/SearchInput'
 import { usePopup } from '../../popups/PopupContext';
+import StatusBadge from '../../StatusBadge'
 export default function StockIns() {
     const navigate = useNavigate();
     const search = useForm();
@@ -54,10 +55,8 @@ export default function StockIns() {
             }
         },
         {
-            label: "Status", key: "status", render: (status) => {
-                return <span className='badge bg-primary text-uppercase'>
-                    {status}
-                </span>
+            label: "Status", key: "status", render: (value) => {
+                return <StatusBadge status={value} />
             }
         },
 

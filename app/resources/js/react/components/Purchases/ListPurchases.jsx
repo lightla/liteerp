@@ -10,6 +10,7 @@ import { useForm } from '../../libraries/handleInput'
 import PageHead from '../PageHead';
 import Currencies from '../Currencies';
 import { isoToDateTime } from '../../libraries/common';
+import StatusBadge from '../StatusBadge';
 export default function ListPurchases() {
     const navigate = useNavigate();
     const { openPopup } = usePopup();
@@ -36,7 +37,7 @@ export default function ListPurchases() {
         {
             label: "Shipping fee", key: "shipping_fee", render: (value) => {
                 return <strong>
-                    <Currencies amount={value}/>
+                    <Currencies amount={value} />
                 </strong>
             }
         },
@@ -45,28 +46,17 @@ export default function ListPurchases() {
         { label: "Compensation", key: "compensation_quantity" },
         { label: "Conversion", key: "conversion_quantity" },
         { label: "Gift", key: "gift_quantity" },
-        { label: "Tax", key: "tax", render: (value) => {
-            return <strong>
-                <Currencies amount={value}/>
-            </strong>
-        } },
+        {
+            label: "Tax", key: "tax", render: (value) => {
+                return <strong>
+                    <Currencies amount={value} />
+                </strong>
+            }
+        },
         {
             label: "Status", key: "status", render: (value) => {
-                const badgeMap = {
-                    draft: 'bg-secondary',
-                    requested: 'bg-info',
-                    approved: 'bg-primary',
-                    ordered: 'bg-warning',
-                    paid: 'bg-success',
-                    received: 'bg-success',
-                    cancelled: 'bg-danger'
-                };
-                return (
-                    <span className={`badge rounded-pill text-uppercase px-3 py-2 ${badgeMap[value] || 'bg-secondary'}`}>
-                        {value}
-                    </span>
-                );
-            }
+                return <StatusBadge status={value} />
+            },
         },
     ];
 
@@ -100,14 +90,14 @@ export default function ListPurchases() {
     }, [search.formData?.status])
     return <div>
         <div>
-                <PageHead
+            <PageHead
                 containerClass='mx-4'
                 title='Purchases'
                 subtitle='Track your offers, approval and payment status.'
-                />
-            </div>
+            />
+        </div>
         <div className="m-4">
-            
+
             <CommonDataTable
                 filter={<div className='d-flex'>
                     <div className='col-6'>
@@ -144,7 +134,7 @@ export default function ListPurchases() {
                 loading={table.loading}
             />
 
-            
+
         </div>
     </div>
 }
