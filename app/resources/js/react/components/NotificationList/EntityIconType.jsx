@@ -28,10 +28,11 @@ export default function EntityIconType({
         {entity_type === 'purchase' 
             ? <div className={color}>
                 <i className="bi bi-bag"></i>
-            </div> : null}
-        {entity_type === 'order' 
+            </div> : entity_type === 'order' 
             ? <div className={color}>
                 <i className="bi bi-basket2-fill"></i>
-            </div> : null}
+            </div> : <div className={color}>
+                <i className="bi bi-receipt"></i>
+            </div>}
     </div>
 }

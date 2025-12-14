@@ -5,11 +5,12 @@ import useTable from '../libraries/handleTable'
 import { usePopup } from '../components/popups/PopupContext'
 import LoadingBox from './LoadingBox'
 import ListItem from "./NotificationList/ListItem";
-import {useForm} from '../libraries/handleInput';
-import {Select} from '../components/UI/Input/Select'
+import { useForm } from '../libraries/handleInput';
+import { Select } from '../components/UI/Input/Select'
 const NotificationList = () => {
-  const [loading,setLoading] = useState(false);
-  const [types,setTypes] = useState([]);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [lastPage, setLastPage] = useState(0);
+  const [types, setTypes] = useState([]);
   const table = useTable();
   const search = useForm();
   const { openPopup } = usePopup();
@@ -19,19 +20,27 @@ const NotificationList = () => {
         setTypes(resp.message)
       })
       .catch((error) => {
-        
+
       })
-  },[]);
-  const getNotifications = useCallback(() => {
-    setLoading(true)
+  }, []);
+  const getList = useCallback((page = 0) => {
+    table.setLoading(true)
     NotificationService.list({
-      page: 0,
+      page: page,
       type: search.formData?.type ?? ''
     })
       .then((resp) => {
-        table.setData(resp.message.data);
+        if (page === 0) {
+          table.setData(resp.message.data)
+        } else {
+          table.setData((data) => {
+            return data.concat(resp.message.data);
+          });
+        }
+
         table.setTotal(resp.message.total);
-        setLoading(false)
+        table.setLoading(false);
+        setLastPage(resp.message.last_page);
       })
       .catch((error) => {
         if (error.response?.data?.message) {
@@ -40,7 +49,7 @@ const NotificationList = () => {
             message: error.response?.data?.message
           })
         }
-        setLoading(false)
+        table.setLoading(false)
       })
   }, [search.formData?.type]);
   const update = useCallback((row) => {
@@ -69,12 +78,15 @@ const NotificationList = () => {
         }
       })
   }, [])
-  
+
   useEffect(() => {
-    getNotifications();
+
+    getList(currentPage);
+  }, [currentPage, search.formData?.type]);
+
+  useEffect(() => {
     getListType();
-    
-  }, [search.formData?.type])
+  }, []);
 
   return (
     <div
@@ -86,38 +98,43 @@ const NotificationList = () => {
           <h5 className="theme-title-highlight mb-0">All Notifications</h5>
           <div className="d-flex align-items-center">
             <span className="badge bg-secondary me-2">
-              {table.data.length} notifications
+              {table.total} notifications
             </span>
-            {/* <select
-              className="form-select form-select-sm border-secondary"
-              style={{ width: "130px" }}
-            >
-              <option>All</option>
-              {types.map((item,index) => {
-                return <option key={index}>{item.entity_type}</option>
-              })}
-            </select> */}
             <Select className="form-select form-select-sm border-secondary"
-            name="type"
-            handleChange={search.handleChange}
-            value={search.formData?.type}
-            errorMessage={search.formErrors?.type}
-            options={types.map((item,index) => {
-              return {
-                value: item.entity_type,
-                label: item.entity_type
-              }
-            })}
+              name="type"
+              handleChange={(e) => {
+                table.setData([]);
+                setCurrentPage(0);
+                search.handleChange(e);
+              }}
+              value={search.formData?.type}
+              errorMessage={search.formErrors?.type}
+              options={types.map((item, index) => {
+                return {
+                  value: item.entity_type,
+                  label: item.entity_type
+                }
+              })}
             />
           </div>
         </div>
-        {loading ? <LoadingBox/> : table.data.map((n, key) => (
+        {table.data.map((n, key) => (
           <div key={key}>
-            <ListItem update={update} destroy={destroy} entity={n}/>
+            <ListItem update={update} destroy={destroy} entity={n} />
           </div>
         ))}
-        
-        
+        {table.loading ? <LoadingBox /> : <div className="text-center h2" onClick={() => {
+          setCurrentPage((current) => {
+            if (current === lastPage) {
+              return current;
+            }
+            return current + 1;
+          })
+        }}>
+          <i className="bi bi-arrow-bar-down btn"></i>
+        </div>}
+
+
       </div>
     </div>
   );

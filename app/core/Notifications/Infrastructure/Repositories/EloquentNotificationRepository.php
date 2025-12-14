@@ -40,7 +40,7 @@ class EloquentNotificationRepository implements NotificationRepositoryInterface
         if(!empty($data['type'])) {
             $index = $index->where('entity_type',$data['type']);
         }
-        return $index->paginate(15)->toArray();
+        return $index->orderBy("id","DESC")->paginate(15)->toArray();
     }
     public function findById(array $data): ?Notification
     {
