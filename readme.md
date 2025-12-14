@@ -192,6 +192,7 @@ You need config SMTP mail, timezone at `./app/.env` before start.
 Visit: http://localhost:8001/dashboard/login
 
 Note: You can change password for mysql account at `docker-compose.yml` 
+
 --- 
 
 ## 👨‍💻 Author
@@ -202,3 +203,7 @@ LiteERP
 ## 📄 Contact
 
 Contact email: hoang.le.tn91@gmail.com
+
+## ❤️ Support LiteERP
+
+If this project helps you, consider sponsoring via GitHub Sponsors.
