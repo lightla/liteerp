@@ -21,6 +21,23 @@ class CreateStockOut
             'business_id' => $dto->business_id,
             'order_id' => $dto->order_id
         ]);
+        Event::dispatch("erp.notification.many", [
+            'user_id' => $dto->created_by,
+            'business_id' => $dto->business_id,
+            'type' => 'created',
+            'entity_type' => 'stockout',
+            'entity_id' => $create->id,
+            'chanels' => ['db'],
+            'roles' => ['admin','manager']
+        ]);
+        Event::dispatch("erp.notification.create", [
+            'user_id' => $dto->created_by,
+            'business_id' => $dto->business_id,
+            'type' => 'created',
+            'entity_type' => 'stockout',
+            'entity_id' => $create->id,
+            'chanels' => ['db']
+        ]);
         DB::commit();
         return $create;
     }

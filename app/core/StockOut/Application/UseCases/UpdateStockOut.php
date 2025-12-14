@@ -22,6 +22,7 @@ class UpdateStockOut
     {
         DB::beginTransaction();
         $update = $this->service->update($dto->toArray());
+        $statusNotify = 'updated';
         if($update->isCompleted()) {
             Event::dispatch("erp.stockout.completed", [
                 ...$update->toArray(),
@@ -30,6 +31,7 @@ class UpdateStockOut
                 'order_id' => $dto->order_id,
                 'stock_out_id' => $update->id
             ]);
+            $statusNotify = 'completed';
         } else if($update->isShipped()) {
             Event::dispatch("erp.stockout.shipped", [
                 ...$update->toArray(),
@@ -38,6 +40,7 @@ class UpdateStockOut
                 'order_id' => $dto->order_id,
                 'stock_out_id' => $update->id
             ]);
+            $statusNotify = 'shipped';
         } else {
             Event::dispatch("erp.stockout.update", [
                 ...$update->toArray(),
@@ -46,6 +49,23 @@ class UpdateStockOut
                 'order_id' => $dto->order_id
             ]);    
         }
+        Event::dispatch("erp.notification.many", [
+            'user_id' => $dto->created_by,
+            'business_id' => $dto->business_id,
+            'type' => $statusNotify,
+            'entity_type' => 'stockout',
+            'entity_id' => $update->id,
+            'chanels' => ['db'],
+            'roles' => ['admin','manager']
+        ]);
+        Event::dispatch("erp.notification.create", [
+            'user_id' => $dto->created_by,
+            'business_id' => $dto->business_id,
+            'type' => $statusNotify,
+            'entity_type' => 'stockout',
+            'entity_id' => $update->id,
+            'chanels' => ['db']
+        ]);
         DB::commit();
         return $update;
     }
