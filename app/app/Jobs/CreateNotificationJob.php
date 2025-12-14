@@ -6,6 +6,7 @@ use Core\Notifications\Application\DTOs\InsertManyNotificationRequest;
 use Core\Notifications\Application\UseCases\InsertManyNotification;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Queue\Queueable;
+use Illuminate\Support\Facades\Log;
 
 class CreateNotificationJob implements ShouldQueue
 {
