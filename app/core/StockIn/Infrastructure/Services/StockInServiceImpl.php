@@ -29,7 +29,7 @@ class StockInServiceImpl implements StockInService
     public function update(array $data) :StockIn | BadException {
         $entity = $this->repo->findById($data);
         if(!$entity) {
-            throw new BadException(__("Not found data"));
+            throw new BadException(__("Not found stock in"));
         }
         if($entity->isReceived()) {
             throw new BadException(__("This ticket got approved"));
@@ -44,7 +44,7 @@ class StockInServiceImpl implements StockInService
     public function changeToCancelled(array $data) :StockIn | BadException {
         $entity = $this->repo->findByInvoiceInId($data);
         if(!$entity) {
-            throw new BadException(__("Not found data"));
+            throw new BadException(__("Not found stock in"));
         }
         $entity->markCancelled();
         return $this->repo->update($entity); 
@@ -52,5 +52,9 @@ class StockInServiceImpl implements StockInService
     public function findById(array $data): StockIn|BadException
     {
         return $this->repo->findById($data) ?? throw new BadException(__("Not found stock in"));
+    }
+    public function getByInvoiceInId(array $data): ?StockIn
+    {
+        return $this->repo->findByInvoiceInId($data);
     }
 }

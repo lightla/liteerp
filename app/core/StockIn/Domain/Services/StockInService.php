@@ -13,4 +13,5 @@ interface StockInService
     public function update(array $data) : StockIn | BadException;
     public function findById(array $data) : StockIn | BadException;
     public function changeToCancelled(array $data) : StockIn | BadException;
+    public function getByInvoiceInId(array $data) : ?StockIn;
 }
