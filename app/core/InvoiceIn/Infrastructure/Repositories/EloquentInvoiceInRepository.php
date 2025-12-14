@@ -38,7 +38,7 @@ class EloquentInvoiceInRepository implements InvoiceInRepositoryInterface
             if(!empty($data['payment_status'])) {
                 $list = $list->where('invoice_ins.payment_status',$data['payment_status']);
             }
-            return $list->paginate(15)->toArray();
+            return $list->orderBy("invoice_ins.id","DESC")->paginate(15)->toArray();
     }
     public function checkExists(array $data): bool {
         return InvoiceInModel::select("invoice_ins.*")

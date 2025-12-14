@@ -27,7 +27,7 @@ class InvoiceInServiceImpl implements InvoiceInService
     {
         $entity = $this->repo->findById($data);
         if (!$entity) {
-            throw new BadException(__("Not found data"));
+            throw new BadException(__("Not found invoice in"));
         }
         if ($data['approved'] === false && $entity->isApproved()) {
             throw new BadException(__("The data for stock in has been created, 
@@ -66,7 +66,7 @@ class InvoiceInServiceImpl implements InvoiceInService
     public function changeToUnApproved(array $data): InvoiceIn|BadException{
         $entity = $this->repo->findByPurchaseId($data);
         if (!$entity) {
-            throw new BadException(__("Not found data"));
+            throw new BadException(__("Not found invoice in"));
         }
         $entity->markUnApproved();
         $update = $this->repo->update($entity);
