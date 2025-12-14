@@ -21,18 +21,18 @@ class NotificationWrite
                 $notiAdapter = new InsertManyNotificationRequest(
                     message: $data['message'] ?? null,
                     title: $data['title'] ?? null,
-                    entity_type: $data['title'] ?? null,
+                    entity_type: $data['entity_type'] ?? null,
                     entity_id: $data['entity_id'],
                     chanels: $data['chanels'] ?? ['db'],
                     business_id: $data['business_id'],
                     link: $data['link'] ?? URL::to('/dashboard'),
                     role: $data['role'] ?? ['admin', 'manager'],
-                    created_by: $data['user_id'],
+                    user_id: $data['user_id'],
                     queue: $data['queue'] ?? null,
                     type: $data['type']  
                 );
 
-                CreateNotificationJob::dispatch($notiAdapter->toArray())->onQueue('low');
+                CreateNotificationJob::dispatch($notiAdapter->toArray())->onQueue($data['queue'] ?? 'low');
             } else if ($eventName === 'erp.notification.create') {
                 
                 $notiAdapter = new CreateNotificationRequest(
@@ -47,7 +47,6 @@ class NotificationWrite
                     chanels: $data['chanels'],
                     business_id: $data['business_id'],
                 );
-                Log::info(json_encode($notiAdapter));
                 $CreateNotification->handle($notiAdapter);
             }
         });

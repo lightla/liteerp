@@ -17,7 +17,7 @@ class InsertManyNotificationRequest
         public ?string $queue = null,
         public ?int $business_id = null,
         public ?string $type = null,
-        public int $created_by
+        public int $user_id
     ) {
         
     }
@@ -35,7 +35,7 @@ class InsertManyNotificationRequest
             role: $data['role'],
             business_id: $data['business_id'] ?? null,
             type: $data['type'] ?? null,
-            created_by: $data['user_id']
+            user_id: $data['user_id']
         );
     }
     
@@ -52,7 +52,7 @@ class InsertManyNotificationRequest
             'role' => $this->role,
             'business_id'   => $this->business_id,
             'type'  => $this->type,
-            'created_by' => $this->created_by
+            'user_id' => $this->user_id
         ];
     }
 }

@@ -10,6 +10,7 @@ use Core\Notifications\Application\DTOs\InsertManyNotificationRequest;
 use Core\Notifications\Domain\Entities\Notification;
 use Core\Notifications\Domain\Services\NotificationDBService;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\URL;
 
 class InsertManyNotification
@@ -25,7 +26,7 @@ class InsertManyNotification
             ListUserByBusinessRoleRequest::fromArray([
                 'role' => $dto->role,
                 'business_id' => $dto->business_id,
-                'user_id' => $dto->created_by,
+                'user_id' => $dto->user_id,
             ])
         );
         foreach($users as $k => $user ) {
@@ -33,12 +34,14 @@ class InsertManyNotification
                 $adapter = new CreateNotificationRequest(
                     user_id: $user['user_id'],
                     message: $dto->message,
-                    link: $dto->link ?? URL::to('/dashboard'),
+                    link: $dto->link,
                     title: $dto->title,
                     entity_type: $dto->entity_type,
                     entity_id: $dto->entity_id,
                     chanels: $dto->chanels,
-                    type: $dto->type
+                    type: $dto->type,
+                    business_id: $dto->business_id,
+                    queue: $dto->queue
                 );
                 switch($chanels) {
                     case "db":
