@@ -28,6 +28,23 @@ class UpdateStockIn
                 'business_id' => $dto->business_id
             ]);
         }
+        Event::dispatch("erp.notification.many", [
+            'user_id' => $dto->created_by,
+            'business_id' => $dto->business_id,
+            'type' => $update->isReceived() ? 'received' : 'updated',
+            'entity_type' => 'stockin',
+            'entity_id' => $update->id,
+            'chanels' => ['db'],
+            'roles' => ['admin','manager']
+        ]);
+        Event::dispatch("erp.notification.create", [
+            'user_id' => $dto->created_by,
+            'business_id' => $dto->business_id,
+            'type' => $update->isReceived() ? 'received' : 'updated',
+            'entity_type' => 'stockin',
+            'entity_id' => $update->id,
+            'chanels' => ['db']
+        ]);
         DB::commit();
         return $update;
     }
