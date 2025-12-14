@@ -37,7 +37,7 @@ class CreateInvoiceOutRequest
             payment_status: $data['payment_status'] ?? 'pending',
             approved: $data['approved'] ?? false,
             created_by: $data['user_id'] ?? null,
-            image: $data['image']
+            image: $data['image'] ?? null 
         );
     }
 

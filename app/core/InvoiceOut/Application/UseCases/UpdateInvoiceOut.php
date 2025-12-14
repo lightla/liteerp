@@ -2,14 +2,8 @@
 
 namespace Core\InvoiceOut\Application\UseCases;
 
-use Core\Inventory\Application\UseCases\FindInventoryById;
 use Core\InvoiceOut\Application\DTOs\CreateInvoiceOutRequest;
 use Core\InvoiceOut\Domain\Services\InvoiceOutService;
-use Core\OrderItem\Application\UseCases\IndexOrderItem;
-use Core\StockMovementOut\Application\DTOs\CreateStockMovementOutRequest;
-use Core\StockMovementOut\Application\UseCases\CreateStockMovementOut;
-use Core\StockOut\Application\DTOs\CreateStockOutRequest;
-use Core\StockOut\Application\UseCases\CreateStockOut;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Event;
 
@@ -40,6 +34,25 @@ class UpdateInvoiceOut
                 'invoice_out_id' => $update->id
             ]);    
         }
+
+        Event::dispatch("erp.notification.many", [
+            'user_id' => $dto->created_by,
+            'business_id' => $dto->business_id,
+            'type' => 'updated',
+            'entity_type' => 'invoiceout',
+            'entity_id' => $update->id,
+            'chanels' => ['db'],
+            'roles' => ['admin','manager']
+        ]);
+        
+        Event::dispatch("erp.notification.create", [
+            'user_id' => $dto->created_by,
+            'business_id' => $dto->business_id,
+            'type' => 'updated',
+            'entity_type' => 'invoiceout',
+            'entity_id' => $update->id,
+            'chanels' => ['db']
+        ]);
         
         DB::commit();
         return $update;
