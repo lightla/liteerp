@@ -2,15 +2,10 @@
 
 namespace Core\InvoiceIn\Application\UseCases;
 
-use App\Jobs\CreateNotificationJob;
-use Core\ActivityLog\Application\DTOs\CreateActivityLogRequest;
-use Core\ActivityLog\Application\UseCases\CreateActivityLog;
 use Core\InvoiceIn\Application\DTOs\CreateInvoiceInRequest;
 use Core\InvoiceIn\Domain\Services\InvoiceInService;
-use Core\Notifications\Application\DTOs\InsertManyNotificationRequest;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Event;
-use Illuminate\Support\Facades\URL;
 
 class CreateInvoiceIn
 {
@@ -24,6 +19,15 @@ class CreateInvoiceIn
             ...$create->toArray(),
             'user_id' => $dto->created_by,
             'business_id' => $dto->business_id
+        ]);
+        Event::dispatch("erp.notification.many", [
+            'user_id' => $dto->created_by,
+            'business_id' => $dto->business_id,
+            'type' => 'created',
+            'entity_type' => 'invoicein',
+            'entity_id' => $create->id,
+            'chanels' => ['db'],
+            'roles' => ['admin','manager']
         ]);
         DB::commit();
         return $create;
