@@ -121,7 +121,7 @@ export default function StockOuts() {
             links={table.links}
             iconEdit={<i className="bi bi-eye"></i>}
             onEdit={(row) => {
-                navigate('/stocks?stockin=' + row.id)
+                navigate('/stocks?stockout=' + row.id)
             }}
         />
         
