@@ -95,4 +95,7 @@ class Purchase
     {
         return $this->status === 'cancelled' ? true : false;
     }
+    public function getStatus() : string {
+        return $this->status;
+    }
 }

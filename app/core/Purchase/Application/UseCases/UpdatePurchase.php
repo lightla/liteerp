@@ -20,6 +20,7 @@ class UpdatePurchase
         DB::beginTransaction();
 
         $update = $this->service->update($dto->toArray());
+
         /**
          * Check items 
          */
@@ -62,6 +63,23 @@ class UpdatePurchase
             ];
             Event::dispatch("erp.purchase.cancelled", $updateData);
         }
+        Event::dispatch("erp.notification.many", [
+            'user_id' => $dto->created_by,
+            'business_id' => $dto->business_id,
+            'type' => $update->getStatus(),
+            'entity_type' => 'purchase',
+            'entity_id' => $update->id,
+            'chanels' => ['db'],
+            'roles' => ['admin','manager']
+        ]);
+        Event::dispatch("erp.notification.create", [
+            'user_id' => $dto->created_by,
+            'business_id' => $dto->business_id,
+            'type' => $update->getStatus(),
+            'entity_type' => 'purchase',
+            'entity_id' => $update->id,
+            'chanels' => ['db']
+        ]);
         DB::commit();
         return $update;
     }

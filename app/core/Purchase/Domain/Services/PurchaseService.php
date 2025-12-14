@@ -12,6 +12,4 @@ interface PurchaseService
     public function show(array $data) : array | BadException;
     public function findOneById(array $data) : Purchase | BadException;
     public function update(array $data): Purchase | BadException;
-    // public function changeToPaid(array $data): Purchase | BadException;
-    // public function changeToReceived(array $data): Purchase | BadException;
 }
