@@ -61,19 +61,19 @@ class Purchase
 
     public function setDraft()
     {
-        return $this->status = 'draft';
+        $this->status = 'draft';
     }
     public function setRequested()
     {
-        return $this->status = 'requested';
+        $this->status = 'requested';
     }
     public function setApproved()
     {
-        return $this->status = 'approved';
+        $this->status = 'approved';
     }
     public function setCancelled()
     {
-        return $this->status = 'cancelled';
+        $this->status = 'cancelled';
     }
     public function makePurchase(): Purchase
     {

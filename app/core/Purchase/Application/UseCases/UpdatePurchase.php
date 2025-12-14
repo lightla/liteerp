@@ -9,6 +9,7 @@ use Core\Purchase\Domain\Services\PurchaseService;
 use Core\Purchase\Domain\Entities\Purchase;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Event;
+use Illuminate\Support\Facades\Log;
 
 class UpdatePurchase
 {

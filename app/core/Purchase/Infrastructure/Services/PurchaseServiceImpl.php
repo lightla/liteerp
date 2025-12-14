@@ -3,10 +3,10 @@
 namespace Core\Purchase\Infrastructure\Services;
 
 use App\Exceptions\BadException;
-use Carbon\Carbon;
 use Core\Purchase\Domain\Services\PurchaseService;
 use Core\Purchase\Domain\Repositories\PurchaseRepositoryInterface;
 use Core\Purchase\Domain\Entities\Purchase;
+use Illuminate\Support\Facades\Log;
 
 class PurchaseServiceImpl implements PurchaseService
 {
@@ -34,6 +34,9 @@ class PurchaseServiceImpl implements PurchaseService
     {
 
         $row = $this->repo->findById($data);
+        if(!$row) {
+            throw new BadException(__("Not found purchase"));
+        }
         switch ($data['status']) {
             case "draft":
                 if (!$row->isDraft()) {

@@ -33,6 +33,7 @@ class EloquentPurchaseRepository implements PurchaseRepositoryInterface
             ->leftJoin("purchase_items", "purchase_items.purchase_id", "=", "purchases.id")
             ->where('purchases.business_id', $data['business_id'])
             ->where('suppliers.unit_name','like','%'.($data['name'] ?? '').'%')
+            ->orderBy("purchases.id","DESC")
             ->groupBy("purchases.id");
         if(!empty($data['status'])) {
             $list->where('purchases.status',$data['status']);
