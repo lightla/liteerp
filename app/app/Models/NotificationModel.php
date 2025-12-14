@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
@@ -12,7 +13,7 @@ class NotificationModel extends Model
     use HasFactory, SoftDeletes;
 
     protected $table = 'notifications';
-
+    protected $appends = ['created_at_human'];
     /**
      * Mass assignable fields
      */
@@ -23,6 +24,13 @@ class NotificationModel extends Model
         'message',
         'entity_type',
         'is_read',
-        'link'
+        'link',
+        'entity_id'
     ];
+    public function getCreatedAtHumanAttribute(): ?string
+    {
+        return $this->created_at
+            ? Carbon::parse($this->created_at)->diffForHumans()
+            : null;
+    }
 }

@@ -6,21 +6,21 @@ class CreateNotificationRequest
 {
     public function __construct(
         public int $user_id,
-        public string $message,
+        public ?string $message = null,
         public ?string $link = null,
-        public ?string $title,
+        public ?string $title = null,
         public ?string $entity_type,
         public ?int $entity_id,
         public array $chanels = ['db'],
         public ?string $queue = null,
-        public ?string $type = 'default'
+        public ?string $type = null
     ) {}
 
     public static function fromArray(array $data): self
     {
         return new self(
             user_id: $data['user_id'],
-            message: $data['message'],
+            message: $data['message'] ?? null,
             link: $data['link'] ?? null,        
             title: $data['title'],      
             entity_type: $data['entity_type'] ?? null,
@@ -45,14 +45,5 @@ class CreateNotificationRequest
             'type'    => $this->type
         ];
         
-    }
-    public function setDanger(){
-        $this->type = 'danger';
-    }
-    public function setWarning(){
-        $this->type = 'warning';
-    }
-    public function setInfo(){
-        $this->type = 'info';
     }
 }

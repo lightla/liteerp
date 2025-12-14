@@ -17,10 +17,11 @@ return new class extends Migration
             $table->string('type')->nullable();
             $table->string('title');
              $table->string('link')->nullable();
-            $table->text('message');
+            $table->text('message')->nullable();
             $table->string('entity_type')->nullable();
             $table->unsignedBigInteger('entity_id')->nullable();
             $table->boolean('is_read')->default(false);
+            $table->softDeletes();
             $table->timestamps();
         });
     }

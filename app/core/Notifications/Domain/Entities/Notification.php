@@ -8,30 +8,28 @@ class Notification
 {
     public function __construct(
         public string $user_id,
-        public string $message,
-        public ?string $link,
-        public ?string $title,
+        public ?string $message = null,
+        public ?string $link = null,
+        public ?string $title = null,
         public ?string $entity_type,
         public ?int $entity_id,
         public ?int $id = null,
-        public ?string $created_at = null,
-        public ?string $updated_at = null,
-        public string $type = 'default'
+        public string $type = 'default',
+        public ?bool $is_read = null
     ) {}
 
     public static function fromArray(array $data): self
     {
         return new self(
             user_id: $data['user_id'],
-            message: $data['message'],
+            message: $data['message'] ?? null,
             link: $data['link'] ?? null,        
             title: $data['title'] ?? null,      
             entity_type: $data['entity_type'] ?? null,
             entity_id: $data['entity_id'] ?? null,
             id : $data['id'] ?? null,
-            created_at: $data['created_at'] ?? Carbon::now()->format('Y-m-d H:i:s'),
-            updated_at: $data['updated_at'] ?? Carbon::now()->format('Y-m-d H:i:s'),
-            type: $data['type'] ?? 'default'   
+            type: $data['type'] ?? 'default',
+            is_read: $data['is_read'] ?? null    
         );
     }
     
@@ -45,18 +43,11 @@ class Notification
             'entity_type' => $this->entity_type,
             'entity_id' => $this->entity_id,
             'id'    => $this->id,
-            'created_at'    => $this->created_at ?? Carbon::now()->format('Y-m-d H:i:s'),
-            'updated_at'    => $this->updated_at ?? Carbon::now()->format('Y-m-d H:i:s'),
-            'type'  => $this->type
+            'type'  => $this->type,
+            'is_read'   => $this->is_read
         ];
     }
-    public function setDanger(){
-        $this->type = 'danger';
-    }
-    public function setWarning(){
-        $this->type = 'warning';
-    }
-    public function setInfo(){
-        $this->type = 'info';
+    public function markRead(){
+        $this->is_read = true;
     }
 }

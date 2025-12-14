@@ -9,6 +9,7 @@
 @import './popup.css';
 @import './business.css';
 @import './ui.css';
+@import './notification.css';
 .dashboard-megabox {
     overflow-x: hidden;
     background-color: var(--body);

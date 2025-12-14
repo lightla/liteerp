@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\URL;
 class InsertManyNotificationRequest
 {
     public function __construct(
-        public ?string $title,
+        public ?string $title = null,
         public ?string $message = null,
         public array $role = ['admin','manager'],
         public ?string $link = null,
@@ -16,7 +16,8 @@ class InsertManyNotificationRequest
         public array $chanels = [],
         public ?string $queue = null,
         public ?int $business_id = null,
-        public ?string $type = 'info'
+        public ?string $type = null,
+        public int $created_by
     ) {
         
     }
@@ -24,7 +25,7 @@ class InsertManyNotificationRequest
     public static function fromArray(array $data): self
     {
         return new self(
-            message: $data['message'],
+            message: $data['message'] ?? null,
             link: $data['link'],        
             title: $data['title'] ?? null,      
             entity_type: $data['entity_type'] ?? null,
@@ -33,7 +34,8 @@ class InsertManyNotificationRequest
             queue: $data['queue'] ?? null,
             role: $data['role'],
             business_id: $data['business_id'] ?? null,
-            type: $data['type'] ?? 'info'
+            type: $data['type'] ?? null,
+            created_by: $data['user_id']
         );
     }
     
@@ -49,19 +51,8 @@ class InsertManyNotificationRequest
             'queue'   => $this->queue,
             'role' => $this->role,
             'business_id'   => $this->business_id,
-            'type'  => $this->type
+            'type'  => $this->type,
+            'created_by' => $this->created_by
         ];
-    }
-    public function setDanger(){
-        $this->type = 'danger';
-        $this->message ??= "MS01";
-    }
-    public function setWarning(){
-        $this->type = 'warning';
-        $this->message ??= "MS02";
-    }
-    public function setInfo(){
-        $this->type = 'info';
-        $this->message ??= "MS03";
     }
 }

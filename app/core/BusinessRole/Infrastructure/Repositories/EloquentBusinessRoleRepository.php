@@ -42,6 +42,7 @@ class EloquentBusinessRoleRepository implements BusinessRoleRepositoryInterface
     public function listUserByRole(array $data) : array {
         return BusinessRoleModel::whereIn('role',$data['role'])
         ->where('business_id',$data['business_id'])
+        ->where('id','!=',$data['created_by'])
         ->limit(config('businessrole.limit'))->get()?->toArray();
     }
 }

@@ -20,13 +20,16 @@ class NotificationWrite
             if ($eventName === 'erp.notification.many') {
                 $notiAdapter = new InsertManyNotificationRequest(
                     message: $data['message'] ?? null,
-                    title: $data['title'] ?? 'title',
-                    entity_type: $data['title'] ?? 'entity_type',
-                    entity_id: $data['id'] ?? 'entity_id',
+                    title: $data['title'] ?? null,
+                    entity_type: $data['title'] ?? null,
+                    entity_id: $data['entity_id'],
                     chanels: $data['chanels'] ?? ['db'],
                     business_id: $data['business_id'] ?? null,
                     link: $data['link'] ?? URL::to('/dashboard'),
-                    role: $data['role'] ?? ['admin', 'manager']
+                    role: $data['role'] ?? ['admin', 'manager'],
+                    created_by: $data['user_id'],
+                    queue: $data['queue'] ?? null,
+                    type: $data['type']  
                 );
 
                 CreateNotificationJob::dispatch($notiAdapter->toArray())->onQueue('low');
@@ -34,13 +37,13 @@ class NotificationWrite
                 
                 $notiAdapter = new CreateNotificationRequest(
                     user_id: $data['user_id'],
-                    message: $data['message'],
-                    link: $data['link'],
-                    title: $data['title'],
-                    entity_type: $data['entity_type'] ?? null,
+                    message: $data['message'] ?? null,
+                    link: $data['link'] ?? null,
+                    title: $data['title'] ?? null,
+                    entity_type: $data['entity_type'],
                     entity_id: $data['entity_id'] ?? null,
                     queue: $data['queue'] ?? null,
-                    type: $data['type'] ?? null,
+                    type: $data['type'],
                     chanels: $data['chanels']
                 );
                 Log::info(json_encode($notiAdapter));

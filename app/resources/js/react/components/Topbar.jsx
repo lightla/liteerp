@@ -1,20 +1,26 @@
-import React, { useEffect, useState } from "react";
-import { List, Search, Bell, Sun, Moon } from "react-bootstrap-icons";
+import React, { useCallback, useEffect, useState } from "react";
+import { Bell, Sun, Moon } from "react-bootstrap-icons";
 import { useDispatch, useSelector } from "react-redux";
 import { toggleTheme } from "../redux/themeSlice";
 import { Link, useNavigate } from "react-router-dom";
+import NotificationService from "../services/NotificationService";
+import { setNotificationCount } from "../redux/NotificationSlice";
 export default function Topbar() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const theme = useSelector((state) => state.theme.mode);
-  const today = new Date();
-  const formattedDate = today.toLocaleDateString("en-US", {
-    weekday: "long",
-    day: "numeric",
-    month: "long",
-    year: "numeric",
-  });
   const business = useSelector((state) => state.business.data);
+  const notify = useSelector((state) => state.notify.data);
+  const getNotification = useCallback(() => {
+    NotificationService.listIsNotRead()
+    .then((resp) => {
+      dispatch(setNotificationCount(resp.message.total ?? 0))
+    })
+    .catch((error) => {})
+  },[]);
+  useEffect(() => {
+    getNotification();
+  },[]);
   return (
     <div className="erp-topbar d-flex align-items-center justify-content-between px-4">
       {/* Left Section */}
@@ -33,7 +39,7 @@ export default function Topbar() {
           navigate('/notification')
         }} className="position-relative me-4 topbar-notification">
           <Bell size={20} color="#fff" />
-          <span className="erp-badge bg-danger">2</span>
+          <span className="erp-badge bg-danger">{notify}</span>
         </div>
 
         {/* Theme Toggle */}

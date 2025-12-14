@@ -13,7 +13,8 @@ class ListUserByBusinessRole
     {
         return $this->service->listUserByRole([
             'business_id' => $dto->business_id,
-            'role' => $dto->role
+            'role' => $dto->role,
+            'created_by' => $dto->created_by
         ]);
     }
 }

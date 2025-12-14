@@ -1,75 +1,80 @@
-import React from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
-
+import NotificationService from "../services/NotificationService";
+import useTable from '../libraries/handleTable'
+import { usePopup } from '../components/popups/PopupContext'
+import LoadingBox from './LoadingBox'
+import ListItem from "./NotificationList/ListItem";
+import {useForm} from '../libraries/handleInput';
+import {Select} from '../components/UI/Input/Select'
 const NotificationList = () => {
-  const notifications = [
-    {
-      id: 1,
-      icon: "bi-bag",
-      color: "#0d6efd",
-      title: "New Order #DH001",
-      desc: "Customer ABC Corp just placed an order",
-      time: "5 minutes ago",
-      unread: true,
-    },
-    {
-      id: 2,
-      icon: "bi-exclamation-triangle-fill",
-      color: "#ffc107",
-      title: "Low Stock Warning",
-      desc: "Product XYZ is almost out of stock",
-      time: "1 hour ago",
-      unread: true,
-    },
-    {
-      id: 3,
-      icon: "bi-cash-coin",
-      color: "#0dcaf0",
-      title: "Payment Successful",
-      desc: "Received 15,000,000 VND",
-      time: "3 hours ago",
-    },
-    {
-      id: 4,
-      icon: "bi-bag",
-      color: "#0d6efd",
-      title: "New Order #DH002",
-      desc: "Customer DEF Ltd placed an order",
-      time: "3 hours ago",
-    },
-    {
-      id: 5,
-      icon: "bi-person-circle",
-      color: "#6f42c1",
-      title: "New Customer",
-      desc: "GHI Company has registered an account",
-      time: "4 hours ago",
-    },
-    {
-      id: 6,
-      icon: "bi-exclamation-octagon-fill",
-      color: "#ffc107",
-      title: "System Warning",
-      desc: "Server storage is almost full",
-      time: "5 hours ago",
-    },
-    {
-      id: 7,
-      icon: "bi-cash-stack",
-      color: "#0dcaf0",
-      title: "Payment Successful",
-      desc: "Received 8,500,000 VND",
-      time: "6 hours ago",
-    },
-    {
-      id: 8,
-      icon: "bi-x-circle-fill",
-      color: "#dc3545",
-      title: "Order Cancelled #DH003",
-      desc: "Customer JKL Corp cancelled the order",
-      time: "1 day ago",
-    },
-  ];
+  const [loading,setLoading] = useState(false);
+  const [types,setTypes] = useState([]);
+  const table = useTable();
+  const search = useForm();
+  const { openPopup } = usePopup();
+  const getListType = useCallback(() => {
+    NotificationService.listType()
+      .then((resp) => {
+        setTypes(resp.message)
+      })
+      .catch((error) => {
+        
+      })
+  },[]);
+  const getNotifications = useCallback(() => {
+    setLoading(true)
+    NotificationService.list({
+      page: 0,
+      type: search.formData?.type ?? ''
+    })
+      .then((resp) => {
+        table.setData(resp.message.data);
+        table.setTotal(resp.message.total);
+        setLoading(false)
+      })
+      .catch((error) => {
+        if (error.response?.data?.message) {
+          openPopup({
+            type: 'error',
+            message: error.response?.data?.message
+          })
+        }
+        setLoading(false)
+      })
+  }, [search.formData?.type]);
+  const update = useCallback((row) => {
+    NotificationService.update(row)
+      .then((resp) => {
+      })
+      .catch((error) => {
+        if (error.response?.data?.message) {
+          openPopup({
+            type: 'error',
+            message: error.response?.data?.message
+          })
+        }
+      })
+  }, [])
+  const destroy = useCallback((row) => {
+    NotificationService.delete(row)
+      .then((resp) => {
+      })
+      .catch((error) => {
+        if (error.response?.data?.message) {
+          openPopup({
+            type: 'error',
+            message: error.response?.data?.message
+          })
+        }
+      })
+  }, [])
+  
+  useEffect(() => {
+    getNotifications();
+    getListType();
+    
+  }, [search.formData?.type])
 
   return (
     <div
@@ -81,76 +86,38 @@ const NotificationList = () => {
           <h5 className="theme-title-highlight mb-0">All Notifications</h5>
           <div className="d-flex align-items-center">
             <span className="badge bg-secondary me-2">
-              {notifications.length} notifications
+              {table.data.length} notifications
             </span>
-            <select
+            {/* <select
               className="form-select form-select-sm border-secondary"
               style={{ width: "130px" }}
             >
               <option>All</option>
-              <option>Orders</option>
-              <option>Payments</option>
-              <option>Warnings</option>
-              <option>Customers</option>
-              <option>Cancelled</option>
-            </select>
+              {types.map((item,index) => {
+                return <option key={index}>{item.entity_type}</option>
+              })}
+            </select> */}
+            <Select className="form-select form-select-sm border-secondary"
+            name="type"
+            handleChange={search.handleChange}
+            value={search.formData?.type}
+            errorMessage={search.formErrors?.type}
+            options={types.map((item,index) => {
+              return {
+                value: item.entity_type,
+                label: item.entity_type
+              }
+            })}
+            />
           </div>
         </div>
-
-        {notifications.map((n) => (
-          <div
-            key={n.id}
-            className="d-flex align-items-start justify-content-between p-3 mb-3 rounded notification-item theme-sidebar-bg theme-title"
-          >
-            <div className="d-flex align-items-start">
-              <div
-                className="rounded-circle d-flex justify-content-center align-items-center me-3 theme-title"
-                style={{
-                  width: "36px",
-                  height: "36px",
-                  backgroundColor: n.color,
-                  flexShrink: 0,
-                }}
-              >
-                <i className={`bi ${n.icon} theme-title-highlight`}></i>
-              </div>
-              <div>
-                <div className="theme-title-highlight fw-semibold">
-                  {n.title}{" "}
-                  {n.unread && (
-                    <span
-                      className="text-danger ms-1"
-                      style={{
-                        fontSize: "10px",
-                        verticalAlign: "middle",
-                      }}
-                    >
-                      ●
-                    </span>
-                  )}
-                </div>
-                <div className="theme-title small">{n.desc}</div>
-                <div className="theme-title small mt-1">{n.time}</div>
-              </div>
-            </div>
-            <div className="text-end">
-              {n.unread && (
-                <button
-                  className="btn btn-link btn-sm text-decoration-none text-info"
-                  style={{ fontSize: "0.85rem" }}
-                >
-                  Mark as read
-                </button>
-              )}
-              <button
-                className="btn btn-link btn-sm text-decoration-none text-danger"
-                style={{ fontSize: "0.85rem" }}
-              >
-                Delete
-              </button>
-            </div>
+        {loading ? <LoadingBox/> : table.data.map((n, key) => (
+          <div key={key}>
+            <ListItem update={update} destroy={destroy} entity={n}/>
           </div>
         ))}
+        
+        
       </div>
     </div>
   );

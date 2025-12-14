@@ -2,11 +2,10 @@
 
 namespace Core\Notifications\Application\UseCases;
 
+use App\Exceptions\BadException;
 use App\Jobs\SendMailJob;
 use Core\Notifications\Application\DTOs\CreateNotificationRequest;
-use Core\Notifications\Domain\Entities\Notification;
 use Core\Notifications\Domain\Services\NotificationDBService;
-use Core\Notifications\Domain\Services\NotificationMailService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\URL;
 
@@ -24,6 +23,9 @@ class CreateNotification
                     $create = $this->serviceDB->create($dto->toArray());
                     break;
                 case "mail":
+                    if(!$dto->title || !$dto->message) {
+                        throw new BadException(__("Notification chanel DB can not empty title or message"));
+                    }
                     SendMailJob::dispatch($dto->user_id,$dto->title,
                         $dto->message,$dto->link ?? URL::to('/dashboard'))
                             ->onQueue($dto->queue ?? 'low');

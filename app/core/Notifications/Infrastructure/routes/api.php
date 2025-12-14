@@ -1,8 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Core\Notifications\Http\Controllers\CreateNotificationController;
+use Core\Notifications\Http\Controllers\NotificationController;
 
-Route::prefix(strtolower('Notifications'))->group(function () {
-    Route::post('/', CreateNotificationController::class)->name('Notification.create');
+Route::prefix('/api/business-access')->middleware(['business'])->group(function () {
+    Route::resource('/notifications', NotificationController::class);
 });

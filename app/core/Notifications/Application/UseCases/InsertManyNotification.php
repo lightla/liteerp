@@ -9,7 +9,6 @@ use Core\Notifications\Application\DTOs\CreateNotificationRequest;
 use Core\Notifications\Application\DTOs\InsertManyNotificationRequest;
 use Core\Notifications\Domain\Entities\Notification;
 use Core\Notifications\Domain\Services\NotificationDBService;
-use Core\Notifications\Domain\Services\NotificationMailService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\URL;
 
@@ -25,7 +24,8 @@ class InsertManyNotification
         $users = $this->listUserByBusinessRole->handle(
             ListUserByBusinessRoleRequest::fromArray([
                 'role' => $dto->role,
-                'business_id' => $dto->business_id
+                'business_id' => $dto->business_id,
+                'user_id' => $dto->created_by,
             ])
         );
         foreach($users as $k => $user ) {

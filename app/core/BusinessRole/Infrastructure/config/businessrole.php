@@ -177,7 +177,15 @@ return [
             'erp.report.show',
 
             // BUSINESS SETTING
-            'erp.business.update'
+            'erp.business.update',
+
+            // NOTIFICATION
+            'erp.notification.index',
+            'erp.notification.show',
+            'erp.notification.create',
+            'erp.notification.update',
+            'erp.notification.delete',
+            'erp.notification.many',
         ],
 
 
@@ -345,7 +353,15 @@ return [
 
             // REPORT
             'erp.report.index',
-            'erp.report.show'
+            'erp.report.show',
+
+            // NOTIFICATION
+            'erp.notification.index',
+            'erp.notification.show',
+            'erp.notification.create',
+            'erp.notification.update',
+            'erp.notification.delete',
+            'erp.notification.many',
         ],
 
 
@@ -406,7 +422,15 @@ return [
             'erp.categoryproduct.delete',
 
             // INVENTORY
-            'erp.inventory.update'
+            'erp.inventory.update',
+
+            // NOTIFICATION
+            'erp.notification.index',
+            'erp.notification.show',
+            'erp.notification.create',
+            'erp.notification.update',
+            'erp.notification.delete',
+            'erp.notification.many',
         ],
 
 
@@ -434,7 +458,15 @@ return [
             'erp.report.index',
             'erp.report.show',
             // PRODUCT
-            'erp.product.index'
+            'erp.product.index',
+
+            // NOTIFICATION
+            'erp.notification.index',
+            'erp.notification.show',
+            'erp.notification.create',
+            'erp.notification.update',
+            'erp.notification.delete',
+            'erp.notification.many',
         ],
 
 
@@ -484,7 +516,15 @@ return [
             'erp.stockin.update',
             'erp.stockin.received',
             // PRODUCT
-            'erp.product.index'
+            'erp.product.index',
+
+            // NOTIFICATION
+            'erp.notification.index',
+            'erp.notification.show',
+            'erp.notification.create',
+            'erp.notification.update',
+            'erp.notification.delete',
+            'erp.notification.many',
         ],
 
 
@@ -498,7 +538,7 @@ return [
             'erp.supplier.update',
             'erp.supplier.delete',
 
-                        // PURCHASE
+            // PURCHASE
             'erp.purchase.index',
             'erp.purchase.show',
             'erp.purchase.create',
@@ -515,6 +555,14 @@ return [
 
             // PRODUCT
             'erp.product.index',
+
+            // NOTIFICATION
+            'erp.notification.index',
+            'erp.notification.show',
+            'erp.notification.create',
+            'erp.notification.update',
+            'erp.notification.delete',
+            'erp.notification.many',
         ],
     ],
 ];

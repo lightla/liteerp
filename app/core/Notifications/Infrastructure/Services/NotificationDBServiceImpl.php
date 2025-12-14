@@ -2,6 +2,7 @@
 
 namespace Core\Notifications\Infrastructure\Services;
 
+use App\Exceptions\BadException;
 use Core\Notifications\Domain\Services\NotificationDBService;
 use Core\Notifications\Domain\Repositories\NotificationRepositoryInterface;
 use Core\Notifications\Domain\Entities\Notification;
@@ -18,5 +19,26 @@ class NotificationDBServiceImpl implements NotificationDBService
     public function insertMany(array $data): array
     {
         return $this->repo->insertMany($data);
+    }
+    public function index(array $data): array
+    {
+        return $this->repo->index($data);
+    }
+    public function update(array $data): Notification | BadException
+    {
+        $entity = $this->repo->findById($data);
+        if(!$entity) {
+            throw new BadException(__("Not found data"));
+        }
+        $entity->markRead();
+        return $this->repo->update($entity);
+    }
+    public function delete(array $data): Notification|BadException
+    {
+        $entity = $this->repo->findById($data);
+        if(!$entity) {
+            throw new BadException(__("Not found data"));
+        }
+        return $this->repo->delete($entity);
     }
 }
