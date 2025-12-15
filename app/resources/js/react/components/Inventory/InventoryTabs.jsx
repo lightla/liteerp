@@ -10,7 +10,7 @@ export default function InventoryTabs() {
     const getInventory = useCallback((page = 0) => {
         table.setLoading(true);
         InventoryService.list({
-            keywords: search.formData?.keywords,
+            keywords: search.formData?.keywords ?? '',
             page: page
         })
             .then((resp) => {
