@@ -27,7 +27,6 @@ class ActivityLogWrite
                     || empty($data['business_id'])
                     || empty($data['id'])
                 ) {
-                    Log::info(json_encode($data));
                     return;
                 }
                 $this->createLog->handle(CreateActivityLogRequest::fromArray([
