@@ -3,12 +3,14 @@ import useTable from '../../libraries/handleTable';
 import InventoryService from '../../services/InventoryService';
 import CommonDataTable from '../CommonDataTable';
 import SearchInput from '../UI/Input/SearchInput';
+import { useForm } from '../../libraries/handleInput';
 export default function InventoryTabs() {
     const table = useTable();
+    const search = useForm();
     const getInventory = useCallback((page = 0) => {
         table.setLoading(true);
         InventoryService.list({
-            keywords: '',
+            keywords: search.formData?.keywords,
             page: page
         })
             .then((resp) => {
@@ -16,7 +18,7 @@ export default function InventoryTabs() {
                 table.setData(resp.message.data);
                 table.setLinks(resp.message.links);
             })
-    }, []);
+    }, [search.formData?.keywords]);
     useEffect(() => {
         getInventory();
     }, []);
@@ -25,7 +27,12 @@ export default function InventoryTabs() {
             filter={<div>
                 <div className='row'>
                     <div className='col-6'>
-                        <SearchInput placeholder='Search by name' />
+                        <SearchInput 
+                        submit={getInventory}
+                        value={search.formData?.keywords}
+                        name='keywords'
+                        handleChange={search.handleChange}
+                        placeholder='Search by name' />
                     </div>
                 </div>
             </div>}
@@ -36,7 +43,6 @@ export default function InventoryTabs() {
                 { key: "reserved_qty", label: "Reserved qty" },
                 { key: "sku", label: "Sku" },
                 { key: "unit", label: "Unit" },
-                { key: "unit_name", label: "Supplier" },
                 { key: "warehouse", label: "Warehouse" },
                 { key: "category", label: "Category" }
             ]}

@@ -9,7 +9,7 @@ class IndexInventoryRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'isOrder' => 'nullable|numeric|min:0|max:1'
+            'keywords' => 'nullable|string|max:150'
         ];
     }
 
