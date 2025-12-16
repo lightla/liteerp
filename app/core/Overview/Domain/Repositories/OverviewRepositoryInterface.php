@@ -12,7 +12,7 @@ interface OverviewRepositoryInterface
     public function getProduct(array $data): int;
     public function businessChart(array $data) : array;
     public function createCacheForMonth(array $data): array;
-    public function getCacheForMonth(): ?array;
-    public function createCacheForYear(array $data): array;
-    public function getCacheForYear(): ?array;
+    public function getCacheForMonth(array $data): ?array;
+    public function createCacheForYear(array $data, int $business_id): array;
+    public function getCacheForYear(array $data): ?array;
 }

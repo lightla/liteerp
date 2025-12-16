@@ -90,22 +90,22 @@ class EloquentOverviewRepository implements OverviewRepositoryInterface
                 ->first()?->total ?? 0
         ];
     }
-    public function getCacheForMonth(): ?array
+    public function getCacheForMonth(array $data): ?array
     {
-        return (array) Cache::get('overview_createCacheForMonth') ?? null;
+        return (array) Cache::get('overview_createCacheForMonth_' . $data['business_id']) ?? null;
     }
     public function createCacheForMonth(array $data): array
     {
-        Cache::put('overview_createCacheForMonth', $data);
+        Cache::put('overview_createCacheForMonth_' . $data['business_id'], $data);
         return $data;
     }
-    public function getCacheForYear(): ?array
+    public function getCacheForYear(array $data): ?array
     {
-        return (array) Cache::get('overview_getCacheForYear') ?? null;
+        return (array) Cache::get('overview_getCacheForYear_' . $data['business_id']) ?? null;
     }
-    public function createCacheForYear(array $data): array
+    public function createCacheForYear(array $data, int $business_id): array
     {
-        Cache::put('overview_getCacheForYear', $data);
+        Cache::put('overview_getCacheForYear_' . $business_id, $data);
         return $data;
     }
 }

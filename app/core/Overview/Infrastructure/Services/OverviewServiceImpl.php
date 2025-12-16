@@ -14,8 +14,8 @@ class OverviewServiceImpl implements OverviewService
     {
 
         return [
-            'month' => $this->repo->getCacheForMonth(),
-            'chart' => $this->repo->getCacheForYear()
+            'month' => $this->repo->getCacheForMonth($data),
+            'chart' => $this->repo->getCacheForYear($data)
         ];
     }
 
@@ -43,14 +43,14 @@ class OverviewServiceImpl implements OverviewService
             ) {
                 $chart[] = [
                     ...$this->repo->businessChart([
-                        'business_id' => $data->business_id,
+                        'business_id' => $data->id,
                         'month' => $i + 1
                     ]),
-                    'name' => $value
+                    'name' => $value,
                 ];
                 $i++;
             }
-            $return[] = $this->repo->createCacheForYear($chart);
+            $return[] = $this->repo->createCacheForYear($chart, $data->id);
         }
 
         return $return;
@@ -60,25 +60,25 @@ class OverviewServiceImpl implements OverviewService
     {
         $return = [];
         foreach (BusinessModel::get() as $key => $data) {
+        
             $order = [];
             $order['current'] = $this->repo->getOrder([
                 'month' => date('m', time()),
-                'business_id' => $data->business_id
+                'business_id' => $data->id
             ]);
             $order['prev'] = $this->repo->getOrder([
                 'month' => now()->startOfMonth()->subMonth()->month,
-                'business_id' => $data->business_id
+                'business_id' => $data->id
             ]);
             $order['compare'] = $order['prev'] >= 1 ? ($order['prev'] / $order['current'] * 100) - 100 : 100;
-
             $product = [];
             $product['current'] = $this->repo->getProduct([
                 'month' => date('m', time()),
-                'business_id' => $data->business_id
+                'business_id' => $data->id
             ]);
             $product['prev'] = $this->repo->getProduct([
                 'month' => now()->startOfMonth()->subMonth()->month,
-                'business_id' => $data->business_id
+                'business_id' => $data->id
             ]);
             $product['compare'] = $product['prev'] >= 1
                 ? ($product['prev'] / $product['current'] * 100) - 100
@@ -87,11 +87,11 @@ class OverviewServiceImpl implements OverviewService
             $customer = [];
             $customer['current'] = $this->repo->getCustomer([
                 'month' => date('m', time()),
-                'business_id' => $data->business_id
+                'business_id' => $data->id
             ]);
             $customer['prev'] = $this->repo->getCustomer([
                 'month' => now()->startOfMonth()->subMonth()->month,
-                'business_id' => $data->business_id
+                'business_id' => $data->id
             ]);
             $customer['compare'] = $customer['prev'] >= 1
                 ? ($customer['prev'] / $customer['current'] * 100) - 100
@@ -100,11 +100,11 @@ class OverviewServiceImpl implements OverviewService
             $revenue = [];
             $revenue['current'] = $this->repo->getRevenue([
                 'month' => date('m', time()),
-                'business_id' => $data->business_id
+                'business_id' => $data->id
             ]);
             $revenue['prev'] = $this->repo->getRevenue([
                 'month' => now()->startOfMonth()->subMonth()->month,
-                'business_id' => $data->business_id
+                'business_id' => $data->id
             ]);
             $revenue['compare'] = $revenue['prev'] >= 1
                 ? ($revenue['prev'] / $revenue['current'] * 100) - 100
@@ -114,11 +114,11 @@ class OverviewServiceImpl implements OverviewService
                 'order' => $order,
                 'product' => $product,
                 'customer' => $customer,
-                'revenue'  => $revenue
+                'revenue'  => $revenue,
+                'business_id' => $data->id
             ];
             $return[] = $this->repo->createCacheForMonth($array);
         }
-
         return $return;
     }
 }
