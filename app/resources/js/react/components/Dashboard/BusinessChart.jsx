@@ -81,9 +81,9 @@ export default function BusinessChart({
             type="monotone"
             dataKey="inventory"
             name="Inventories"
-            stroke="#60a5fa"
+            stroke="#db120bff"
             strokeWidth={2}
-            dot={{ fill: "#60a5fa" }}
+            dot={{ fill: "#db120bff" }}
           />
           <Line
             yAxisId="right"
