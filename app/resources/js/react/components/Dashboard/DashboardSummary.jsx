@@ -1,42 +1,15 @@
-import React from "react";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { CurrencyDollar, Cart, People, BoxArrowUp } from "react-bootstrap-icons";
+import OverviewService from "../../services/OverviewService";
 
-const summaryData = [
-  {
-    title: "Total Revenue",
-    value: "2,450,000",
-    change: "+12.5%",
-    note: "compared to last month",
-    icon: <CurrencyDollar size={20} color="#0ea5e9" />,
-    iconBg: "#0ea5e933",
-  },
-  {
-    title: "Total Orders",
-    value: "1,847",
-    change: "+8.3%",
-    note: "compared to last month",
-    icon: <Cart size={20} color="#2563eb" />,
-    iconBg: "#2563eb33",
-  },
-  {
-    title: "Total Customers",
-    value: "12,456",
-    change: "+15.2%",
-    note: "compared to last month",
-    icon: <People size={20} color="#9333ea" />,
-    iconBg: "#9333ea33",
-  },
-  {
-    title: "Total Products",
-    value: "3,892",
-    change: "+5.7%",
-    note: "compared to last month",
-    icon: <BoxArrowUp size={20} color="#f59e0b" />,
-    iconBg: "#f59e0b33",
-  },
-];
 
-export default function DashboardSummary() {
+
+export default function DashboardSummary({
+  summaryData = []
+}) {
+
+
+
   return (
     <div className="erp-summary-container d-flex flex-wrap gap-3 mt-3">
       {summaryData.map((item, i) => (

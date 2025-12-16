@@ -2,18 +2,19 @@
 
 namespace Core\Overview\Application\UseCases;
 
-use Core\Overview\Application\DTOs\CreateOverviewRequest;
 use Core\Overview\Domain\Services\OverviewService;
+use Illuminate\Support\Facades\Concurrency;
 
 class CreateOverview
 {
     public function __construct(private OverviewService $service) {}
 
-    public function handle(CreateOverviewRequest $dto)
+    public function handle()
     {
-        return $this->service->create([
-            'name' => $dto->name,
-            'description' => $dto->description,
+        Concurrency::driver('fork')->run([
+            fn () => $this->service->createCacheForMonth(),
+            fn () => $this->service->createCacheForYear()
         ]);
+        return [];
     }
 }
