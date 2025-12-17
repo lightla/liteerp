@@ -50,6 +50,7 @@ class EloquentStockOutRepository implements StockOutRepositoryInterface
             + SUM(order_items.conversion_quantity) as quantity"),
             "orders.expected_delivery_date as expected_delivery_date",
             "orders.order_date as order_date",
+            "orders.status as order_status",
             "orders.id as order_id",
             "invoice_outs.document_no as document_no",
             "customers.name as customer_name",

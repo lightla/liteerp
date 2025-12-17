@@ -76,7 +76,12 @@ export default function StockOuts() {
             render: (date) => {
                 return <span>{date}</span>
             }
-        }
+        },
+        {
+            label: "Order status", key: "order_status", render: (value) => {
+                return <StatusBadge status={value} />
+            }
+        },
     ];
     useEffect(() => {
         getListStockIn();
