@@ -31,6 +31,7 @@ class EloquentInvoiceOutRepository implements InvoiceOutRepositoryInterface
     public function index(array $data): array {
         $list = InvoiceOutModel::select("invoice_outs.*",
         "customers.name as customer_name",
+        "orders.status as order_status",
         DB::raw("
         CASE
             WHEN shippings.shipping_fee_actual > 0

@@ -72,6 +72,13 @@ export default function InvoiceOuts() {
                 return <StatusBadge status={value} />
             }
         },
+        {
+            label: "Order status",
+            key: "order_status",
+            render: (value) => {
+                return <StatusBadge status={value} />
+            }
+        },
     ];
     const getInvoices = useCallback((page = 0) => {
         table.setLoading(true);
