@@ -38,13 +38,13 @@ It has extremely low framework dependencies.
 - **Order**
 - **Invoice Out**
 - **Stock Out**
-
-### ⏳ In Progress
-- **Reports**
 - **Notification**
 - **Overview Dashboard**
 - **Employee Role** 
 - **Storage**
+
+### ⏳ In Progress
+- **Reports**
 - **Multiple Language**
 
 ---
