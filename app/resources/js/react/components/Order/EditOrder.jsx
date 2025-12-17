@@ -87,6 +87,7 @@ export default function EditOrder() {
             })
     }, [searchParams]);
     const saveShipping = useCallback(() => {
+        shippingForm.setLoading(true)
         OrderShippingService.update(shippingForm.formData)
             .then((resp) => {
                 openPopup({
@@ -94,6 +95,7 @@ export default function EditOrder() {
                     message: 'You has been changed'
                 });
                 setShippingDetail(shippingForm.formData);
+                shippingForm.setLoading(false)
             })
             .catch((error) => {
                 if (error.response.data?.errors) {
@@ -105,6 +107,7 @@ export default function EditOrder() {
                         message: error.response.data?.message
                     })
                 }
+                shippingForm.setLoading(false)
             })
     }, [shippingForm.formData, shippingDetail]);
     const confirmUpdateShipping = useCallback(() => {
@@ -239,22 +242,22 @@ export default function EditOrder() {
                         </div>
                         <div className="row">
                             <div className="col-2">
-                                <SecondaryButton onClick={prevStep} label='Back' />
+                                <SecondaryButton loading={form.loading || shippingForm.loading} onClick={prevStep} label='Back' />
                             </div>
                             <div className="col-4 ms-auto text-end">
                                 <div className='row'>
                                     <div className='col-6'>
                                         {detail?.status !== 'cancelled' ?
-                                        <DangerButton onClick={confirmCancelled} label='Take Cancelled' />
+                                        <DangerButton loading={form.loading || shippingForm.loading} onClick={confirmCancelled} label='Take Cancelled' />
                                         : null }
                                     </div>
                                     <div className='col-6'>
                                         {currentStep <= 2
-                                            ? <PrimaryButton onClick={nextStep} label='Next' />
+                                            ? <PrimaryButton loading={form.loading || shippingForm.loading} onClick={nextStep} label='Next' />
                                             : null}
 
                                         {currentStep === 3 && detail?.status === 'pending'
-                                            ? <PrimaryButton onClick={confirmApprove} label='Approved' />
+                                            ? <PrimaryButton loading={form.loading} onClick={confirmApprove} label='Approved' />
                                             : null}
                                     </div>
                                 </div>

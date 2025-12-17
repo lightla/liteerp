@@ -10,10 +10,12 @@ import { usePopup } from '../popups/PopupContext';
 import CustomerInformation from './EditOrder/CustomerInformation';
 export default function AddOrder() {
     const form = useForm(null);
+    
     const {openPopup} = usePopup();
     const navigate = useNavigate();
     const create = useCallback(() => {
         form.setFormErrors(null);
+        form.setLoading(true);
         OrderService.add(form.formData)
             .then((resp) => {
                 openPopup({
@@ -23,6 +25,7 @@ export default function AddOrder() {
                         navigate('/orders?form=edit&id=' + resp.message.id);
                     }
                 })
+                form.setLoading(false);
             })
             .catch((error) => {
                 if (error.response?.data?.errors) {
@@ -34,6 +37,7 @@ export default function AddOrder() {
                         message: error.response.data?.message
                     })
                 }
+                form.setLoading(false);
             })
     }, [form.formData]);
     return <div>
@@ -48,7 +52,7 @@ export default function AddOrder() {
                     <SecondaryButton label='Back' />
                 </div>
                 <div className="col-2 ms-auto text-end">
-                    <PrimaryButton onClick={create} label='Next' />
+                    <PrimaryButton loading={form.loading} onClick={create} label='Next' />
                 </div>
             </div>
         </div>
