@@ -28,6 +28,6 @@ class UnapproveInvoiceOutByOrderCancelled
         }
 
         DB::commit();
-        return $update;
+        return;
     }
 }

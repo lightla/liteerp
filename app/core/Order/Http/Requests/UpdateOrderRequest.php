@@ -15,7 +15,8 @@ class UpdateOrderRequest extends FormRequest
             'note'        => 'nullable|string',
 
             'type'        => 'nullable|in:retail,wholesale',
-            'status' => 'nullable|in:pending,approved,cancelled'    
+            'status' => 'nullable|in:pending,approved,cancelled',
+            'reason' => 'nullable|string|max:250'    
         ];
     }
 

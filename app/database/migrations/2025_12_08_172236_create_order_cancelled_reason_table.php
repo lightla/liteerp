@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('order_cancelled_reason', function (Blueprint $table) {
             $table->id();
             $table->foreignId('order_id')->constrained('orders')->onDelete('cascade');
-            $table->string('reason');
+            $table->string('reason')->nullable();
             $table->foreignId('created_by')->constrained('users')->onDelete('cascade');
             $table->timestamps();
         });

@@ -2,8 +2,7 @@
 
 namespace Core\Order\Application\UseCases;
 
-use Core\Order\Application\DTOs\CreateOrderRequest;
-use Core\OrderItem\Application\UseCases\GetSummaryOrderItem;
+use Core\Order\Application\DTOs\UpdateOrderRequest;
 use Core\Order\Domain\Services\OrderService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Event;
@@ -14,7 +13,7 @@ class UpdateOrder
         private OrderService $service
     ) {}
 
-    public function handle(CreateOrderRequest $dto)
+    public function handle(UpdateOrderRequest $dto)
     {
         DB::beginTransaction();
         $update = $this->service->update($dto->toArray());
@@ -33,6 +32,7 @@ class UpdateOrder
                 'business_id' => $dto->business_id,
                 'id' => $update->id,
                 'order_id'     => $update->id,
+                'reason' => $dto->reason
             ]);
             $notificationStatus = "cancelled";
         } else {

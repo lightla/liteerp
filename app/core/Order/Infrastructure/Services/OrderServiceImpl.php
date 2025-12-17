@@ -80,9 +80,6 @@ class OrderServiceImpl implements OrderService
                 $entity->markApprove();
                 break;
             case "cancelled":
-                if (!$entity->isApproved()) {
-                    throw new BadException(__("Status invalid"));
-                }
                 $entity->markCancelled();
                 break;
         }

@@ -4,6 +4,7 @@ namespace Core\Order\Http\Controllers;
 
 use Core\Order\Application\UseCases\CreateOrder;
 use Core\Order\Application\DTOs\CreateOrderRequest;
+use Core\Order\Application\DTOs\UpdateOrderRequest as DTOsUpdateOrderRequest;
 use Core\Order\Application\UseCases\IndexOrder;
 use Core\Order\Application\UseCases\ShowOrder;
 use Core\Order\Application\UseCases\UpdateOrder;
@@ -31,7 +32,7 @@ class OrderController
     }
     public function update(string $id,UpdateOrderRequest $request,UpdateOrder $useCase) {
         $request->merge(['id' => $id]);
-        $dto = CreateOrderRequest::fromArray($request->all());
+        $dto = DTOsUpdateOrderRequest::fromArray($request->all());
         $entity = $useCase->handle($dto);
         return response()->json(['message' => $entity]);
     }

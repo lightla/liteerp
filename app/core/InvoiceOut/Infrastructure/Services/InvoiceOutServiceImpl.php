@@ -63,6 +63,6 @@ class InvoiceOutServiceImpl implements InvoiceOutService
     }
     public function getByOrderId(array $data): ?InvoiceOut
     {
-        return $this->repo->findByOrderId($data) ?? throw new BadException(__("not found data"));
+        return $this->repo->findByOrderId($data);
     }
 }

@@ -4,7 +4,6 @@ namespace Core\StockOut\Application\UseCases;
 
 use App\Exceptions\BadException;
 use Core\StockOut\Application\DTOs\CancelledStockOutByOrderCancelledRequest;
-use Core\StockOut\Domain\Entities\StockOut;
 use Core\StockOut\Domain\Services\StockOutService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Event;

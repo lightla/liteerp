@@ -16,7 +16,11 @@ import OrderItemService from '../../services/OrderItemService';
 import Completed from './EditOrder/Completed';
 import BeforeApprove from './EditOrder/BeforeApprove';
 import DangerButton from '../UI/Buttons/DangerButton';
+import { PopupLayout } from '../../layouts/PopupLayout';
+import TextArea from '../UI/Input/Textarea';
+import Cancelled from './EditOrder/Cancelled';
 export default function EditOrder() {
+    const [showCancelReason,setShowCancelReason] = useState(false);
     const [currentStep, setCurrentStep] = useState(0);
     const [searchParams] = useSearchParams();
     const form = useForm(null);
@@ -27,6 +31,7 @@ export default function EditOrder() {
     const { openPopup } = usePopup();
     const updateInformation = useCallback((callback = null) => {
         form.setFormErrors(null);
+        form.setLoading(true)
         OrderService.update(form.formData)
             .then((resp) => {
                 openPopup({
@@ -37,6 +42,7 @@ export default function EditOrder() {
                 if (callback) {
                     callback();
                 }
+                form.setLoading(false)
             })
             .catch((error) => {
                 if (error.response?.data?.errors) {
@@ -48,6 +54,7 @@ export default function EditOrder() {
                         message: error.response.data?.message
                     })
                 }
+                form.setLoading(false)
                 getDetail();
             })
     }, [form]);
@@ -134,7 +141,7 @@ export default function EditOrder() {
             type: 'warning',
             message: 'Are you sure wanna to take approved',
             onConfirm: () => {
-                form.handleChangeByKey('status','approved');
+                form.handleChangeByKey('status', 'approved');
             }
         })
     };
@@ -143,22 +150,22 @@ export default function EditOrder() {
             type: 'warning',
             message: 'Are you sure wanna to take cancelled',
             onConfirm: () => {
-                form.handleChangeByKey('status','cancelled');
+                setShowCancelReason(true)
             }
         })
     };
     useEffect(() => {
-        if(detail?.status === 'pending' && form.formData?.status === 'approved') {
+        if (detail?.status === 'pending' && form.formData?.status === 'approved') {
             updateInformation(() => {
 
             });
         }
-        if(detail?.status === 'approved' && form.formData?.status === 'cancelled') {
+        if (detail?.status !== 'cancelled' && form.formData?.status === 'cancelled') {
             updateInformation(() => {
-
+                setShowCancelReason(false)
             });
         }
-    },[form?.formData?.status, detail?.status])
+    }, [form?.formData?.status, detail?.status])
     const nextStep = () => {
         if (currentStep >= 3) {
             return;
@@ -201,16 +208,16 @@ export default function EditOrder() {
     }, [detail])
 
     return <div>
-        <PageHead 
-        containerClass='mx-5'
-        title='Order' subtitle='Add new order' />
+        <PageHead
+            containerClass='mx-5'
+            title='Order' subtitle='Add new order' />
         {detail ? <div>
             <div className='row mx-4'>
-               <div className='mt-3'>
-                 <FormStep
-                    list={["Customer & Order", "Products", "Shipping", "Completed"]}
-                    active={currentStep} />
-               </div>
+                <div className='mt-3'>
+                    <FormStep
+                        list={["Customer & Order", "Products", "Shipping", "Completed"]}
+                        active={currentStep} />
+                </div>
                 <div className='col-9'>
                     <div className='mt-3'>
                         <div className='theme-card p-3 rounded-4 border'>
@@ -224,28 +231,33 @@ export default function EditOrder() {
                                 <ShippingForm form={shippingForm} />
                             </div>
                             <div className={currentStep == 3 ? 'show' : 'hidden'}>
-                                {detail?.status === 'approved' 
-                                ? <Completed/>
-                                : <BeforeApprove/>}
+                                {detail?.status === 'approved'
+                                    ? <Completed />
+                                    : detail?.status === 'cancelled' 
+                                    ? <Cancelled/> : <BeforeApprove />}
                             </div>
                         </div>
                         <div className="row">
                             <div className="col-2">
                                 <SecondaryButton onClick={prevStep} label='Back' />
                             </div>
-                            <div className="col-2 ms-auto text-end">
-                                
-                                {currentStep <= 2 
-                                ? <PrimaryButton onClick={nextStep} label='Next' />
-                                : null}
+                            <div className="col-4 ms-auto text-end">
+                                <div className='row'>
+                                    <div className='col-6'>
+                                        {detail?.status !== 'cancelled' ?
+                                        <DangerButton onClick={confirmCancelled} label='Take Cancelled' />
+                                        : null }
+                                    </div>
+                                    <div className='col-6'>
+                                        {currentStep <= 2
+                                            ? <PrimaryButton onClick={nextStep} label='Next' />
+                                            : null}
 
-                                {currentStep === 3 && detail?.status === 'pending' 
-                                ? <PrimaryButton onClick={confirmApprove} label='Approved' />
-                                : null }
-
-                                {currentStep === 3 && detail?.status === 'approved' 
-                                ? <DangerButton onClick={confirmCancelled} label='Cancelled' />
-                                : null }
+                                        {currentStep === 3 && detail?.status === 'pending'
+                                            ? <PrimaryButton onClick={confirmApprove} label='Approved' />
+                                            : null}
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -255,5 +267,24 @@ export default function EditOrder() {
                 </div>
             </div>
         </div> : null}
+        {showCancelReason ?<PopupLayout
+        loading={form.loading}
+        title='Cancel reason'
+        confirmText='Submit cancel'
+        onClose={() => setShowCancelReason(false)}
+        onConfirm={() => {
+            form.handleChangeByKey('status', 'cancelled');
+        }}
+        >
+            <label>Reason</label>
+            <TextArea
+            name='reason'
+            value={form.formData?.reason}
+            errorMessage={form.formErrors?.reason}
+            handleChange={form.handleChange}
+            placeholder='Reason for cancel order, maximum 250 characters'
+            />
+        </PopupLayout> : null }
+        
     </div>
 }
