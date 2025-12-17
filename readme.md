@@ -176,6 +176,14 @@ https://drive.google.com/file/d/1acR1X12C4dLYNyK7w4grxWdTnfyswQDi/view?usp=shari
 
 ## 📦 Setup by Docker 
 
+Setup basic information for business, you need change information like business information working for. 
+
+`APP_TIMEZONE="Asia/Ho_Chi_Minh"`
+
+`APP_CURRENCY="USD"`
+
+`APP_CURRENCY_LOCALE="en-US"` 
+
 You need config SMTP mail, timezone at `./app/.env` before start.
 
 - First go to root folder and run `docker compose build && docker compose up -d` 
