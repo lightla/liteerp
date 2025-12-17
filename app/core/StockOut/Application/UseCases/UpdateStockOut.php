@@ -2,15 +2,11 @@
 
 namespace Core\StockOut\Application\UseCases;
 
-use Core\Inventory\Application\DTOs\CreateInventoryRequest;
-use Core\Inventory\Application\UseCases\UpdateInventory;
-use Core\StockMovementOut\Application\UseCases\IndexWithLimitStockMovementOut;
 use Core\StockOut\Application\DTOs\CreateStockOutRequest;
 use Core\StockOut\Domain\Entities\StockOut;
 use Core\StockOut\Domain\Services\StockOutService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Event;
-use Illuminate\Support\Facades\Log;
 
 class UpdateStockOut
 {
