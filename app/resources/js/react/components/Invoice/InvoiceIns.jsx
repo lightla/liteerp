@@ -72,6 +72,13 @@ export default function InvoiceIns() {
                 return <StatusBadge status={value}/>
             }
         },
+        {
+            label: "Purchase status",
+            key: "purchase_status",
+            render: (value) => {
+                return <StatusBadge status={value}/>
+            }
+        },
     ];
 
     const handleEdit = useCallback((row) => {

@@ -27,7 +27,8 @@ class EloquentInvoiceInRepository implements InvoiceInRepositoryInterface
             "suppliers.bank_name as bank_name",
             "suppliers.bank_account as bank_account",
             "suppliers.website as website",
-            "suppliers.note as note"
+            "suppliers.note as note",
+            "purchases.status as purchase_status"
         )
             ->join("purchases", "purchases.id", "=", "invoice_ins.purchase_id")
             ->join("suppliers", "suppliers.id", "=", "purchases.supplier_id")
