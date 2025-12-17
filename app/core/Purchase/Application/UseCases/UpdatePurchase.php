@@ -3,7 +3,7 @@
 namespace Core\Purchase\Application\UseCases;
 
 use App\Exceptions\BadException;
-use Core\Purchase\Application\DTOs\CreatePurchaseRequest;
+use Core\Purchase\Application\DTOs\UpdatePurchaseRequest;
 use Core\PurchaseItem\Application\UseCases\IndexPurchaseItem;
 use Core\Purchase\Domain\Services\PurchaseService;
 use Core\Purchase\Domain\Entities\Purchase;
@@ -16,7 +16,7 @@ class UpdatePurchase
     public function __construct(private PurchaseService $service, 
     private IndexPurchaseItem $purchaseItem) {}
 
-    public function handle(CreatePurchaseRequest $dto): Purchase
+    public function handle(UpdatePurchaseRequest $dto): Purchase
     {
         DB::beginTransaction();
 
@@ -58,8 +58,10 @@ class UpdatePurchase
             Event::dispatch("erp.purchase.requested", $updateData);
         } else if($update->isCancelled()){
             $updateData = [
+                'reason' => $dto->reason,
                 'user_id' => $dto->created_by,
                 'business_id' => $dto->business_id,
+                'purchase_id' => $update->id,
                 ...$update->toArray()
             ];
             Event::dispatch("erp.purchase.cancelled", $updateData);

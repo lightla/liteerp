@@ -15,7 +15,10 @@ import ApprovedContent from './EditPurchase/ApprovedContent';
 import DangerButton from '../UI/Buttons/DangerButton';
 import CancelledContent from './EditPurchase/CancelledContent';
 import PageHead from '../PageHead'
+import { PopupLayout } from '../../layouts/PopupLayout';
+import TextArea from '../UI/Input/Textarea';
 export default function EditPurchase() {
+    const [showCancel,setShowCancel] = useState(false)
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
     const { openPopup } = usePopup();
@@ -53,7 +56,7 @@ export default function EditPurchase() {
                 openPopup({
                     type: 'success',
                     message: 'You has been updated',
-                    onCancel : callback ?? null 
+                    onCancel: callback ?? null
                 });
                 getPurchaseDetail();
                 form.setLoading(false)
@@ -94,7 +97,8 @@ export default function EditPurchase() {
             type: 'warning',
             message: 'Do you wanna change to cancelled',
             onConfirm: () => {
-                update('cancelled')
+                //update('cancelled')
+                setShowCancel(true)
             }
         })
     }
@@ -102,15 +106,15 @@ export default function EditPurchase() {
         if (currentStep === 2) {
             return;
         }
-        switch(currentStep) {
+        switch (currentStep) {
             case 0:
-                if(JSON.stringify(detail) !== JSON.stringify(form.formData)) {
+                if (JSON.stringify(detail) !== JSON.stringify(form.formData)) {
                     openPopup({
                         cancelText: 'No change',
                         type: 'warning',
                         message: 'You just change data, do you wanna save change?',
                         onConfirm: () => {
-                            update(form.formData?.status ?? 'draft',() => {
+                            update(form.formData?.status ?? 'draft', () => {
                                 setCurrentStep((pre) => pre + 1)
                             })
                         },
@@ -137,10 +141,10 @@ export default function EditPurchase() {
         getPurchaseDetail();
     }, []);
     return <div>
-        <PageHead 
-        containerClass="mx-4"
-        title='Update purchase'
-        subtitle='Update purchase information'
+        <PageHead
+            containerClass="mx-4"
+            title='Update purchase'
+            subtitle='Update purchase information'
         />
         <div className='mx-4 mt-3'>
             <FormStep list={[
@@ -156,31 +160,59 @@ export default function EditPurchase() {
                         <AddProduct detail={detail} form={form} />
                     </div>
                     <div className={currentStep === 2 ? 'show' : 'hidden'}>
-                        {detail?.status === 'draft' ? <RequestContent/> : null}
-                        {detail?.status === 'requested' ? <ApproveContent/> : null}
-                        {detail?.status === 'approved' ? <ApprovedContent/> : null}
-                        {detail?.status === 'cancelled' ? <CancelledContent/> : null}
+                        {detail?.status === 'draft' ? <RequestContent /> : null}
+                        {detail?.status === 'requested' ? <ApproveContent /> : null}
+                        {detail?.status === 'approved' ? <ApprovedContent /> : null}
+                        {detail?.status === 'cancelled' ? <CancelledContent /> : null}
                     </div>
-                    </div> : null}
+                </div> : null}
             </div>
             <div className="row">
                 <div className="col-2">
                     <SecondaryButton onClick={preStep} label='Back' />
                 </div>
-                <div className="col-2 ms-auto text-end">
-                    {currentStep <= 1
-                    ? <PrimaryButton loading={form.loading} onClick={nextStep} label='Next' />
-                    : null }
-                    {currentStep === 2 && detail?.status === 'draft' 
-                    ? <PrimaryButton loading={form.loading} onClick={confirmUpdateToRequest} label={'Send To Request'} /> : null}
-                    {currentStep === 2 && detail?.status === 'requested' 
-                    ? <PrimaryButton loading={form.loading} onClick={confirmUpdateToApprove} label={'Take Approved'} /> : null}
-                    {currentStep === 2 && detail?.status === 'approved' 
-                    ? <DangerButton loading={form.loading} onClick={confirmUpdateToCancelled} label={'Take Cancelled'} /> : null}
+                <div className="col-4 ms-auto text-end">
+                    <div className='row'>
+                        <div className='col-6'>
+                            {detail?.status !== 'cancelled' ?<DangerButton 
+                                loading={form.loading}
+                                onClick={confirmUpdateToCancelled} 
+                                label={'Take Cancelled'} /> : null }
+                            
+                        </div>
+                        <div className='col-6'>
+                            {currentStep <= 1
+                                ? <PrimaryButton loading={form.loading} onClick={nextStep} label='Next' />
+                                : null}
+                            {currentStep === 2 && detail?.status === 'draft'
+                                ? <PrimaryButton loading={form.loading} onClick={confirmUpdateToRequest} label={'Send To Request'} /> : null}
+                            {currentStep === 2 && detail?.status === 'requested'
+                                ? <PrimaryButton loading={form.loading} onClick={confirmUpdateToApprove} label={'Take Approved'} /> : null}
+                        </div>
+                    </div>
+
                 </div>
             </div>
 
 
         </div>
+        {showCancel ?<PopupLayout 
+            loading={form.loading}
+            onConfirm={() => {
+                update('cancelled');
+                setShowCancel(false)
+            }}
+            onClose={() => setShowCancel(false)}
+            confirmText='Submit cancel'
+            title='Cancel reason'>
+            <label>Reason</label>
+            <TextArea
+            name='reason'
+            errorMessage={form.formErrors?.reason}
+            handleChange={form.handleChange}
+            placeholder='Reason cancel purchase, maximum 250 characters'
+            />
+        </PopupLayout> : null }
+        
     </div>
 }
