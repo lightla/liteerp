@@ -8,6 +8,9 @@
   Lightweight Open-Source ERP for internal business use.
 </p>
 
+🚧 Project Status: Active Development
+
+LiteERP is under heavy development. The current version is not production-ready. This project is intended for experienced developers evaluating architecture and core design also join into team to grow together
 
 
 # 🏢 LiteERP – Clean Architecture & Domain Driven Design
