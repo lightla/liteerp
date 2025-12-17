@@ -14,7 +14,7 @@ LiteERP is under heavy development. The current version is not production-ready.
 
 ## 📸 Screenshots
 
-![Dashboard](screenshoot.png)
+![Dashboard](screenshoot.PNG)
 
 # 🏢 LiteERP – Clean Architecture & Domain Driven Design
 
