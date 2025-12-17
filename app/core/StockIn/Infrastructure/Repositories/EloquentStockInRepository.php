@@ -25,7 +25,8 @@ class EloquentStockInRepository implements StockInRepositoryInterface
             "suppliers.unit_name as supplier_name",
             "invoice_ins.document_no as document_no",
             "purchases.id as purchase_id",
-            "invoice_ins.due_date as due_date"
+            "invoice_ins.due_date as due_date",
+            "purchases.status as purchase_status"
         )
             ->join("invoice_ins", "invoice_ins.id", "=", "stock_ins.invoice_in_id")
             ->join("purchases", "purchases.id", "=", "invoice_ins.purchase_id")

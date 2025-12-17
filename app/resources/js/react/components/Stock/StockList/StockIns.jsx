@@ -79,6 +79,13 @@ export default function StockIns() {
             render: (date) => {
                 return date ? isoToDateTime(date) : '-'
             }
+        },
+        {
+            label: "Purchase status",
+            key: "purchase_status",
+            render: (value) => {
+                return <StatusBadge status={value} />
+            }
         }
     ];
 
