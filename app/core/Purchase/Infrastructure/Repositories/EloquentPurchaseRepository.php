@@ -22,6 +22,8 @@ class EloquentPurchaseRepository implements PurchaseRepositoryInterface
         $list = PurchaseModel::select(
             "purchases.*",
             "suppliers.unit_name as supplier_name",
+            "created_users.name as created_name",
+            "approved_users.name as approved_name",
             DB::raw("SUM(purchase_items.buy_quantity) as buy_quantity"),
             DB::raw("SUM(purchase_items.gift_quantity) as gift_quantity"),
             DB::raw("SUM(purchase_items.compensation_quantity) as compensation_quantity"),
@@ -30,6 +32,8 @@ class EloquentPurchaseRepository implements PurchaseRepositoryInterface
             DB::raw("SUM(purchase_items.unit_cost) as unit_cost")
         )
             ->join("suppliers", "suppliers.id", "=", "purchases.supplier_id")
+            ->join("users as created_users", "created_users.id", "=", "purchases.created_by")
+            ->leftJoin("users as approved_users", "approved_users.id", "=", "purchases.approved_by")
             ->leftJoin("purchase_items", "purchase_items.purchase_id", "=", "purchases.id")
             ->where('purchases.business_id', $data['business_id'])
             ->where('suppliers.unit_name','like','%'.($data['name'] ?? '').'%')

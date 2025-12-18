@@ -11,6 +11,8 @@ import PageHead from '../PageHead';
 import Currencies from '../Currencies';
 import { isoToDateTime } from '../../libraries/common';
 import StatusBadge from '../StatusBadge';
+import PaymentMethod from '../PaymentMethod';
+import ContentOnTable from '../ContentOnTable';
 export default function ListPurchases() {
     const navigate = useNavigate();
     const { openPopup } = usePopup();
@@ -23,7 +25,9 @@ export default function ListPurchases() {
                 return <span>PU{id}</span>
             }
         },
-        { label: "Supplier", key: "supplier_name" },
+        { label: "Supplier", key: "supplier_name",render: (value) => {
+            return <ContentOnTable value={value} max={15}/>
+        } },
         {
             label: "Purchase date", key: "purchase_date", render: (date) => {
                 return isoToDateTime(date);
@@ -41,7 +45,9 @@ export default function ListPurchases() {
                 </strong>
             }
         },
-        { label: "Payment method", key: "payment_method" },
+        { label: "Payment method", key: "payment_method", render:(value) => {
+            return <PaymentMethod value={value}/>
+        } },
         { label: "Buy", key: "buy_quantity" },
         { label: "Compensation", key: "compensation_quantity" },
         { label: "Conversion", key: "conversion_quantity" },
@@ -58,6 +64,12 @@ export default function ListPurchases() {
                 return <StatusBadge status={value} />
             },
         },
+        { label: "Approved by", key: "approved_name", render:(value) => {
+            return <span className='badge bg-primary text-uppercase'>{value}</span>
+        } },
+        { label: "Created by", key: "created_name", render:(value) => {
+            return <span className='badge bg-primary text-uppercase'>{value}</span>
+        } },
     ];
 
     const handleEdit = (row) => {
