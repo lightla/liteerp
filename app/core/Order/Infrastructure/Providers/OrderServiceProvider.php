@@ -2,7 +2,7 @@
 
 namespace Core\Order\Infrastructure\Providers;
 
-use Core\Order\Application\UseCases\CheckAddOrderItem;
+use Core\Order\Application\UseCases\CheckReadyForOrderItem;
 use Core\Order\Application\UseCases\CheckOrderCancelled;
 use Core\Order\Application\UseCases\CheckUpdateShippingOrder;
 use Illuminate\Support\ServiceProvider;
@@ -21,14 +21,14 @@ class OrderServiceProvider extends ServiceProvider
         $this->mergeModuleConfig();
     }
 
-    public function boot(CheckAddOrderItem $CheckAddOrderItem,
+    public function boot(CheckReadyForOrderItem $CheckReadyForOrderItem,
         CheckUpdateShippingOrder $CheckUpdateShippingOrder,
         CheckOrderCancelled $CheckOrderCancelled)
     {
         $this->loadModuleRoutes();
         $this->loadModuleTranslations();
         $listener = new OrderListener();
-        $listener->handle($CheckAddOrderItem,$CheckUpdateShippingOrder,$CheckOrderCancelled);
+        $listener->handle($CheckReadyForOrderItem,$CheckUpdateShippingOrder,$CheckOrderCancelled);
     }
 
     protected function mergeModuleConfig(): void

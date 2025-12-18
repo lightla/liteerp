@@ -2,7 +2,7 @@
 
 namespace Core\Order\Application\DTOs;
 
-class CheckAddOrderItemRequest
+class CheckReadyForOrderItemRequest
 {
     public function __construct(
         public int $business_id,
