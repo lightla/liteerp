@@ -23,7 +23,6 @@ return new class extends Migration
             $table->decimal('compensation_quantity',15,2)->default(0);
             $table->decimal('conversion_quantity',15,2)->default(0);
             $table->bigInteger('unit_cost')->default(0);
-            $table->softDeletes();
             $table->timestamps();
         });
     }

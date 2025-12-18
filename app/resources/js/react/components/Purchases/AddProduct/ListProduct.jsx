@@ -12,9 +12,13 @@ import { InputForm } from '../../UI/Input/InputForm';
 import SearchSelect from '../../UI/Input/SearchSelect';
 import PurchaseTaxService from '../../../services/PurchaseTaxService';
 import Currencies from '../../Currencies';
+import PurchaseService from '../../../services/PurchaseService';
+import { useDispatch } from 'react-redux';
+import { setPurchaseDetail } from '../../../redux/purchase/detailSlice';
 export default function ListProducts({
     purchase = null
 }) {
+    const dispatch = useDispatch();
     const [checkList, setCheckList] = useState([]);
     const [isCheckAll, setIsCheckAll] = useState(false);
     const [showForm, setShowForm] = useState(false);
@@ -26,6 +30,23 @@ export default function ListProducts({
     const { openPopup } = usePopup();
     const [products, setProducts] = useState([])
     const navigate = useNavigate();
+    const getPurchaseDetail = useCallback(() => {
+        PurchaseService.show(searchParams.get('id'))
+            .then((resp) => {
+                dispatch(setPurchaseDetail(resp.message))
+            })
+            .catch((error) => {
+                if (error.response.data?.message) {
+                    openPopup({
+                        type: 'error',
+                        message: error.response.data?.message,
+                        onCancel: () => {
+                            navigate('/purchases')
+                        }
+                    })
+                }
+            })
+    }, []);
     const addToCheckList = (id) => {
         setCheckList(prev => {
             if (prev.includes(id)) {
@@ -80,12 +101,12 @@ export default function ListProducts({
             { label: "Conversion", key: "conversion_quantity" },
             {
                 label: "Unit cost", key: "unit_cost", render: (value) => {
-                    return <span>{<Currencies amount={value}/>}</span>
+                    return <span>{<Currencies amount={value} />}</span>
                 }
             },
             {
                 label: "Subtotal", key: "subtotal", render: (value) => (
-                    <span>{<Currencies amount={value}/>}</span>
+                    <span>{<Currencies amount={value} />}</span>
                 )
             },
             {
@@ -95,12 +116,12 @@ export default function ListProducts({
             },
             {
                 label: "Total tax", key: "total_tax", render: (value) => {
-                    return <span>{<Currencies amount={value}/>}</span>
+                    return <span>{<Currencies amount={value} />}</span>
                 }
             },
             {
                 label: "Total price", key: "total", render: (value) => (
-                    <span>{<Currencies amount={value}/>}</span>
+                    <span>{<Currencies amount={value} />}</span>
                 )
             }
         ]
@@ -114,9 +135,7 @@ export default function ListProducts({
         setShowForm(true);
     };
 
-    const handleDelete = (row) => {
 
-    };
     const create = useCallback(() => {
         form.setLoading(true);
         form.setFormErrors(null);
@@ -135,6 +154,7 @@ export default function ListProducts({
                 });
                 form.setFormData(null)
                 form.setLoading(false);
+                getPurchaseDetail();
             })
             .catch((error) => {
                 if (error.response?.data?.errors) {
@@ -165,6 +185,7 @@ export default function ListProducts({
                 form.setFormData(null);
                 setShowForm(false);
                 form.setLoading(false);
+                getPurchaseDetail();
             })
             .catch((error) => {
                 if (error.response?.data?.errors) {
@@ -179,6 +200,42 @@ export default function ListProducts({
                 form.setLoading(false);
             });
     }, [form.formData, searchParams]);
+
+    const destroy = useCallback((row) => {
+        PurchaseItemService.delete(row)
+            .then(() => {
+                getPurchaseItems();
+                openPopup({
+                    type: 'success',
+                    message: 'You has been update',
+                    onConfirm: () => {
+                        setShowForm(false);
+                    }
+                });
+                getPurchaseDetail();
+            })
+            .catch((error) => {
+                if (error.response?.data?.errors) {
+                    form.setFormErrors(error.response.data.errors);
+                }
+                if (error.response.data?.message) {
+                    openPopup({
+                        type: 'error',
+                        message: error.response.data?.message
+                    })
+                }
+            });
+    }, []);
+
+    const handleDelete = (row) => {
+        openPopup({
+            type: 'warning',
+            message: 'Are you sure to delete?',
+            onConfirm: () => {
+                destroy(row)
+            }
+        })
+    };
 
     const getPurchaseItems = useCallback((page = 0) => {
         table.setLoading(true);
@@ -195,7 +252,7 @@ export default function ListProducts({
 
             });
     }, [searchParams]);
-    const getProducts = useCallback((keywords = '',callback = null) => {
+    const getProducts = useCallback((keywords = '', callback = null) => {
         ProductService.list({
             keywords: keywords,
             page: 0,
@@ -203,7 +260,7 @@ export default function ListProducts({
         })
             .then((resp) => {
                 setProducts(resp.message.data)
-                if(callback) {
+                if (callback) {
                     callback();
                 }
             })

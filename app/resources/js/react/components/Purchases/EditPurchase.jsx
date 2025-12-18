@@ -17,19 +17,22 @@ import CancelledContent from './EditPurchase/CancelledContent';
 import PageHead from '../PageHead'
 import { PopupLayout } from '../../layouts/PopupLayout';
 import TextArea from '../UI/Input/Textarea';
+import { useDispatch, useSelector } from 'react-redux';
+import { setPurchaseDetail } from '../../redux/purchase/detailSlice';
 export default function EditPurchase() {
+    const dispatch = useDispatch();
     const [showCancel,setShowCancel] = useState(false)
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
     const { openPopup } = usePopup();
     const form = useForm();
-    const [detail, setDetail] = useState(null);
+    const detail = useSelector((state) => state.purchasedetail.data);
     const [currentStep, setCurrentStep] = useState(1);
     const getPurchaseDetail = useCallback(() => {
         PurchaseService.show(searchParams.get('id'))
             .then((resp) => {
-                setDetail(resp.message);
                 form.setFormData(resp.message)
+                dispatch(setPurchaseDetail(resp.message))
             })
             .catch((error) => {
                 if (error.response.data?.message) {
@@ -157,7 +160,7 @@ export default function EditPurchase() {
                     <PurchaseInformation form={form} />
                 </div>
                     <div className={currentStep === 1 ? 'show' : 'hidden'}>
-                        <AddProduct detail={detail} form={form} />
+                        <AddProduct />
                     </div>
                     <div className={currentStep === 2 ? 'show' : 'hidden'}>
                         {detail?.status === 'draft' ? <RequestContent /> : null}

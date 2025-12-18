@@ -18,6 +18,7 @@ class PurchaseListener
                 if (
                     $eventName === 'erp.purchaseitem.create'
                     || $eventName === 'erp.purchaseitem.update'
+                    || $eventName === 'erp.purchaseitem.delete'
                 ) {
                     $checkForPurchaseItem->handle([
                         'business_id' => $data['business_id'],

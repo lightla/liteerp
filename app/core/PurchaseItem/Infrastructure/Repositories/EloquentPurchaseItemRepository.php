@@ -72,6 +72,12 @@ class EloquentPurchaseItemRepository implements PurchaseItemRepositoryInterface
         ->update($entity->toArray());
         return $entity;
     }
+    public function delete(PurchaseItem $entity): PurchaseItem
+    {
+        PurchaseItemModel::where('id',$entity->id)
+        ->delete();
+        return $entity;
+    }
     public function indexMinimal(array $data): array
     {
         return PurchaseItemModel::select("purchase_items.*")

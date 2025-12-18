@@ -49,4 +49,12 @@ class PurchaseItemServiceImpl implements PurchaseItemService
     {
         return $this->repo->indexMinimal($data);
     }
+    public function delete(array $data): PurchaseItem|BadException
+    {
+        $entity = $this->repo->findById($data);
+        if(!$entity) {
+            throw new BadException(__("Not found data"));
+        }
+        return $this->repo->delete($entity);
+    }
 }
