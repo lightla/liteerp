@@ -6,7 +6,8 @@ import { useForm } from "../../../../libraries/handleInput";
 import InventoryService from '../../../../services/InventoryService'
 export default function ListProduct({
     add = (product) => { },
-    loading = false
+    loading = false,
+    detail = null 
 }) {
     const columns = [
         { label: "ID", key: "id" },
@@ -31,7 +32,7 @@ export default function ListProduct({
         InventoryService.list({
             keywords: search.formData?.keywords ?? '',
             page: page,
-            isOrder: 1
+            customer_group_id: detail?.customer_group_id
         })
             .then((resp) => {
                 console.log(resp)
@@ -42,10 +43,10 @@ export default function ListProduct({
             .catch((error) => {
 
             })
-    }, [search.formData?.keywords]);
+    }, [search.formData?.keywords,detail]);
     useEffect(() => {
         getInventories();
-    },[])
+    },[detail?.customer_group_id])
     return <div>
         <h4 className="h5">Inventory</h4>
         <CommonDataTable

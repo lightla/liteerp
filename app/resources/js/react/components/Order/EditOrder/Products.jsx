@@ -8,7 +8,9 @@ import OrderItemService from '../../../services/OrderItemService'
 import { usePopup } from '../../popups/PopupContext'
 import { useSearchParams } from 'react-router-dom'
 import useTable from '../../../libraries/handleTable'
-export default function Products() {
+export default function Products({
+    detail = null 
+}) {
     const form = useForm();
     const [showForm, setShowForm] = useState(false);
     const [searchParams] = useSearchParams();
@@ -73,7 +75,7 @@ export default function Products() {
     }, [])
     return <div>
         <ProductAdded table={table} />
-        <ListProduct add={add} />
+        <ListProduct detail={detail} add={add} />
         <div>
             {showForm ? <PopupLayout
                 onClose={() => setShowForm(false)}

@@ -228,7 +228,7 @@ export default function EditOrder() {
                                 <CustomerInformation form={form} />
                             </div>
                             <div className={currentStep == 1 ? 'show' : 'hidden'}>
-                                <Products />
+                                <Products detail={detail}/>
                             </div>
                             <div className={currentStep == 2 ? 'show' : 'hidden'}>
                                 <ShippingForm form={shippingForm} />
