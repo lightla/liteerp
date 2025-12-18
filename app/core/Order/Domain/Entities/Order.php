@@ -76,6 +76,7 @@ class Order
     }
     public function markApprove(): void
     {
+        $this->approved_by = $this->created_by;
         $this->status = 'approved';
     }
     public function isApproved() : bool {
