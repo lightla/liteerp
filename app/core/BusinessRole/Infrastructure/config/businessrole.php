@@ -133,6 +133,9 @@ return [
             'erp.purchaseitem.update',
             'erp.purchaseitem.delete',
 
+            // PURCHASE TAX
+            'erp.purchasetax.create',
+
             // STOCK IN
             'erp.stockin.index',
             'erp.stockin.show',
@@ -311,6 +314,9 @@ return [
             'erp.purchaseitem.create',
             'erp.purchaseitem.update',
             'erp.purchaseitem.delete',
+
+            // PURCHASE TAX
+            'erp.purchasetax.create',
 
             // STOCK IN
             'erp.stockin.index',
@@ -552,6 +558,9 @@ return [
             'erp.purchaseitem.create',
             'erp.purchaseitem.update',
             'erp.purchaseitem.delete',
+
+            // PURCHASE TAX
+            'erp.purchasetax.create',
 
             // PRODUCT
             'erp.product.index',
