@@ -15,7 +15,8 @@ class CreateOrderItemRequest
         public float $gift_quantity = 0,
         public float $compensation_quantity = 0,
         public float $conversion_quantity = 0,
-        public float $price
+        public float $price,
+        public ?int $id = null 
     ) {}
 
     /**
@@ -34,7 +35,8 @@ class CreateOrderItemRequest
             conversion_quantity:    (float)($data['conversion_quantity'] ?? 0),
             business_id: (int) $data['business_id'] ?? null,
             user_id: (int) $data['user_id'] ?? null,
-            price: (float) $data['price']
+            price: (float) $data['price'],
+            id: $data['id'] ?? null 
         );
     }
 
@@ -54,7 +56,8 @@ class CreateOrderItemRequest
             'conversion_quantity'   => $this->conversion_quantity,
             'business_id' => $this->business_id,
             'user_id' => $this->user_id,
-            'price'   => $this->price
+            'price'   => $this->price,
+            'id'      => $this->id
         ];
     }
     public function totalQuantity(){

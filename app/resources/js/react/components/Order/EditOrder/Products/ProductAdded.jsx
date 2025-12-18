@@ -2,7 +2,15 @@ import React from "react";
 import CommonDataTable from "../../../CommonDataTable";
 import Currencies from '../../../Currencies';
 
-export default function ProductAdded({ table = null, orderType = 'retail', movePage = (page) => {}, loading = false, disabled = false }) {
+export default function ProductAdded({ 
+    table = null, 
+    form=null, 
+    movePage = (page) => {}, 
+    loading = false, 
+    disabled = false,
+    setShowForm = (status) => {}, 
+    onDelete = (value) => {}
+    }) {
     
     const columns = [
         { label: "Name", key: "name" },
@@ -60,10 +68,12 @@ export default function ProductAdded({ table = null, orderType = 'retail', moveP
                 links={table?.links}
                 movePage={movePage}
                 onEdit={ disabled ? null : (row) => {
-
+                    form.setFormData(row);
+                    form.setIsEdit(true);
+                    setShowForm(true)
                 }}
                 onDelete={disabled ? null :(row) => {
-
+                    onDelete(row)
                 }}
                 loading={loading}
             />

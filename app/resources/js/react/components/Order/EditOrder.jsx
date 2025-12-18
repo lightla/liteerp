@@ -213,7 +213,7 @@ export default function EditOrder() {
     return <div>
         <PageHead
             containerClass='mx-5'
-            title='Order' subtitle='Add new order' />
+            title='Order' subtitle='Update order' />
         {detail ? <div>
             <div className='row mx-4'>
                 <div className='mt-3'>

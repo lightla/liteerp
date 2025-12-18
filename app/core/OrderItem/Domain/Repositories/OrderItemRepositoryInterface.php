@@ -13,5 +13,6 @@ interface OrderItemRepositoryInterface
     public function index(array $data) : array;
     public function indexForStockMovementOut(array $data) : array;
     public function update(OrderItem $entity) : OrderItem;
+    public function delete(OrderItem $entity) : OrderItem;
     public function summary(array $data) : ?array;
 }

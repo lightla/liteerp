@@ -36,12 +36,74 @@ export default function Products({
             order_id: searchParams.get('id'),
             inventory_id: form.formData?.id
         }
+        form.setLoading(true)
         OrderItemService.add(submitData)
             .then((resp) => {
                 getOrderItem();
                 openPopup({
                     type: 'success',
                     message: 'You has been added'
+                })
+                form.setLoading(false)
+                setShowForm(false)
+            })
+            .catch((error) => {
+                if (error.response.data?.errors) {
+                    form.setFormErrors(error.response.data?.errors);
+                }
+                if (error.response.data?.message) {
+                    openPopup({
+                        type: 'error',
+                        message: error.response.data?.message
+                    })
+                }
+                form.setLoading(false)
+                setShowForm(false)
+            })
+    }, [form.formData]);
+        const updateInventory = useCallback(() => {
+        if (Number(form.formData?.buy_quantity ?? 0) === 0
+            && Number(form.formData?.compensation_quantity ?? 0) === 0
+            && Number(form.formData?.conversion_quantity ?? 0) === 0
+            && Number(form.formData?.gift_quantity ?? 0) === 0) {
+            openPopup({
+                type: 'error',
+                message: 'You need to choose at least 1 of the 4 options from buy, compensaction, conversion, gift'
+            })
+            return;
+        }
+        form.setLoading(true)
+        OrderItemService.update(form.formData)
+            .then((resp) => {
+                getOrderItem();
+                openPopup({
+                    type: 'success',
+                    message: 'You has been updated'
+                })
+                form.setLoading(false);
+                setShowForm(false)
+            })
+            .catch((error) => {
+                if (error.response.data?.errors) {
+                    form.setFormErrors(error.response.data?.errors);
+                }
+                if (error.response.data?.message) {
+                    openPopup({
+                        type: 'error',
+                        message: error.response.data?.message
+                    })
+                }
+                form.setLoading(false)
+                setShowForm(false)
+            })
+    }, [form.formData]);
+    const deleteInventory = useCallback((row) => {
+        OrderItemService.delete(row)
+            .then((resp) => {
+                getOrderItem();
+                openPopup({
+                    type: 'success',
+                    message: 'You has been deleted'
                 })
             })
             .catch((error) => {
@@ -55,7 +117,16 @@ export default function Products({
                     })
                 }
             })
-    }, [form.formData]);
+    }, []);
+    const confirmDelete = useCallback((row)=>{
+        openPopup({
+            type: 'warning',
+            message: 'Are you sure to delete?',
+            onConfirm: () => {
+                deleteInventory(row)
+            }
+        })
+    },[]);
     const getOrderItem = useCallback((page = 0) => {
         table.setLoading(true);
         OrderItemService.list({
@@ -74,12 +145,15 @@ export default function Products({
         getOrderItem();
     }, [])
     return <div>
-        <ProductAdded table={table} />
+        <ProductAdded onDelete={confirmDelete} table={table} form={form} setShowForm={setShowForm} />
         <ListProduct detail={detail} add={add} />
         <div>
             {showForm ? <PopupLayout
+                loading={form.loading}
                 onClose={() => setShowForm(false)}
-                title='Add product into order' onConfirm={addInventory}>
+                title={ form.isEdit ? 'Update product order' : 'Add product order'} 
+                confirmText={form.isEdit ? 'Add' : 'Update'}
+                onConfirm={ form.isEdit ? updateInventory : addInventory}>
                 <div>
                     <div>
                         <div className='row'>

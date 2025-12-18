@@ -42,6 +42,12 @@ class EloquentOrderItemRepository implements OrderItemRepositoryInterface
             ->update($entity->toArray());
         return $entity;
     }
+    public function delete(OrderItem $entity): OrderItem
+    {
+        OrderItemModel::where('id', $entity->id)
+            ->delete();
+        return $entity;
+    }
     public function findById(array $data): ?OrderItem
     {
         $row = OrderItemModel::select("order_items.*")
