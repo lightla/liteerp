@@ -9,6 +9,8 @@ import useTable from '../../libraries/handleTable'
 import SearchInput from '../UI/Input/SearchInput';
 import PageHead from '../PageHead';
 import StatusBadge from '../StatusBadge';
+import ContentOnTable from '../ContentOnTable'
+import PaymentMethod from '../PaymentMethod'
 export default function ListOrder() {
     const navigate = useNavigate();
     const { openPopup } = usePopup();
@@ -16,8 +18,12 @@ export default function ListOrder() {
     const search = useForm();
     const columns = [
         { label: "ID", key: "id" },
-        { label: "Customer name", key: "customer_name" },
-        { label: "Address shipping", key: "customer_address" },
+        { label: "Customer name", key: "customer_name",render: (value) => {
+            return <ContentOnTable value={value}/>
+        } },
+        { label: "Address shipping", key: "customer_address",render: (value) => {
+            return <ContentOnTable value={value}/>
+        } },
         {
             label: "Order type", key: "type",render: (value) => {
                 return <span className='badge bg-primary text-uppercase'>{value}</span>
@@ -37,6 +43,29 @@ export default function ListOrder() {
             render: (value) => {
                 return <StatusBadge status={value}/>
             },
+        },
+        {
+            label: "Payment",
+            key: "payment_method",
+            render: (value) => {
+                return <PaymentMethod value={value}/>
+            },
+        },
+        {
+            label: "Created by",
+            key: "created_name",
+            render: (value) => {
+                return <span className='badge bg-primary text-uppercase'>
+                        {value}</span>
+            }
+        },
+        {
+            label: "Approved by",
+            key: "approved_name",
+            render: (value) => {
+                return <span className='badge bg-primary text-uppercase'>
+                        {value}</span>
+            }
         }
     ];
 
