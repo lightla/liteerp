@@ -48,7 +48,8 @@ class EloquentOrderRepository implements OrderRepositoryInterface
             "shippings.shipping_fee_estimated as shipping_fee_estimated",
             "shippings.shipping_unit as shipping_unit",
             "shippings.shipping_code as shipping_code",
-            "orders.id as order_id")
+            "orders.id as order_id",
+            "customers.group as customer_group_id")
             ->join("shippings","shippings.order_id","=","orders.id")
             ->join("customers","customers.id","=","orders.customer_id")
             ->where('orders.id', $data['id'])
@@ -71,6 +72,8 @@ class EloquentOrderRepository implements OrderRepositoryInterface
             "orders.*",
             "customers.name as customer_name",
             "customers.address as customer_address",
+            "created_user.name as created_name",
+            "approved_user.name as approved_name",
             DB::raw("SUM(order_items.buy_quantity) as total_buy"),
             DB::raw("SUM(order_items.gift_quantity) as total_gift"),
             DB::raw("SUM(order_items.compensation_quantity) as total_comp"),
@@ -78,6 +81,8 @@ class EloquentOrderRepository implements OrderRepositoryInterface
             DB::raw("SUM(order_items.discount) as total_discount"),
             DB::raw("COUNT(order_items.id) as total_product")
         )->join("customers", "customers.id", "=", "orders.customer_id")
+            ->join("users as created_user", "created_user.id", "=", "orders.created_by")
+            ->leftJoin("users as approved_user", "approved_user.id", "=", "orders.approved_by")
             ->leftJoin("order_items", "order_items.order_id", "=", "orders.id")
             ->groupBy("orders.id")
             ->where('orders.business_id',$data['business_id']);
