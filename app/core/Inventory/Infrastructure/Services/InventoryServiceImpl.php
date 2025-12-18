@@ -54,6 +54,9 @@ class InventoryServiceImpl implements InventoryService
     }
     public function index(array $data): array
     {
+        if(!empty($data['customer_group_id'])) {
+            return $this->repo->indexForOrder($data);
+        }
         return $this->repo->index($data);
     }
     public function findById(array $data): Inventory|BadException

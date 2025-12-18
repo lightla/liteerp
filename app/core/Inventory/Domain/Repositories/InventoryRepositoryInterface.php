@@ -11,4 +11,5 @@ interface InventoryRepositoryInterface
     public function findByOneByProductAndWarehouse(array $data): ?Inventory;
     public function findById(array $data): ?Inventory;
     public function index(array $data) : array;
+    public function indexForOrder(array $data) : array;
 }

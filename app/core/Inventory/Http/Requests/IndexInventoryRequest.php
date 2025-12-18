@@ -9,7 +9,8 @@ class IndexInventoryRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'keywords' => 'nullable|string|max:150'
+            'keywords' => 'nullable|string|max:150',
+            'customer_group_id' => 'nullable|numeric|exists:customer_group,id'
         ];
     }
 
