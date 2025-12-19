@@ -49,9 +49,13 @@ class EloquentOrderRepository implements OrderRepositoryInterface
             "shippings.shipping_unit as shipping_unit",
             "shippings.shipping_code as shipping_code",
             "orders.id as order_id",
-            "customers.group as customer_group_id")
+            "customers.group as customer_group_id",
+            "order_cancelled_reason.reason as reason")
             ->join("shippings","shippings.order_id","=","orders.id")
-            ->join("customers","customers.id","=","orders.customer_id")
+            ->leftJoin("order_cancelled_reason","order_cancelled_reason.order_id",
+            "=","orders.id")
+            ->join("customers","customers.id",
+                "=","orders.customer_id")
             ->where('orders.id', $data['id'])
             ->where('orders.business_id', $data['business_id'])->first()?->toArray();
         if (!$row) {
@@ -85,6 +89,7 @@ class EloquentOrderRepository implements OrderRepositoryInterface
             ->leftJoin("users as approved_user", "approved_user.id", "=", "orders.approved_by")
             ->leftJoin("order_items", "order_items.order_id", "=", "orders.id")
             ->groupBy("orders.id")
+            ->orderBy("orders.id","DESC")
             ->where('orders.business_id',$data['business_id']);
         if (!empty($data['status'])) {
             $list = $list->where('orders.status', $data['status']);
