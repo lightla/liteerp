@@ -20,7 +20,10 @@ import { PopupLayout } from '../../layouts/PopupLayout';
 import TextArea from '../UI/Input/Textarea';
 import Cancelled from './EditOrder/Cancelled';
 import BootstrapAlert from '../BootstrapAlert'
+import { useDispatch, useSelector } from 'react-redux';
+import { setSummary } from '../../redux/order/summarySlice';
 export default function EditOrder() {
+    const dispatch = useDispatch();
     const [showCancelReason,setShowCancelReason] = useState(false);
     const [currentStep, setCurrentStep] = useState(0);
     const [searchParams] = useSearchParams();
@@ -28,8 +31,9 @@ export default function EditOrder() {
     const shippingForm = useForm();
     const [detail, setDetail] = useState(null);
     const [shippingDetail, setShippingDetail] = useState(null);
-    const [summaryData, setSummaryData] = useState([]);
+    //const [summaryData, setSummaryData] = useState([]);
     const { openPopup } = usePopup();
+    const summaryData = useSelector((state) => state.summarydetai.data);
     const updateInformation = useCallback((callback = null) => {
         form.setFormErrors(null);
         form.setLoading(true)
@@ -134,7 +138,7 @@ export default function EditOrder() {
             order_id: searchParams.get('id')
         })
             .then((resp) => {
-                setSummaryData(resp.message);
+                dispatch(setSummary(resp.message));
             })
             .catch((error) => {
 
@@ -272,7 +276,7 @@ export default function EditOrder() {
                     </div>
                 </div>
                 <div className='col-3'>
-                    <Summary reload={getSummary} summaryData={summaryData} />
+                    <Summary summaryData={summaryData} />
                 </div>
             </div>
         </div> : null}

@@ -8,9 +8,12 @@ import OrderItemService from '../../../services/OrderItemService'
 import { usePopup } from '../../popups/PopupContext'
 import { useSearchParams } from 'react-router-dom'
 import useTable from '../../../libraries/handleTable'
+import { setSummary } from '../../../redux/order/summarySlice'
+import { useDispatch } from 'react-redux'
 export default function Products({
-    detail = null 
+    detail = null
 }) {
+    const dispatch = useDispatch();
     const form = useForm();
     const [showForm, setShowForm] = useState(false);
     const [searchParams] = useSearchParams();
@@ -20,6 +23,18 @@ export default function Products({
         setShowForm(true)
     }, [form]);
     const table = useTable();
+    const getSummary = useCallback(() => {
+        OrderItemService.summary({
+            order_id: searchParams.get('id')
+        })
+            .then((resp) => {
+                dispatch(setSummary(resp.message));
+                //setSummaryData(resp.message);
+            })
+            .catch((error) => {
+
+            })
+    }, [searchParams]);
     const addInventory = useCallback(() => {
         if (Number(form.formData?.buy_quantity ?? 0) === 0
             && Number(form.formData?.compensation_quantity ?? 0) === 0
@@ -46,6 +61,7 @@ export default function Products({
                 })
                 form.setLoading(false)
                 setShowForm(false)
+                getSummary();
             })
             .catch((error) => {
                 if (error.response.data?.errors) {
@@ -61,7 +77,7 @@ export default function Products({
                 setShowForm(false)
             })
     }, [form.formData]);
-        const updateInventory = useCallback(() => {
+    const updateInventory = useCallback(() => {
         if (Number(form.formData?.buy_quantity ?? 0) === 0
             && Number(form.formData?.compensation_quantity ?? 0) === 0
             && Number(form.formData?.conversion_quantity ?? 0) === 0
@@ -82,6 +98,7 @@ export default function Products({
                 })
                 form.setLoading(false);
                 setShowForm(false)
+                getSummary();
             })
             .catch((error) => {
                 if (error.response.data?.errors) {
@@ -105,6 +122,7 @@ export default function Products({
                     type: 'success',
                     message: 'You has been deleted'
                 })
+                getSummary();
             })
             .catch((error) => {
                 if (error.response.data?.errors) {
@@ -118,7 +136,7 @@ export default function Products({
                 }
             })
     }, []);
-    const confirmDelete = useCallback((row)=>{
+    const confirmDelete = useCallback((row) => {
         openPopup({
             type: 'warning',
             message: 'Are you sure to delete?',
@@ -126,7 +144,7 @@ export default function Products({
                 deleteInventory(row)
             }
         })
-    },[]);
+    }, []);
     const getOrderItem = useCallback((page = 0) => {
         table.setLoading(true);
         OrderItemService.list({
@@ -141,6 +159,7 @@ export default function Products({
 
             })
     }, [searchParams]);
+
     useEffect(() => {
         getOrderItem();
     }, [])
@@ -151,9 +170,9 @@ export default function Products({
             {showForm ? <PopupLayout
                 loading={form.loading}
                 onClose={() => setShowForm(false)}
-                title={ form.isEdit ? 'Update product order' : 'Add product order'} 
+                title={form.isEdit ? 'Update product order' : 'Add product order'}
                 confirmText={form.isEdit ? 'Add' : 'Update'}
-                onConfirm={ form.isEdit ? updateInventory : addInventory}>
+                onConfirm={form.isEdit ? updateInventory : addInventory}>
                 <div>
                     <div>
                         <div className='row'>
@@ -194,7 +213,7 @@ export default function Products({
                             <div className='form-group col-6'>
                                 <label>Price</label>
                                 <InputForm handleChange={form.handleChange}
-                                    name='price' 
+                                    name='price'
                                     value={form.formData?.price}
                                     errorMessage={form.formErrors?.price} />
                             </div>
