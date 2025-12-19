@@ -19,9 +19,10 @@ import { PopupLayout } from '../../layouts/PopupLayout';
 import TextArea from '../UI/Input/Textarea';
 import { useDispatch, useSelector } from 'react-redux';
 import { setPurchaseDetail } from '../../redux/purchase/detailSlice';
+import BootstrapAlert from '../BootstrapAlert'
 export default function EditPurchase() {
     const dispatch = useDispatch();
-    const [showCancel,setShowCancel] = useState(false)
+    const [showCancel, setShowCancel] = useState(false)
     const [searchParams] = useSearchParams();
     const navigate = useNavigate();
     const { openPopup } = usePopup();
@@ -149,6 +150,11 @@ export default function EditPurchase() {
             title='Update purchase'
             subtitle='Update purchase information'
         />
+
+        {detail?.status === 'cancelled' ? <div className='px-4 mt-3'>
+            <BootstrapAlert type='danger' title='Cancelled' message={detail?.reason ?? 'No reason'} />
+        </div> : null}
+
         <div className='mx-4 mt-3'>
             <FormStep list={[
                 "Purchase information",
@@ -177,11 +183,11 @@ export default function EditPurchase() {
                 <div className="col-4 ms-auto text-end">
                     <div className='row'>
                         <div className='col-6'>
-                            {detail?.status !== 'cancelled' ?<DangerButton 
+                            {detail?.status !== 'cancelled' ? <DangerButton
                                 loading={form.loading}
-                                onClick={confirmUpdateToCancelled} 
-                                label={'Take Cancelled'} /> : null }
-                            
+                                onClick={confirmUpdateToCancelled}
+                                label={'Take Cancelled'} /> : null}
+
                         </div>
                         <div className='col-6'>
                             {currentStep <= 1
@@ -199,7 +205,7 @@ export default function EditPurchase() {
 
 
         </div>
-        {showCancel ?<PopupLayout 
+        {showCancel ? <PopupLayout
             loading={form.loading}
             onConfirm={() => {
                 update('cancelled');
@@ -210,12 +216,13 @@ export default function EditPurchase() {
             title='Cancel reason'>
             <label>Reason</label>
             <TextArea
-            name='reason'
-            errorMessage={form.formErrors?.reason}
-            handleChange={form.handleChange}
-            placeholder='Reason cancel purchase, maximum 250 characters'
+                name='reason'
+                errorMessage={form.formErrors?.reason}
+                handleChange={form.handleChange}
+                value={form.formData?.reason}
+                placeholder='Reason cancel purchase, maximum 250 characters'
             />
-        </PopupLayout> : null }
-        
+        </PopupLayout> : null}
+
     </div>
 }
