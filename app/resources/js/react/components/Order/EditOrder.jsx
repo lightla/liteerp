@@ -19,6 +19,7 @@ import DangerButton from '../UI/Buttons/DangerButton';
 import { PopupLayout } from '../../layouts/PopupLayout';
 import TextArea from '../UI/Input/Textarea';
 import Cancelled from './EditOrder/Cancelled';
+import BootstrapAlert from '../BootstrapAlert'
 export default function EditOrder() {
     const [showCancelReason,setShowCancelReason] = useState(false);
     const [currentStep, setCurrentStep] = useState(0);
@@ -214,6 +215,11 @@ export default function EditOrder() {
         <PageHead
             containerClass='mx-5'
             title='Order' subtitle='Update order' />
+        {detail?.status === 'cancelled' ? <div className='row mx-4 mt-3'>
+            <div className='col-12'>
+                <BootstrapAlert title='Cancelled' type='danger' message={detail?.reason ?? 'No reason'}/>
+            </div>
+        </div> : null}
         {detail ? <div>
             <div className='row mx-4'>
                 <div className='mt-3'>
