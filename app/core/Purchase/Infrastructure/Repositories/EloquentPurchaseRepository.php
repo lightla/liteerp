@@ -57,6 +57,7 @@ class EloquentPurchaseRepository implements PurchaseRepositoryInterface
         return PurchaseModel::select(
             "purchases.*",
             "suppliers.unit_name as supplier_name",
+            "purchase_cancelled_reason.reason as reason",
             DB::raw("SUM(purchase_items.buy_quantity) as buy_quantity"),
             DB::raw("SUM(purchase_items.gift_quantity) as gift_quantity"),
             DB::raw("SUM(purchase_items.compensation_quantity) as compensation_quantity"),
@@ -76,9 +77,11 @@ class EloquentPurchaseRepository implements PurchaseRepositoryInterface
         )
             ->join("suppliers", "suppliers.id", "=", "purchases.supplier_id")
             ->leftJoin("purchase_items", "purchase_items.purchase_id", "=", "purchases.id")
+            ->leftJoin("purchase_cancelled_reason", "purchase_cancelled_reason.purchase_id", 
+                "=", "purchases.id")
             ->where('purchases.business_id', $data['business_id'])
             ->where('purchases.id',$data['id'])
-            ->groupBy("purchases.id")
+            ->groupBy("purchases.id","purchase_cancelled_reason.id")
             ->first()?->toArray();
     }
     public function update(Purchase $entity): Purchase
