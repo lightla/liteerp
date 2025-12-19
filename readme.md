@@ -158,11 +158,13 @@ Modules communicate via **Domain Events**, enabling:
 ---
 
 ## 🧭 Roadmap
-- [*] Notification Center  
+- [x] Notification Center  
 - [ ] Reporting Engine  
-- [*] Overview Dashboard  
+- [x] Overview Dashboard  
 - [ ] Extended test coverage  
 - [ ] Realtime event streaming (WebSocket)  
+- [ ] Reports
+- [ ] Multiple Language
 
 ---
 
