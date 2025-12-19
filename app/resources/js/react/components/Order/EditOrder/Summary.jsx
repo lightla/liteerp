@@ -13,7 +13,7 @@ export default function Summary({
             total_quantity: summaryData?.total_quantity,
             total_discount: <Currencies amount={summaryData?.discount}/>,
             subtotal: <Currencies amount={summaryData?.subtotal}/>,
-            total_tax: <Currencies amount={summaryData?.total_tax}/>,
+            total_tax: <Currencies amount={summaryData?.tax}/>,
             shipping_fee: <Currencies amount={summaryData?.shipping_fee}/>,
             total: <Currencies amount={summaryData?.total}/>,
         }}/>

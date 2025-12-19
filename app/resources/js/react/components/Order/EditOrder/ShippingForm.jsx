@@ -1,32 +1,28 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { useSearchParams } from 'react-router-dom';
 import { usePopup } from '../../popups/PopupContext';
-import OrderShippingService from '../../../services/OrderShippingService';
 import { InputForm } from '../../UI/Input/InputForm';
 import SearchSelect from '../../UI/Input/SearchSelect';
-import PrimaryButton from '../../UI/Buttons/PrimaryButton';
-import {useForm} from '../../../libraries/handleInput'
 import ShippingService from '../../../services/ShippingService';
 export default function ShippingForm({
     form = {
         formData: null,
         formErrors: null,
         handleChange: null,
-        handleChangeByKey: null 
-    }  
+        handleChangeByKey: null
+    }
 }) {
     const disabled = false;
     const { openPopup } = usePopup();
     //const form = useForm();
     const [shippings, setShippings] = useState([]);
-    const getShippings = useCallback((keywords = '',callback = null) => {
+    const getShippings = useCallback((keywords = '', callback = null) => {
         ShippingService.list({
             page: 0,
             keywords: keywords
         })
             .then((resp) => {
                 setShippings(resp.message.data);
-                if(callback) {
+                if (callback) {
                     callback();
                 }
             })
@@ -39,41 +35,42 @@ export default function ShippingForm({
                 }
             })
     }, []);
-    {/* useMemo(() => {
-        if(detail) {
-            shippings.map((item) => {
-                if(detail.preferred_unit === item.id) {
-                    setPreferredUnit({
-                        value: item.id,
-                        label: item.name
-                    })
-                }
-            })
-        }
-    },[shippings,form.formData?.preferred_unit]) */}
     return <div>
         <h2 className='h5'>Shipping information</h2>
-        <div className='form-group'>
-            <label>Receiver name</label>
-            <InputForm
-            disabled={disabled}
-                value={form.formData?.receiver_name}
-                handleChange={form.handleChange}
-                name='receiver_name'
-                errorMessage={form.formErrors?.receiver_name}
-                type='text'
-            />
-        </div>
-        <div className='form-group mt-3'>
-            <label>Receiver phone</label>
-            <InputForm
-                disabled={disabled}
-                value={form.formData?.receiver_phone}
-                handleChange={form.handleChange}
-                name='receiver_phone'
-                errorMessage={form.formErrors?.receiver_phone}
-                type='text'
-            />
+        <div className='row  mt-3'>
+            <div className='form-group col-4'>
+                <label>Receiver name</label>
+                <InputForm
+                    disabled={disabled}
+                    value={form.formData?.receiver_name}
+                    handleChange={form.handleChange}
+                    name='receiver_name'
+                    errorMessage={form.formErrors?.receiver_name}
+                    type='text'
+                />
+            </div>
+            <div className='form-group col-4'>
+                <label>Receiver phone</label>
+                <InputForm
+                    disabled={disabled}
+                    value={form.formData?.receiver_phone}
+                    handleChange={form.handleChange}
+                    name='receiver_phone'
+                    errorMessage={form.formErrors?.receiver_phone}
+                    type='text'
+                />
+            </div>
+            <div className='form-group col-4'>
+                <label>Shipping fee estimated</label>
+                <InputForm
+                    disabled={disabled}
+                    value={form.formData?.shipping_fee_estimated}
+                    handleChange={form.handleChange}
+                    name='shipping_fee_estimated'
+                    errorMessage={form.formErrors?.shipping_fee_estimated}
+                    type='number'
+                />
+            </div>
         </div>
         <div className='form-group mt-3'>
             <label>Receiver address</label>
@@ -99,7 +96,7 @@ export default function ShippingForm({
         </div>
         <div className='form-group mt-3'>
             <label>Preferred unit </label>
-            
+
             <SearchSelect
                 errorMessage={form.formErrors?.preferred_unit}
                 disabled={disabled}
@@ -116,6 +113,6 @@ export default function ShippingForm({
                 defaultKeywords={form.formData?.shipping_provider_name ?? ''}
             />
         </div>
-        
+
     </div>
 }

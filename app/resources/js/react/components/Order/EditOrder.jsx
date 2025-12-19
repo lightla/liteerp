@@ -101,6 +101,7 @@ export default function EditOrder() {
                 });
                 setShippingDetail(shippingForm.formData);
                 shippingForm.setLoading(false)
+                getSummary();
             })
             .catch((error) => {
                 if (error.response.data?.errors) {
