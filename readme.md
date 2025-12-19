@@ -158,9 +158,9 @@ Modules communicate via **Domain Events**, enabling:
 ---
 
 ## 🧭 Roadmap
-- [ ] Notification Center  
+- [*] Notification Center  
 - [ ] Reporting Engine  
-- [ ] Overview Dashboard  
+- [*] Overview Dashboard  
 - [ ] Extended test coverage  
 - [ ] Realtime event streaming (WebSocket)  
 
