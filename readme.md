@@ -165,6 +165,7 @@ Modules communicate via **Domain Events**, enabling:
 - [ ] Realtime event streaming (WebSocket)  
 - [ ] Reports
 - [ ] Multiple Language
+- [ ] Extensions
 
 ---
 
