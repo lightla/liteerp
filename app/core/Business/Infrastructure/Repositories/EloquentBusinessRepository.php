@@ -31,7 +31,9 @@ class EloquentBusinessRepository implements BusinessRepositoryInterface
     }
     public function findByIdWithFullData(array $data) : ?array
     {
-       return BusinessModel::select("business.*","business_role.role as role")
+       return BusinessModel::select("business.*",
+            "business_role.role as role",
+            "business_role.user_id as user_id")
        ->join("business_role","business_role.business_id","=","business.id")
         ->where('business.id',$data['business_id'])
         ->where('business_role.user_id',$data['user_id'])->first()?->toArray();
