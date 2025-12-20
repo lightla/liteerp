@@ -55,7 +55,7 @@ class MakeBroadcastModule extends Command
             class {$name}Broadcast
             {
                 use Dispatchable, InteractsWithSockets, SerializesModels;
-
+                
                 /**
                  * Create a new event instance.
                  */
@@ -74,6 +74,13 @@ class MakeBroadcastModule extends Command
                     return [
                         new PrivateChannel('channel-name'),
                     ];
+                }
+                /**
+                 * The name of the queue on which to place the broadcasting job.
+                 */
+                public function broadcastQueue(): string
+                {
+                    return 'low';
                 }
             }
 
