@@ -9,6 +9,7 @@ use Core\Notifications\Application\DTOs\CreateNotificationRequest;
 use Core\Notifications\Application\DTOs\InsertManyNotificationRequest;
 use Core\Notifications\Domain\Entities\Notification;
 use Core\Notifications\Domain\Services\NotificationDBService;
+use Core\Notifications\Infrastructure\Broadcasts\NewNotificationBroadcast;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\URL;
@@ -47,6 +48,7 @@ class InsertManyNotification
                     case "db":
                         $entity = Notification::fromArray($adapter->toArray());
                         $create[$k] = $entity->toArray();
+                        NewNotificationBroadcast::dispatch($user['user_id'],$dto->business_id);
                         break;
                     case "mail":
                         SendMailJob::dispatch($adapter->user_id,$adapter->title,
@@ -55,8 +57,10 @@ class InsertManyNotification
                         break;
                 }
             }
+            
         }
         $data = $this->serviceDB->insertMany($create);
+
         DB::commit();
         return $data;
     }

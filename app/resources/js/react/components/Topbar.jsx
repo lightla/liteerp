@@ -5,6 +5,8 @@ import { toggleTheme } from "../redux/themeSlice";
 import { Link, useNavigate } from "react-router-dom";
 import NotificationService from "../services/NotificationService";
 import { setNotificationCount } from "../redux/NotificationSlice";
+import { useEcho } from "@laravel/echo-react";
+import reactEcho from "../../bootstrap";
 export default function Topbar() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -13,14 +15,23 @@ export default function Topbar() {
   const notify = useSelector((state) => state.notify.data);
   const getNotification = useCallback(() => {
     NotificationService.listIsNotRead()
-    .then((resp) => {
-      dispatch(setNotificationCount(resp.message.total ?? 0))
-    })
-    .catch((error) => {})
-  },[]);
+      .then((resp) => {
+        dispatch(setNotificationCount(resp.message.total ?? 0))
+      })
+      .catch((error) => { })
+  }, []);
+  /**
+  * Listen event broadcast 
+  */
+  useEcho(`user.${business?.user_id}.${business.id}`, ".NewNotificationBroadcast", (e) => {
+    getNotification();
+  }).listen();
+  /**
+   * Pull notifications
+  */
   useEffect(() => {
     getNotification();
-  },[]);
+  }, []);
   return (
     <div className="erp-topbar d-flex align-items-center justify-content-between px-4">
       {/* Left Section */}
@@ -60,7 +71,7 @@ export default function Topbar() {
         <div>
           <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
             <li><Link className="dropdown-item" to={"/profile"}>Profile</Link></li>
-            <li><hr className="dropdown-divider"/></li>
+            <li><hr className="dropdown-divider" /></li>
             <li><Link className="dropdown-item" to="/logout">Logout account</Link></li>
             <li><Link className="dropdown-item" to="/business">Logout business</Link></li>
           </ul>
