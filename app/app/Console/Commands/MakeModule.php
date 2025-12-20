@@ -36,6 +36,9 @@ class MakeModule extends Command
             "Infrastructure/lang/en",
             "Infrastructure/lang/vi",
             "Infrastructure/routes",
+            "Infrastructure/Events",
+            "Infrastructure/Listeners",
+            "Infrastructure/Boardcasts",
             "Http/Controllers",
             "Http/Requests",
             "Http/Resources",
@@ -70,8 +73,8 @@ class MakeModule extends Command
         <?php
 
         return [
-            'created' => 'Tạo {$entityName} thành công!',
-            'deleted' => 'Xoá {$entityName} thành công!',
+            'created' => 'Create {$entityName} successfully!',
+            'deleted' => 'Delete {$entityName} successfully!',
         ];
         PHP);
 
