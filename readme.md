@@ -162,7 +162,7 @@ Modules communicate via **Domain Events**, enabling:
 - [ ] Reporting Engine  
 - [x] Overview Dashboard  
 - [ ] Extended test coverage  
-- [ ] Realtime event streaming (WebSocket)  
+- [x] Realtime event streaming (WebSocket)  
 - [ ] Reports
 - [ ] Multiple Language
 - [ ] Extensions
@@ -193,7 +193,7 @@ Setup basic information for business, you need change information like business 
 
 `APP_CURRENCY_LOCALE="en-US"` 
 
-You need config SMTP mail, timezone at `./app/.env` before start.
+You also need config SMTP mail, timezone, pusher at `./app/.env` before start.
 
 - First go to root folder and run `docker compose build && docker compose up -d` 
 - Next login in to docker container `docker exec -it erpsoft-8.3 bash`
