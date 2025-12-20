@@ -231,6 +231,9 @@ class MakeModule extends Command
                 if (file_exists("\$routePath/web.php")) {
                     \$this->loadRoutesFrom("\$routePath/web.php");
                 }
+                    if (file_exists("\$routePath/channels.php")) {
+                    \$this->loadRoutesFrom("\$routePath/channels.php");
+                }
             }
             protected function loadModuleCommands(): void
             {
@@ -260,6 +263,12 @@ class MakeModule extends Command
                 }
             }
         }
+        PHP);
+
+        File::put("{$basePath}/Infrastructure/routes/channels.php", <<<PHP
+        <?php
+
+        use Illuminate\Support\Facades\Broadcast;
         PHP);
 
         /* ------------------------------
