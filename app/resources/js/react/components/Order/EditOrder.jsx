@@ -24,7 +24,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setSummary } from '../../redux/order/summarySlice';
 export default function EditOrder() {
     const dispatch = useDispatch();
-    const [showCancelReason,setShowCancelReason] = useState(false);
+    const [showCancelReason, setShowCancelReason] = useState(false);
     const [currentStep, setCurrentStep] = useState(0);
     const [searchParams] = useSearchParams();
     const form = useForm(null);
@@ -222,7 +222,7 @@ export default function EditOrder() {
             title='Order' subtitle='Update order' />
         {detail?.status === 'cancelled' ? <div className='row mx-4 mt-3'>
             <div className='col-12'>
-                <BootstrapAlert title='Cancelled' type='danger' message={detail?.reason ?? 'No reason'}/>
+                <BootstrapAlert title='Cancelled' type='danger' message={detail?.reason ?? 'No reason'} />
             </div>
         </div> : null}
         {detail ? <div>
@@ -239,7 +239,7 @@ export default function EditOrder() {
                                 <CustomerInformation form={form} />
                             </div>
                             <div className={currentStep == 1 ? 'show' : 'hidden'}>
-                                <Products detail={detail}/>
+                                <Products detail={detail} />
                             </div>
                             <div className={currentStep == 2 ? 'show' : 'hidden'}>
                                 <ShippingForm form={shippingForm} />
@@ -247,8 +247,8 @@ export default function EditOrder() {
                             <div className={currentStep == 3 ? 'show' : 'hidden'}>
                                 {detail?.status === 'approved'
                                     ? <Completed />
-                                    : detail?.status === 'cancelled' 
-                                    ? <Cancelled/> : <BeforeApprove />}
+                                    : detail?.status === 'cancelled'
+                                        ? <Cancelled /> : <BeforeApprove />}
                             </div>
                         </div>
                         <div className="row">
@@ -259,8 +259,8 @@ export default function EditOrder() {
                                 <div className='row'>
                                     <div className='col-6'>
                                         {detail?.status !== 'cancelled' ?
-                                        <DangerButton loading={form.loading || shippingForm.loading} onClick={confirmCancelled} label='Take Cancelled' />
-                                        : null }
+                                            <DangerButton loading={form.loading || shippingForm.loading} onClick={confirmCancelled} label='Take Cancelled' />
+                                            : null}
                                     </div>
                                     <div className='col-6'>
                                         {currentStep <= 2
@@ -281,24 +281,24 @@ export default function EditOrder() {
                 </div>
             </div>
         </div> : null}
-        {showCancelReason ?<PopupLayout
-        loading={form.loading}
-        title='Cancel reason'
-        confirmText='Submit cancel'
-        onClose={() => setShowCancelReason(false)}
-        onConfirm={() => {
-            form.handleChangeByKey('status', 'cancelled');
-        }}
+        {showCancelReason ? <PopupLayout
+            loading={form.loading}
+            title='Cancel reason'
+            confirmText='Submit cancel'
+            onClose={() => setShowCancelReason(false)}
+            onConfirm={() => {
+                form.handleChangeByKey('status', 'cancelled');
+            }}
         >
             <label>Reason</label>
             <TextArea
-            name='reason'
-            value={form.formData?.reason}
-            errorMessage={form.formErrors?.reason}
-            handleChange={form.handleChange}
-            placeholder='Reason for cancel order, maximum 250 characters'
+                name='reason'
+                value={form.formData?.reason}
+                errorMessage={form.formErrors?.reason}
+                handleChange={form.handleChange}
+                placeholder='Reason for cancel order, maximum 250 characters'
             />
-        </PopupLayout> : null }
-        
+        </PopupLayout> : null}
+
     </div>
 }
