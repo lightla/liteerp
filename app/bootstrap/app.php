@@ -8,12 +8,14 @@ use App\Http\Middleware\IsLogged;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
-
+use Laravel\Sanctum\Http\Middleware\EnsureFrontendRequestsAreStateful;
+use Illuminate\Auth\Middleware\Authenticate;
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
         web: __DIR__.'/../routes/web.php',
         api: __DIR__.'/../routes/api.php',
         commands: __DIR__.'/../routes/console.php',
+        channels: __DIR__.'/../routes/channels.php',
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
@@ -22,7 +24,9 @@ return Application::configure(basePath: dirname(__DIR__))
             'isLogged' => IsLogged::class,
             'business.token' => BusinessToken::class,
             'IsAdmin'   => IsAdmin::class,
-            'BusinessAdmin' => BusinessAdmin::class
+            'BusinessAdmin' => BusinessAdmin::class,
+            'auth:sanctum' => EnsureFrontendRequestsAreStateful::class,
+            'auth' => Authenticate::class,
         ]);
         $middleware->group('business', [
             'business.token',
