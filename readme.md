@@ -8,14 +8,6 @@
   Lightweight Open-Source ERP for internal business use.
 </p>
 
-🚧 Project Status: Active Development
-
-LiteERP is under heavy development. The current version is not production-ready. This project is intended for experienced developers evaluating architecture and core design also join into team to grow together
-
-## 📸 Screenshots
-
-![Dashboard](screenshoot.PNG)
-
 # 🏢 LiteERP – Clean Architecture & Domain Driven Design
 
 This LiteERP is built with **ReactJS**, **Laravel**, and **MySQL8**, following modern software architecture principles including **Clean Architecture**, **Domain-Driven Design (DDD)**, and **Domain Events**.  
