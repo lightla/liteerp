@@ -18,7 +18,9 @@ class UpdateCategoryProduct
         Event::dispatch("erp.categoryproduct.update", [
             ...$update->toArray(),
             'user_id' => $dto->created_by,
-            'business_id' => $dto->business_id
+            'business_id' => $dto->business_id,
+            'category_id' => $update->id,
+            'attributes' => $dto->attributes
         ]);
         DB::commit();
         return $update;

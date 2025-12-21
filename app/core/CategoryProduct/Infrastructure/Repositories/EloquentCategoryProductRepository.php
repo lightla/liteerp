@@ -21,7 +21,7 @@ class EloquentCategoryProductRepository implements CategoryProductRepositoryInte
     }
     public function index(array $data): array
     {
-        $index = CategoryProductModel::select("category_product.*","users.name as created_by_name")
+        $index = CategoryProductModel::with(['attributes'])->select("category_product.*","users.name as created_by_name")
         ->join("users","users.id","=","category_product.created_by")
         ->where('category_product.business_id',$data['business_id']);
         if(!empty($data['keywords'])) {

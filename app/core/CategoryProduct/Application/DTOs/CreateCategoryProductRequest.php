@@ -10,7 +10,8 @@ class CreateCategoryProductRequest
         public ?string $description = null,
         public int $created_by,
         public ?int $id,
-        public int $tax 
+        public int $tax,
+        public array $attributes = [] 
     ) {}
 
     public static function fromArray(array $data): self
@@ -21,7 +22,8 @@ class CreateCategoryProductRequest
             description: $data['description'] ?? null,
             created_by: $data['user_id'] ?? null,
             id: $data['id'] ?? null,
-            tax: $data['tax'] 
+            tax: $data['tax'],
+            attributes: $data['attributes'] ?? [] 
         );
     }
     public function toArray() : array {
@@ -31,7 +33,8 @@ class CreateCategoryProductRequest
             'description' => $this->description,
             'created_by' => $this->created_by,
             'id' => $this->id,
-            'tax' => $this->tax
+            'tax' => $this->tax,
+            'attributes' => $this->attributes
         ];
     }
 }

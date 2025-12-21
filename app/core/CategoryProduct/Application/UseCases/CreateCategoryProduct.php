@@ -18,7 +18,9 @@ class CreateCategoryProduct
         Event::dispatch("erp.categoryproduct.create", [
             ...$create->toArray(),
             'user_id' => $dto->created_by,
-            'business_id' => $dto->business_id
+            'business_id' => $dto->business_id,
+            'category_id' => $create->id,
+            'attributes' => $dto->attributes
         ]);
         DB::commit();
         return $create;
