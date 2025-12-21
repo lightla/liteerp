@@ -9,15 +9,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class CategoryProductModel extends Model
 {
     use HasFactory,SoftDeletes;
-
-    /**
-     * Tên bảng trong cơ sở dữ liệu.
-     */
     protected $table = 'category_product';
-
-    /**
-     * Các cột được phép gán hàng loạt (mass assignable).
-     */
     protected $fillable = [
         'name',
         'slug',
@@ -27,12 +19,8 @@ class CategoryProductModel extends Model
         'created_by',
         'tax'
     ];
-
-    /**
-     * Lấy các sản phẩm thuộc danh mục (nếu có quan hệ Product).
-     */
-    public function products()
+    public function attributes()
     {
-        return $this->hasMany(ProductModel::class, 'category_id', 'id');
+        return $this->hasMany(ProductAttributeModel::class,'category_id','id');
     }
 }
