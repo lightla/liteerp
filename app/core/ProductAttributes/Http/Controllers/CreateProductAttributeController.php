@@ -8,10 +8,10 @@ use Core\ProductAttributes\Http\Requests\CreateProductAttributeRequest as FormRe
 
 class CreateProductAttributeController
 {
-    public function __invoke(FormRequest $request, CreateProductAttribute $useCase)
-    {
-        $dto = CreateProductAttributeRequest::fromArray($request->validated());
-        $entity = $useCase->handle($dto);
-        return response()->json(['message' => $entity]);
-    }
+    // public function __invoke(FormRequest $request, CreateProductAttribute $useCase)
+    // {
+    //     $dto = CreateProductAttributeRequest::fromArray($request->validated());
+    //     $entity = $useCase->handle($dto);
+    //     return response()->json(['message' => $entity]);
+    // }
 }

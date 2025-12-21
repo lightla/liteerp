@@ -9,8 +9,8 @@ class CreateProductAttribute
 {
     public function __construct(private ProductAttributeService $service) {}
 
-    public function handle(array $dto)
+    public function handle(CreateProductAttributeRequest $dto)
     {
-        return $this->service->create($dto);
+        return $this->service->create($dto->toArray());
     }
 }

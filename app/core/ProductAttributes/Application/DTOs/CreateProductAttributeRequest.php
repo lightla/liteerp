@@ -5,21 +5,21 @@ namespace Core\ProductAttributes\Application\DTOs;
 class CreateProductAttributeRequest
 {
     public function __construct(
-        public int $product_id,
-        public array $data
+        public int $category_id,
+        public array $attributes
     ) {}
 
     public static function fromArray(array $data): self
     {
         return new self(
-            product_id: $data['product_id'],
-            data: $data['data']
+            category_id: $data['category_id'],
+            attributes: $data['attributes']
         );
     }
     public function toArray(){
         return [
-            'product_id' => $this->data['product_id'],
-            'data' => $this->data 
+            'category_id' => $this->category_id,
+            'attributes' => $this->attributes 
         ];
     }
 }

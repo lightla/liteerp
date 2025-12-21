@@ -6,5 +6,5 @@ use Core\ProductAttributes\Domain\Entities\ProductAttribute;
 
 interface ProductAttributeService
 {
-    public function create(array $data): ?ProductAttribute;
+    public function create(array $data): array;
 }

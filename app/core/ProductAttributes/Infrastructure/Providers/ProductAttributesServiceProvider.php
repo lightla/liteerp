@@ -2,10 +2,12 @@
 
 namespace Core\ProductAttributes\Infrastructure\Providers;
 
+use Core\ProductAttributes\Application\UseCases\CreateProductAttribute;
 use Illuminate\Support\ServiceProvider;
 use Core\ProductAttributes\Domain\Repositories\ProductAttributeRepositoryInterface;
 use Core\ProductAttributes\Infrastructure\Repositories\EloquentProductAttributeRepository;
 use Core\ProductAttributes\Domain\Services\ProductAttributeService;
+use Core\ProductAttributes\Infrastructure\Listeners\ProductAttributesListener;
 use Core\ProductAttributes\Infrastructure\Services\ProductAttributeServiceImpl;
 
 class ProductAttributesServiceProvider extends ServiceProvider
@@ -17,10 +19,12 @@ class ProductAttributesServiceProvider extends ServiceProvider
         $this->mergeModuleConfig();
     }
 
-    public function boot()
+    public function boot(CreateProductAttribute $CreateProductAttribute)
     {
         $this->loadModuleRoutes();
         $this->loadModuleTranslations();
+        $listener = new ProductAttributesListener();
+        $listener->handle($CreateProductAttribute);
     }
 
     protected function mergeModuleConfig(): void
