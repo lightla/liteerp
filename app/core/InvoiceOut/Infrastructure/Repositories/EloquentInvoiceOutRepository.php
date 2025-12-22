@@ -56,7 +56,7 @@ class EloquentInvoiceOutRepository implements InvoiceOutRepositoryInterface
         if(!empty($data['keywords'])) {
             $list = $list->where('invoice_outs.document_no',$data['keywords']);
         }
-        return $list->paginate(15)->toArray();
+        return $list->orderBy("invoice_outs.id",$data['order_by'])->paginate(15)->toArray();
     }
     public function update(InvoiceOut $entity): InvoiceOut
     {

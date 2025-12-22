@@ -85,7 +85,8 @@ export default function InvoiceOuts() {
         InvoiceOutService.list({
             page: page,
             keywords: search?.formData?.keywords ?? '',
-            payment_status: search?.formData?.payment_status ?? ''
+            payment_status: search?.formData?.payment_status ?? '',
+            order_by: search.formData?.order_by ?? ''
         })
             .then((resp) => {
                 table.setData(resp.message.data)
@@ -131,11 +132,11 @@ export default function InvoiceOuts() {
     }
     useEffect(() => {
         getInvoices();
-    }, [search.formData?.payment_status])
+    }, [search.formData?.payment_status,search.formData?.order_by])
     return <div>
         <CommonDataTable
             filter={<div className="d-flex">
-                <div className="col-4">
+                <div className="col-3">
                     <label>Payment status</label>
                     <Select
                         name="payment_status"
@@ -149,7 +150,19 @@ export default function InvoiceOuts() {
                         ]}
                     />
                 </div>
-                <div className="col-4 mx-2">
+                <div className='col-3 mx-2'>
+                    <label>Order by</label>
+                    <Select
+                        name='order_by'
+                        value={search.formData?.order_by}
+                        handleChange={search.handleChange}
+                        errorMessage={search.formErrors?.order_by}
+                        options={[
+                            { value: 'ASC', label: 'Oldest' },
+                            { value: 'DESC', label: 'Newest' }
+                        ]} />
+                </div>
+                <div className="col-6">
                     <label>Search</label>
                     <SearchInput
                         placeholder="Search by document"
