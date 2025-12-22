@@ -5,6 +5,7 @@ import CommonDataTable from '../components/CommonDataTable'
 import ActivityLogService from '../services/ActivityLogService';
 import useTable from '../libraries/handleTable';
 import { isoToDateTime } from '../libraries/common';
+import StatusBadge from '../components/StatusBadge'
 export default function ActivityLogs(){
     const table = useTable();
     const getLogs = useCallback((page = 0) => {
@@ -39,12 +40,7 @@ export default function ActivityLogs(){
                 columns={[
                     {key: 'id',label: "ID"},
                     {key: 'action', label: 'Action',render:(action) => {
-                        return <span
-                        className={'badge text-uppercase ' + 
-                        (action === 'create' ? 'bg-success' 
-                            : action === 'update' ? 'bg-primary' 
-                            : action === 'delete' ? 'bg-danger' : null)}
-                        >{action}</span>
+                        return <StatusBadge status={action}/>
                     }},
                     {key: 'description', label: 'Description'},
                     {key: 'entity_type', label: 'Type'},
