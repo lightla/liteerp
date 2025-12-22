@@ -65,12 +65,12 @@ body,.label, h1, h2, h3, h4, h5, h6 {
 .badge-pending,.badge-draft,.badge-pending, .badge-other {
     background-color: var(--bs-secondary)!important;
 }
-.badge-cancelled, .badge-cod, .badge-delete {
+.badge-cancelled, .badge-cod, .badge-delete,.badge-inactive {
     background-color: var(--bs-danger)!important;
 }
 .badge-approved,.badge-received,.badge-completed,
     .badge-paid, .badge-bank, .badge-create, .badge-creatordershipping,
-    .badge-summary {
+    .badge-summary, .badge-active {
     background-color: var(--bs-success)!important;
 }
 .badge-requested,.badge-shipped, .badge-cash, .badge-update {
