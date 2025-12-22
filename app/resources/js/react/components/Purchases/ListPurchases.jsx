@@ -135,8 +135,8 @@ export default function ListPurchases() {
                             handleChange={search.handleChange}
                             errorMessage={search.formErrors?.order_by}
                             options={[
-                                { value: 'ASC', label: 'Old' },
-                                { value: 'DESC', label: 'New' }
+                                { value: 'ASC', label: 'Oldest' },
+                                { value: 'DESC', label: 'Newest' }
                             ]} />
                     </div>
                     <div className='col-6'>
