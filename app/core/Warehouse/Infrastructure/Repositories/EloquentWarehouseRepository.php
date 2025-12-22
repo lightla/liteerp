@@ -28,7 +28,7 @@ class EloquentWarehouseRepository implements WarehouseRepositoryInterface
             $exists = $exists->where('warehouses.name','like','%'.$data['keywords'].'%');
         }
         if(isset($data['active'])) {
-            $exists = $exists->where('warehouses.active',$data['active'] ?? false);
+            $exists = $exists->where('warehouses.active',$data['active']);
         }
         return $exists->paginate(15)->toArray();
     }
