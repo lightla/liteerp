@@ -4,7 +4,7 @@ import api from "../common/api";
   add: (data) => api.post("/business-access/products",data),
   show: (id) => api.get("/business-access/products/" + id),
   list: (data) => api.get("/business-access/products" 
-    + `?keywords=${data.keywords}&page=${data.page}`),
+    + `?keywords=${data.keywords}&page=${data.page}&order_by=${data.order_by}`),
   listByPurchaseId: (data) => api.get("/business-access/products" + 
     `?purchase_id=${data.purchase_id}&keywords=${data.keywords}&page=${data.page}&active=${data.active}`),
   addCategory: (data) => api.post("/business-access/category-product",data),

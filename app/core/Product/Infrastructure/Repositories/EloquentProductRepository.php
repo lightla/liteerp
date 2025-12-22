@@ -53,7 +53,8 @@ class EloquentProductRepository implements ProductRepositoryInterface
             ->orWhere(function($query)  use ($data) {
                 return $query->where('products.business_id', $data['business_id'])
                     ->where('products.sku', 'like', '%' . ($data['keywords'] ?? '') . '%');
-            });
+            })
+            ->orderBy("products.id",$data['order_by']);
         return $rows->paginate(15)->toArray();
     }
     public function update(Product $entity): Product

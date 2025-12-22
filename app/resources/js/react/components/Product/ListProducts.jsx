@@ -23,9 +23,11 @@ export default function ListProducts() {
     const [category, setCategory] = useState([]);
     const columns = [
         { label: "ID", key: "id" },
-        { label: "Thumbnail", key: 'image', render: (url) => {
-            return <LoadImage width={35} height={35} url={url}/>
-        }},
+        {
+            label: "Thumbnail", key: 'image', render: (url) => {
+                return <LoadImage width={35} height={35} url={url} />
+            }
+        },
         { label: "Name", key: "name" },
         { label: "Sku", key: "sku" },
         { label: "Unit", key: "unit" },
@@ -35,7 +37,8 @@ export default function ListProducts() {
         table.setLoading(true)
         ProductService.list({
             page: page,
-            keywords: search.formData?.keywords ?? ''
+            keywords: search.formData?.keywords ?? '',
+            order_by: search.formData?.order_by ?? ''
         })
             .then((resp) => {
                 table.setData(resp.message.data);
@@ -51,14 +54,14 @@ export default function ListProducts() {
                 }
             })
     }, [search]);
-    const getCategories = useCallback((keywords = '',callback = null) => {
+    const getCategories = useCallback((keywords = '', callback = null) => {
         ProductService.listCategory({
             page: 0,
             keywords: keywords,
         })
             .then((resp) => {
                 setCategory(resp.message.data);
-                if(callback) {
+                if (callback) {
                     callback();
                 }
             })
@@ -155,19 +158,31 @@ export default function ListProducts() {
     }
     useEffect(() => {
         getProducts();
-    }, [search.formData?.active]);
+    }, [search.formData?.order_by]);
     const hasPermission = useMemo(() => {
         return business.role === 'manager'
             || business.role === 'admin' ? true : false
-    },[business]);
+    }, [business]);
     return <div className='mt-3'>
         <CommonDataTable
-            add={ !hasPermission ? null : () => {
+            add={!hasPermission ? null : () => {
                 setShowForm(true);
                 form.setIsEdit(false);
             }}
             filter={<div>
                 <div className='d-flex'>
+                    <div className='col-3 mx-2'>
+                        <label>Order by</label>
+                        <Select
+                            name='order_by'
+                            value={search.formData?.order_by}
+                            handleChange={search.handleChange}
+                            errorMessage={search.formErrors?.order_by}
+                            options={[
+                                { value: 'ASC', label: 'Oldest' },
+                                { value: 'DESC', label: 'Newest' }
+                            ]} />
+                    </div>
                     <div className='col-4'>
                         <label>Search</label>
                         <SearchInput
@@ -185,15 +200,15 @@ export default function ListProducts() {
             columns={columns}
             data={table?.data}
             links={table?.links}
-            onEdit={ !hasPermission ? null : handEdit}
+            onEdit={!hasPermission ? null : handEdit}
             onDelete={!hasPermission ? null : handleDelete}
         />
         <div>
             {showForm ? <PopupLayout
                 loading={form.loading}
-                onConfirm={ form.isEdit ? update : create}
+                onConfirm={form.isEdit ? update : create}
                 onClose={() => setShowForm(false)}
-                title={ form.isEdit ? 'Update product' : 'Add product'}>
+                title={form.isEdit ? 'Update product' : 'Add product'}>
                 <div>
                     <div className='form-group'>
                         <label>Name</label>
@@ -246,9 +261,9 @@ export default function ListProducts() {
                                     value: item.id,
                                     label: item.name
                                 }
-                            })} 
+                            })}
                             defaultKeywords={form.formData?.category}
-                            />
+                        />
                     </div>
                     <div className='form-group mt-3'>
                         <label>Thumbnail</label>
@@ -257,7 +272,7 @@ export default function ListProducts() {
                             handleChangeByKey={form.handleChangeByKey}
                             value={form.formData?.image}
                             errorMessage={form.formErrors?.image}
-                            />
+                        />
                     </div>
                     <div className='form-group mt-3'>
                         <label>Description</label>
