@@ -8,6 +8,7 @@ import SearchInput from '../UI/Input/SearchInput';
 import { PopupLayout } from '../../layouts/PopupLayout';
 import CustomerService from '../../services/CustomerService';
 import CustomerForm from './ListCustomer/CustomerForm';
+import StatusBadge from '../StatusBadge'
 export default function ListCustomer() {
     const table = useTable();
     const search = useForm();
@@ -27,7 +28,10 @@ export default function ListCustomer() {
                     {value}
                 </span>
             }
-        }
+        },
+        { label: "Status", key: "active",render: (value) => {
+            return <StatusBadge status={value ? 'active' : 'inactive'}/>
+        } },
     ];
 
     const handleEdit = (row) => {
@@ -123,7 +127,8 @@ export default function ListCustomer() {
             keywords: search.formData?.keywords ?? '',
             page: page,
             type: search.formData?.type ?? '',
-            order_by: search.formData?.order_by ?? ''
+            order_by: search.formData?.order_by ?? '',
+            active: search.formData?.active ?? ''
         })
             .then((resp) => {
                 table.setData(resp.message.data);
@@ -136,12 +141,23 @@ export default function ListCustomer() {
     }, [search.formData]);
     useEffect(() => {
         getCustomers();
-    }, [search.formData?.type,search.formData?.order_by]);
+    }, [search.formData?.type,search.formData?.order_by,search.formData?.active]);
     return <div>
         <CommonDataTable
             add={() => setShowAdd(true)}
             filter={<div className='d-flex'>
-                <div className='col-3'>
+                <div className='col-2'>
+                    <label>Status</label>
+                    <Select
+                        value={search.formData?.active}
+                        name='active'
+                        handleChange={search.handleChange}
+                        options={[
+                            { value: 0, label: 'Deactive' },
+                            { value: 1, label: 'Active' }
+                        ]} />
+                </div>
+                <div className='col-2 mx-2'>
                     <label>Type</label>
                     <Select
                         value={search.formData?.type}
@@ -152,7 +168,7 @@ export default function ListCustomer() {
                             { value: 'company', label: 'Company' }
                         ]} />
                 </div>
-                <div className='col-3 mx-2'>
+                <div className='col-2'>
                     <label>Order by</label>
                     <Select
                         name='order_by'
@@ -164,7 +180,7 @@ export default function ListCustomer() {
                             { value: 'DESC', label: 'Newest' }
                         ]} />
                 </div>
-                <div className='col-6'>
+                <div className='col-6 mx-2'>
                     <label>Search</label>
                     <SearchInput
                         submit={getCustomers}

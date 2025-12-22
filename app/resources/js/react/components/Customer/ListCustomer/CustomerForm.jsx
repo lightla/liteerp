@@ -12,15 +12,15 @@ export default function CustomerForm({
         handleChangeByKey: null
     }
 }) {
-    const [group,setGroup] = useState([]);
-    const getCustomers = useCallback((keywords = '',calblack = null) => {
+    const [group, setGroup] = useState([]);
+    const getCustomers = useCallback((keywords = '', calblack = null) => {
         CustomerGroupService.list({
             keywords: keywords,
             page: 0
         })
             .then((resp) => {
                 setGroup(resp.message.data);
-                if(calblack) {
+                if (calblack) {
                     calblack();
                 }
             })
@@ -38,35 +38,39 @@ export default function CustomerForm({
                     errorMessage={form.formErrors?.name}
                     placeholder='customer name' />
             </div>
-            <div className='form-group mt-2'>
-                <label>Contact name</label>
-                <InputForm name='contact_name'
-                    handleChange={form.handleChange}
-                    value={form.formData?.contact_name}
-                    errorMessage={form.formErrors?.contact_name}
-                    placeholder='Contact name' />
+            <div className='row mt-2'>
+                <div className='form-group col-6'>
+                    <label>Contact name</label>
+                    <InputForm name='contact_name'
+                        handleChange={form.handleChange}
+                        value={form.formData?.contact_name}
+                        errorMessage={form.formErrors?.contact_name}
+                        placeholder='Contact name' />
+                </div>
+                <div className='form-group col-6'>
+                    <label>Email</label>
+                    <InputForm name='email'
+                        handleChange={form.handleChange}
+                        value={form.formData?.email}
+                        errorMessage={form.formErrors?.email}
+                        placeholder='Email' />
+                </div>
             </div>
-            <div className='form-group mt-2'>
-                <label>Email</label>
-                <InputForm name='email'
-                    handleChange={form.handleChange}
-                    value={form.formData?.email}
-                    errorMessage={form.formErrors?.email}
-                    placeholder='Email' />
-            </div>
-            <div className='form-group mt-2'>
-                <label>Phone</label>
-                <InputForm name='phone'
-                    handleChange={form.handleChange}
-                    value={form.formData?.phone}
-                    errorMessage={form.formErrors?.phone} placeholder='Number phone contact' />
-            </div>
-            <div className='form-group mt-2'>
-                <label>Tax code</label>
-                <InputForm name='tax_code'
-                    handleChange={form.handleChange}
-                    value={form.formData?.tax_code}
-                    errorMessage={form.formErrors?.tax_code} placeholder='Tax code number' />
+            <div className='row mt-2'>
+                <div className='form-group col-6'>
+                    <label>Phone</label>
+                    <InputForm name='phone'
+                        handleChange={form.handleChange}
+                        value={form.formData?.phone}
+                        errorMessage={form.formErrors?.phone} placeholder='Number phone contact' />
+                </div>
+                <div className='form-group col-6'>
+                    <label>Tax code</label>
+                    <InputForm name='tax_code'
+                        handleChange={form.handleChange}
+                        value={form.formData?.tax_code}
+                        errorMessage={form.formErrors?.tax_code} placeholder='Tax code number' />
+                </div>
             </div>
             <div className='form-group mt-2'>
                 <label>Bank name</label>
@@ -82,32 +86,34 @@ export default function CustomerForm({
                     value={form.formData?.bank_account}
                     errorMessage={form.formErrors?.bank_account} placeholder='Bank account' />
             </div>
-            <div className='form-group mt-2'>
-                <label>Type</label>
-                <Select name='type'
-                    handleChange={form.handleChange}
-                    value={form.formData?.type}
-                    errorMessage={form.formErrors?.type} placeholder="Individual or Company" options={[
-                        { value: 'individual', label: 'Individual' },
-                        { value: 'company', label: 'Company' }
-                    ]} />
-            </div>
-            <div className='form-group mt-2'>
-                <label>Group</label>
-                <SearchSelect
-                name='group'
-                value={form.formData?.group}
-                errorMessage={form.formErrors?.group}
-                search={getCustomers}
-                options={group.map((item) => {
-                    return {
-                        value: item.id,
-                        label: item.name
-                    }
-                })}
-                changeValue={form.handleChangeByKey}
-                defaultKeywords={form.formData?.group_name}
-                />
+            <div className='row mt-2'>
+                <div className='form-group col-6'>
+                    <label>Type</label>
+                    <Select name='type'
+                        handleChange={form.handleChange}
+                        value={form.formData?.type}
+                        errorMessage={form.formErrors?.type} placeholder="Individual or Company" options={[
+                            { value: 'individual', label: 'Individual' },
+                            { value: 'company', label: 'Company' }
+                        ]} />
+                </div>
+                <div className='form-group col-6'>
+                    <label>Group</label>
+                    <SearchSelect
+                        name='group'
+                        value={form.formData?.group}
+                        errorMessage={form.formErrors?.group}
+                        search={getCustomers}
+                        options={group.map((item) => {
+                            return {
+                                value: item.id,
+                                label: item.name
+                            }
+                        })}
+                        changeValue={form.handleChangeByKey}
+                        defaultKeywords={form.formData?.group_name}
+                    />
+                </div>
             </div>
             <div className='form-group mt-2'>
                 <label>Address</label>
@@ -115,6 +121,16 @@ export default function CustomerForm({
                     handleChange={form.handleChange}
                     value={form.formData?.address}
                     errorMessage={form.formErrors?.address} placeholder='Address' />
+            </div>
+            <div className='form-group mt-2'>
+                <label>Active</label>
+                <InputForm name='active'
+                    width={20}
+                    type='checkbox'
+                    handleChange={form.handleChange}
+                    value={form.formData?.active}
+                    errorMessage={form.formErrors?.active} />
+                <span>This mean customer can take a order or else</span>
             </div>
         </div>
     </div>
