@@ -9,7 +9,8 @@ class IndexCustomerRequest
         public ?string $keywords,
         public ?int $business_id,
         public ?int $created_by,
-        public ?string $order_by = null
+        public ?string $order_by = null,
+        public ?int $active = null 
     ) {}
     public static function fromArray(array $data): self
     {
@@ -18,7 +19,8 @@ class IndexCustomerRequest
             keywords: $data['keywords'] ?? null,
             business_id: $data['business_id'],
             created_by: $data['user_id'],
-            order_by: $data['order_by'] ?? 'DESC'
+            order_by: $data['order_by'] ?? 'DESC',
+            active: $data['active'] ?? null
         );
     }
     public function toArray(): array
@@ -28,7 +30,8 @@ class IndexCustomerRequest
             'keywords'         => $this->keywords,
             'business_id'   => $this->business_id,
             'created_by'   => $this->created_by,
-            'order_by'  => $this->order_by
+            'order_by'  => $this->order_by,
+            'active'    => $this->active
         ];
     }
 }

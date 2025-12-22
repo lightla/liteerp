@@ -51,6 +51,9 @@ class EloquentCustomerRepository implements CustomerRepositoryInterface
         if(!empty($data['keywords'])) {
             $list = $list->where('customers.name','like','%'.$data['keywords'].'%');
         }
+        if(isset($data['active'])) {
+            $list = $list->where('customers.active',$data['active']);
+        }
         return $list->paginate(15)->toArray();
     }
     public function update(Customer $entity) : Customer {
