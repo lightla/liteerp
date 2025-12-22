@@ -12,6 +12,7 @@ import TextArea from '../components/UI/Input/Textarea'
 import { usePopup } from '../components/popups/PopupContext'
 import PageHead from '../components/PageHead';
 import { substring } from '../libraries/common';
+import StatusBadge from '../components/StatusBadge';
 export default function Suppliers() {
     const { openPopup } = usePopup();
     const [addShow, setAddShow] = useState(false);
@@ -50,11 +51,7 @@ export default function Suppliers() {
             label: "Status",
             key: "active",
             render: (value) => (
-                <span
-                    className={`badge rounded-pill px-3 py-2 ${value ? 'bg-success' : 'bg-secondary'}`}
-                >
-                    {value ? 'Active' : 'Inactive'}
-                </span>
+                <StatusBadge status={value ? 'active' : 'inactive'}/>
             ),
         },
     ];
@@ -310,6 +307,14 @@ export default function Suppliers() {
                                     name='website' placeholder='Website company' />
                             </div>
                             <div className='form-group mt-1'>
+                                <label>Note</label>
+                                <TextArea
+                                    handleChange={form.handleChange}
+                                    value={form.formData?.note ?? ''}
+                                    errorMessage={form.formErrors?.note}
+                                    name='note' placeholder='Note information' />
+                            </div>
+                            <div className='form-group mt-1'>
                                 <label>Active</label>
                                 <div className=''>
                                     <InputForm
@@ -320,17 +325,9 @@ export default function Suppliers() {
                                         errorMessage={form.formErrors?.active}
                                         name='active' />
                                 </div>
-                                <span className='text-warning'>
+                                <span>
                                     If it is not active then you can not select on the purchases
                                 </span>
-                            </div>
-                            <div className='form-group mt-1'>
-                                <label>Note</label>
-                                <TextArea
-                                    handleChange={form.handleChange}
-                                    value={form.formData?.note ?? ''}
-                                    errorMessage={form.formErrors?.note}
-                                    name='note' placeholder='Note information' />
                             </div>
                         </div>
                     </PopupLayout> : null}
