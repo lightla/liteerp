@@ -66,13 +66,14 @@ export default function Suppliers() {
         form.setIsEdit(true);
         setAddShow(true);
     };
-    
+
     const getSupliers = useCallback((page = 0) => {
         table.setLoading(true);
         SupplierService.list({
             page: page,
             keywords: search.formData?.keyword ?? '',
-            active: search.formData?.active ?? ''
+            active: search.formData?.active ?? '',
+            order_by : search.formData?.order_by ?? ''
         })
             .then((resp) => {
                 table.setData(resp.message.data);
@@ -173,7 +174,7 @@ export default function Suppliers() {
 
     useEffect(() => {
         getSupliers();
-    }, [search.formData?.active]);
+    }, [search.formData?.active,search.formData?.order_by]);
     return (
         <DashboardLayout>
             <div>
@@ -188,7 +189,8 @@ export default function Suppliers() {
                 <div>
                     <CommonDataTable
                         filter={<div className='d-flex'>
-                            <div className='col-6'>
+                            <div className='col-3'>
+                                <label>Status</label>
                                 <Select name='active'
                                     handleChange={search.handleChange}
                                     value={search.formData?.active ?? ''}
@@ -197,7 +199,20 @@ export default function Suppliers() {
                                         { value: 0, label: 'Inactive' }
                                     ]} />
                             </div>
-                            <div className='col-6 mx-2'>
+                            <div className='col-3 mx-2'>
+                                <label>Order by</label>
+                                <Select
+                                    name='order_by'
+                                    value={search.formData?.order_by}
+                                    handleChange={search.handleChange}
+                                    errorMessage={search.formErrors?.order_by}
+                                    options={[
+                                        { value: 'ASC', label: 'Oldest' },
+                                        { value: 'DESC', label: 'Newest' }
+                                    ]} />
+                            </div>
+                            <div className='col-6'>
+                                <label>Keywords</label>
                                 <SearchInput
                                     name='keywords'
                                     submit={getSupliers}

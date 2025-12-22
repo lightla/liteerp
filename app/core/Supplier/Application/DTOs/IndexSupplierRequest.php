@@ -7,7 +7,8 @@ class IndexSupplierRequest {
         public ?string $keywords = null,
         public ?int $active = null,
         public int $business_id,
-        public int $created_by
+        public int $created_by,
+        public ?string $order_by = null,
     )
     {
         
@@ -17,7 +18,8 @@ class IndexSupplierRequest {
             keywords: $data['keywords'] ?? null,
             active: $data['active'] ?? null,
             business_id: $data['business_id'],
-            created_by: $data['user_id']  
+            created_by: $data['user_id'],
+            order_by: $data['order_by'] ?? 'DESC'  
         );
     }
     public function toArray(){
@@ -25,7 +27,8 @@ class IndexSupplierRequest {
             'keywords' => $this->keywords,
             'active' => $this->active,
             'business_id'   => $this->business_id,
-            'created_by'    => $this->created_by
+            'created_by'    => $this->created_by,
+            'order_by'  => $this->order_by
         ];
     }
 }

@@ -20,9 +20,9 @@ class EloquentSupplierRepository implements SupplierRepositoryInterface
             $list = $list->where('active',$data['active']);
         }
         if(!empty($data['keywords'])) {
-            $list = $list->where('unit_name','like','%'.($data['keywords'] ?? '').'%');
+            $list = $list->where('unit_name','like','%'.$data['keywords'].'%');
         }
-        return $list->paginate(15)->toArray();
+        return $list->orderBy('id',$data['order_by'])->paginate(15)->toArray();
     }
     public function findById(array $data): ?Supplier
     {
