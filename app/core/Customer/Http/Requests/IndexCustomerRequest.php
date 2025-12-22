@@ -10,7 +10,8 @@ class IndexCustomerRequest extends FormRequest
     {
         return [
             'keywords' => 'nullable|string|max:150',
-            'type'     => 'nullable|in:company,individual'
+            'type'     => 'nullable|in:company,individual',
+            'order_by' => 'nullable|in:ASC,DESC'
         ];
     }
 

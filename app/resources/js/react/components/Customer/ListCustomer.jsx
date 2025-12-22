@@ -37,7 +37,7 @@ export default function ListCustomer() {
         setShowAdd(true)
     };
 
-    
+
     const submit = useCallback(() => {
         form.setLoading(true)
         form.setFormErrors(null);
@@ -122,7 +122,8 @@ export default function ListCustomer() {
         CustomerService.list({
             keywords: search.formData?.keywords ?? '',
             page: page,
-            type: search.formData?.type ?? ''
+            type: search.formData?.type ?? '',
+            order_by: search.formData?.order_by ?? ''
         })
             .then((resp) => {
                 table.setData(resp.message.data);
@@ -135,12 +136,12 @@ export default function ListCustomer() {
     }, [search.formData]);
     useEffect(() => {
         getCustomers();
-    }, [search.formData?.type]);
+    }, [search.formData?.type,search.formData?.order_by]);
     return <div>
         <CommonDataTable
             add={() => setShowAdd(true)}
             filter={<div className='d-flex'>
-                <div className='col-4'>
+                <div className='col-3'>
                     <label>Type</label>
                     <Select
                         value={search.formData?.type}
@@ -151,7 +152,19 @@ export default function ListCustomer() {
                             { value: 'company', label: 'Company' }
                         ]} />
                 </div>
-                <div className='mx-2 col-4'>
+                <div className='col-3 mx-2'>
+                    <label>Order by</label>
+                    <Select
+                        name='order_by'
+                        value={search.formData?.order_by}
+                        handleChange={search.handleChange}
+                        errorMessage={search.formErrors?.order_by}
+                        options={[
+                            { value: 'ASC', label: 'Oldest' },
+                            { value: 'DESC', label: 'Newest' }
+                        ]} />
+                </div>
+                <div className='col-6'>
                     <label>Search</label>
                     <SearchInput
                         submit={getCustomers}

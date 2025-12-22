@@ -43,10 +43,13 @@ class EloquentCustomerRepository implements CustomerRepositoryInterface
         ->join("customer_group","customer_group.id","=","customers.group")
         ->leftJoin("orders","orders.customer_id","=","customers.id")
         ->where('customers.business_id',$data['business_id'])
-        ->where('customers.name','like','%'.($data['keywords'] ?? '').'%')
-        ->groupBy("customers.id");
+        ->groupBy("customers.id")
+        ->orderBy("customers.id",$data['order_by']);
         if(!empty($data['type'])) {
             $list = $list->where('customers.type',$data['type']);
+        }
+        if(!empty($data['keywords'])) {
+            $list = $list->where('customers.name','like','%'.$data['keywords'].'%');
         }
         return $list->paginate(15)->toArray();
     }
