@@ -161,12 +161,6 @@ Modules communicate via **Domain Events**, enabling:
 
 ---
 
-## 📄 License
-This project uses a private license.  
-All rights reserved.
-
----
-
 ## 📄 Diagram Event 
 
 I will continue update to easy to understand
