@@ -8,7 +8,8 @@ class IndexStockInRequest
         public int $business_id,
         public int $created_by,
         public ?string $keywords,
-        public ?string $status
+        public ?string $status,
+        public ?string $order_by = null 
     ) {}
 
     public static function fromArray(array $data): self
@@ -17,7 +18,8 @@ class IndexStockInRequest
             business_id: (int) $data['business_id'],
             status : $data['status'],
             created_by: $data['user_id'],
-            keywords: $data['keywords'] 
+            keywords: $data['keywords'],
+            order_by: $data['order_by'] ?? 'DESC' 
         );
     }
 
@@ -27,7 +29,8 @@ class IndexStockInRequest
             'business_id' => $this->business_id,
             'keywords' => $this->keywords,
             'status'      => $this->status,
-            'created_by'  => $this->created_by
+            'created_by'  => $this->created_by,
+            'order_by'  => $this->order_by
         ];
     }
 }

@@ -21,7 +21,8 @@ export default function StockIns() {
         StockInService.list({
             page: page,
             keywords: search.formData?.keywords ?? '',
-            status: search.formData?.status ?? ''
+            status: search.formData?.status ?? '',
+            order_by: search.formData?.order_by ?? ''
         }).then((resp) => {
                 table.setData(resp.message.data);
                 table.setLinks(resp.message.links);
@@ -91,13 +92,13 @@ export default function StockIns() {
 
     useEffect(() => {
         getListStockIn();
-    }, [search.formData?.status]);
+    }, [search.formData?.status,search.formData?.order_by]);
     return <div className='mt-3'>
         <CommonDataTable
             loading={table.loading}
             filter={<div>
                 <div className='d-flex'>
-                    <div className='col-6'>
+                    <div className='col-3'>
                         <label>Status</label>
                         <Select
                         name='status'
@@ -110,7 +111,19 @@ export default function StockIns() {
                         ]}
                         />
                     </div>
-                    <div className='col-6 mx-2'>
+                    <div className='col-3 mx-2'>
+                        <label>Order by</label>
+                        <Select
+                            name='order_by'
+                            value={search.formData?.order_by}
+                            handleChange={search.handleChange}
+                            errorMessage={search.formErrors?.order_by}
+                            options={[
+                                { value: 'ASC', label: 'Oldest' },
+                                { value: 'DESC', label: 'Newest' }
+                            ]} />
+                    </div>
+                    <div className='col-6'>
                         <label>Search</label>
                         <SearchInput
                         submit={getListStockIn}

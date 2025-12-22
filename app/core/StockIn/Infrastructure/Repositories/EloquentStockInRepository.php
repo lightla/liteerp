@@ -43,7 +43,7 @@ class EloquentStockInRepository implements StockInRepositoryInterface
         if (!empty($data['keywords'])) {
             $list = $list->where('invoice_ins.document_no', 'like', '%' . $data['keywords'] . '%');
         }
-        return $list->paginate(15)->toArray();
+        return $list->orderBy("stock_ins.id",$data['order_by'])->paginate(15)->toArray();
     }
     public function findById(array $data): ?StockIn
     {
