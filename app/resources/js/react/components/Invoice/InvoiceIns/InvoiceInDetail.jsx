@@ -37,9 +37,6 @@ export default function InvoiceInDetail() {
                 label: 'Total tax', key: 'total_tax'
             },
             {
-                label: 'Warehouse', key: 'warehouse_name'
-            },
-            {
                 label: 'Unit cost', key: 'unit_cost',
                 render: (value) => {
                     return <span><Currencies amount={value} /></span>
