@@ -4,6 +4,7 @@ namespace Core\Order\Http\Controllers;
 
 use Core\Order\Application\UseCases\CreateOrder;
 use Core\Order\Application\DTOs\CreateOrderRequest;
+use Core\Order\Application\DTOs\IndexOrderRequest as DTOsIndexOrderRequest;
 use Core\Order\Application\DTOs\UpdateOrderRequest as DTOsUpdateOrderRequest;
 use Core\Order\Application\UseCases\IndexOrder;
 use Core\Order\Application\UseCases\ShowOrder;
@@ -22,7 +23,8 @@ class OrderController
         return response()->json(['message' => $entity]);
     }
     public function index(IndexOrderRequest $request, IndexOrder $useCase) {
-        $entity = $useCase->handle($request->all());
+        $dto = DTOsIndexOrderRequest::fromArray($request->all());
+        $entity = $useCase->handle($dto);
         return response()->json(['message' => $entity]);
     }
     public function show(ShowOrderRequest $request, ShowOrder $useCase, string $id) {

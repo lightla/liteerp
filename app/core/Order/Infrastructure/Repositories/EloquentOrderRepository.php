@@ -89,13 +89,13 @@ class EloquentOrderRepository implements OrderRepositoryInterface
             ->leftJoin("users as approved_user", "approved_user.id", "=", "orders.approved_by")
             ->leftJoin("order_items", "order_items.order_id", "=", "orders.id")
             ->groupBy("orders.id")
-            ->orderBy("orders.id","DESC")
+            ->orderBy("orders.id",$data['order_by'])
             ->where('orders.business_id',$data['business_id']);
         if (!empty($data['status'])) {
             $list = $list->where('orders.status', $data['status']);
         }
         if (!empty($data['keywords'])) {
-            $list = $list->where('orders.order_no', 'like', '%' . ($data['keywords'] ?? '') . '%');
+            $list = $list->where('orders.order_no', 'like', '%' . $data['keywords'] . '%');
         }
         return $list->paginate(15)->toArray();
     }

@@ -10,7 +10,8 @@ class IndexOrderRequest extends FormRequest
     {
         return [
             'keywords' => 'nullable|string|max:150',
-            'status' => 'nullable|in:pending,approved,invoiced,shipped,completed,cancelled'
+            'status' => 'nullable|in:pending,approved,invoiced,shipped,completed,cancelled',
+            'order_by' => 'nullable|in:ASC,DESC'
         ];
     }
 

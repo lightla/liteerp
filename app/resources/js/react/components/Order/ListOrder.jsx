@@ -18,14 +18,18 @@ export default function ListOrder() {
     const search = useForm();
     const columns = [
         { label: "ID", key: "id" },
-        { label: "Customer name", key: "customer_name",render: (value) => {
-            return <ContentOnTable value={value}/>
-        } },
-        { label: "Address shipping", key: "customer_address",render: (value) => {
-            return <ContentOnTable value={value}/>
-        } },
         {
-            label: "Order type", key: "type",render: (value) => {
+            label: "Customer name", key: "customer_name", render: (value) => {
+                return <ContentOnTable value={value} />
+            }
+        },
+        {
+            label: "Address shipping", key: "customer_address", render: (value) => {
+                return <ContentOnTable value={value} />
+            }
+        },
+        {
+            label: "Order type", key: "type", render: (value) => {
                 return <span className='badge bg-primary text-uppercase'>{value}</span>
             }
         },
@@ -41,14 +45,14 @@ export default function ListOrder() {
             label: "Status",
             key: "status",
             render: (value) => {
-                return <StatusBadge status={value}/>
+                return <StatusBadge status={value} />
             },
         },
         {
             label: "Payment",
             key: "payment_method",
             render: (value) => {
-                return <PaymentMethod value={value}/>
+                return <PaymentMethod value={value} />
             },
         },
         {
@@ -56,7 +60,7 @@ export default function ListOrder() {
             key: "created_name",
             render: (value) => {
                 return <span className='badge bg-primary text-uppercase'>
-                        {value}</span>
+                    {value}</span>
             }
         },
         {
@@ -64,7 +68,7 @@ export default function ListOrder() {
             key: "approved_name",
             render: (value) => {
                 return <span className='badge bg-primary text-uppercase'>
-                        {value}</span>
+                    {value}</span>
             }
         }
     ];
@@ -77,56 +81,69 @@ export default function ListOrder() {
         OrderService.list({
             page: page,
             keywords: search.formData?.keywords ?? '',
-            status: search.formData?.status ?? ''
+            status: search.formData?.status ?? '',
+            order_by: search.formData?.order_by ?? ''
         })
-        .then((resp) => {
-            table.setData(resp.message.data);
-            table.setLinks(resp.message.links);
-            table.setLoading(false);
-        })
-        .catch((error) => {
-            if(error.response.data?.message) {
-                openPopup({
-                    type: 'error',
-                    message: error.response.data?.message
-                })
-            }
-        })
-    },[search.formData]);
+            .then((resp) => {
+                table.setData(resp.message.data);
+                table.setLinks(resp.message.links);
+                table.setLoading(false);
+            })
+            .catch((error) => {
+                if (error.response.data?.message) {
+                    openPopup({
+                        type: 'error',
+                        message: error.response.data?.message
+                    })
+                }
+            })
+    }, [search.formData]);
     useEffect(() => {
         getOrders();
-    }, [search.formData?.status]);
+    }, [search.formData?.status,search.formData?.order_by]);
     return <div>
         <div>
             <PageHead
-            containerClass='mx-4'
-            title='Orders'
-            subtitle='Manage orders'
+                containerClass='mx-4'
+                title='Orders'
+                subtitle='Manage orders'
             />
             <div className="m-4">
                 <CommonDataTable
                     filter={<div className='d-flex'>
-                        <div className='col-4'>
+                        <div className='col-3'>
                             <label>Status</label>
-                            <Select 
-                            name='status'
-                            handleChange={search.handleChange}
-                            value={search.formData?.status}
-                            options={[
-                                {value:'pending',label: 'Pending'},
-                                {value:'approved',label: 'Approved'},
-                                {value:'cancelled',label: 'Cancelled'}
-                            ]}
+                            <Select
+                                name='status'
+                                handleChange={search.handleChange}
+                                value={search.formData?.status}
+                                options={[
+                                    { value: 'pending', label: 'Pending' },
+                                    { value: 'approved', label: 'Approved' },
+                                    { value: 'cancelled', label: 'Cancelled' }
+                                ]}
                             />
                         </div>
-                        <div className='col-4 mx-2'>
+                        <div className='col-3 mx-2'>
+                            <label>Order by</label>
+                            <Select
+                                name='order_by'
+                                value={search.formData?.order_by}
+                                handleChange={search.handleChange}
+                                errorMessage={search.formErrors?.order_by}
+                                options={[
+                                    { value: 'ASC', label: 'Oldest' },
+                                    { value: 'DESC', label: 'Newest' }
+                                ]} />
+                        </div>
+                        <div className='col-6'>
                             <label>Search</label>
                             <SearchInput
-                            submit={getOrders}
-                            name='keywords'
-                            handleChange={search.handleChange}
-                            value={search.formData?.keywords}
-                            placeholder='Search by customer name'
+                                submit={getOrders}
+                                name='keywords'
+                                handleChange={search.handleChange}
+                                value={search.formData?.keywords}
+                                placeholder='Search by customer name'
                             />
                         </div>
                     </div>}
@@ -139,7 +156,7 @@ export default function ListOrder() {
                     movePage={getOrders}
                 />
                 <div>
-                   
+
                 </div>
             </div>
         </div>
