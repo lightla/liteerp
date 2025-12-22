@@ -77,7 +77,7 @@ class EloquentStockOutRepository implements StockOutRepositoryInterface
         if(!empty($data['status'])) {
             $index = $index->where('stock_outs.status',$data['status']);
         }
-        return $index->paginate(15)->toArray();
+        return $index->orderBy("stock_outs.id",$data['order_by'])->paginate(15)->toArray();
     }
     public function findByIdWithFullData(array $data): array
     {
