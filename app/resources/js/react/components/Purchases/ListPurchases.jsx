@@ -80,7 +80,8 @@ export default function ListPurchases() {
         PurchaseService.list({
             keywords: search.formData?.keywords ?? '',
             page: page,
-            status: search.formData?.status ?? ''
+            status: search.formData?.status ?? '',
+            order_by: search.formData?.order_by ?? '',
         })
             .then((resp) => {
                 //setPurchaseData(resp.message.data)
@@ -99,7 +100,7 @@ export default function ListPurchases() {
     }, [search.formData]);
     useEffect(() => {
         getPurchases();
-    }, [search.formData?.status])
+    }, [search.formData?.status,search.formData?.order_by])
     return <div>
         <div>
             <PageHead
@@ -112,7 +113,7 @@ export default function ListPurchases() {
 
             <CommonDataTable
                 filter={<div className='d-flex'>
-                    <div className='col-6'>
+                    <div className='col-3'>
                         <label>Status</label>
                         <Select
                             name='status'
@@ -126,7 +127,19 @@ export default function ListPurchases() {
                                 { value: 'cancelled', label: 'Cancelled' }
                             ]} />
                     </div>
-                    <div className='col-6 mx-2'>
+                    <div className='col-3 mx-2'>
+                        <label>Order by</label>
+                        <Select
+                            name='order_by'
+                            value={search.formData?.order_by}
+                            handleChange={search.handleChange}
+                            errorMessage={search.formErrors?.order_by}
+                            options={[
+                                { value: 'ASC', label: 'Old' },
+                                { value: 'DESC', label: 'New' }
+                            ]} />
+                    </div>
+                    <div className='col-6'>
                         <label>Search</label>
                         <SearchInput
                             submit={getPurchases}

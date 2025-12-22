@@ -4,6 +4,7 @@ namespace Core\Purchase\Http\Controllers;
 
 use Core\Purchase\Application\UseCases\CreatePurchase;
 use Core\Purchase\Application\DTOs\CreatePurchaseRequest;
+use Core\Purchase\Application\DTOs\IndexPurchaseRequest as DTOsIndexPurchaseRequest;
 use Core\Purchase\Application\DTOs\UpdatePurchaseRequest as DTOsUpdatePurchaseRequest;
 use Core\Purchase\Application\UseCases\IndexPurchase;
 use Core\Purchase\Application\UseCases\ShowPurchase;
@@ -22,7 +23,8 @@ class PurchaseController
         return response()->json(['message' => $entity]);
     }
     public function index(IndexPurchaseRequest $request, IndexPurchase $useCase){
-        $entity = $useCase->handle($request->all());
+        $dto = DTOsIndexPurchaseRequest::fromArray($request->all());
+        $entity = $useCase->handle($dto);
         return response()->json(['message' => $entity]);
     }
     public function show(ShowPurchaseRequest $request, ShowPurchase $useCase, string $id) {

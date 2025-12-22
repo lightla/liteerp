@@ -11,7 +11,7 @@ class IndexPurchaseRequest extends FormRequest
         return [
             'keywords' => 'nullable|string|max:150',
             'status' => 'nullable|in:draft,requested,approved,cancelled',
-            'page' => 'nullable|numeric|min:0'
+            'order_by' => 'nullable|in:ASC,DESC'
         ];
     }
 

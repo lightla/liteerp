@@ -36,11 +36,13 @@ class EloquentPurchaseRepository implements PurchaseRepositoryInterface
             ->leftJoin("users as approved_users", "approved_users.id", "=", "purchases.approved_by")
             ->leftJoin("purchase_items", "purchase_items.purchase_id", "=", "purchases.id")
             ->where('purchases.business_id', $data['business_id'])
-            ->where('suppliers.unit_name','like','%'.($data['name'] ?? '').'%')
-            ->orderBy("purchases.id","DESC")
+            ->orderBy("purchases.id", $data['order_by'])
             ->groupBy("purchases.id");
-        if(!empty($data['status'])) {
-            $list->where('purchases.status',$data['status']);
+        if (!empty($data['status'])) {
+            $list->where('purchases.status', $data['status']);
+        }
+        if (!empty($data['keywords'])) {
+            $list->where('suppliers.unit_name', 'like', '%' . $data['keywords'] . '%');
         }
         return $list->paginate(15)->toArray();
     }
@@ -53,7 +55,8 @@ class EloquentPurchaseRepository implements PurchaseRepositoryInterface
         }
         return Purchase::fromArray($row);
     }
-    public function findByIdWithFullData(array $data) : ?array {
+    public function findByIdWithFullData(array $data): ?array
+    {
         return PurchaseModel::select(
             "purchases.*",
             "suppliers.unit_name as supplier_name",
@@ -77,11 +80,15 @@ class EloquentPurchaseRepository implements PurchaseRepositoryInterface
         )
             ->join("suppliers", "suppliers.id", "=", "purchases.supplier_id")
             ->leftJoin("purchase_items", "purchase_items.purchase_id", "=", "purchases.id")
-            ->leftJoin("purchase_cancelled_reason", "purchase_cancelled_reason.purchase_id", 
-                "=", "purchases.id")
+            ->leftJoin(
+                "purchase_cancelled_reason",
+                "purchase_cancelled_reason.purchase_id",
+                "=",
+                "purchases.id"
+            )
             ->where('purchases.business_id', $data['business_id'])
-            ->where('purchases.id',$data['id'])
-            ->groupBy("purchases.id","purchase_cancelled_reason.id")
+            ->where('purchases.id', $data['id'])
+            ->groupBy("purchases.id", "purchase_cancelled_reason.id")
             ->first()?->toArray();
     }
     public function update(Purchase $entity): Purchase
