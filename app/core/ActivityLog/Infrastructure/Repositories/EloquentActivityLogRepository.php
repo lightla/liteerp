@@ -18,6 +18,7 @@ class EloquentActivityLogRepository implements ActivityLogRepositoryInterface
     {
         return ActivityLogModel::select("activity_logs.*","users.name as name")
         ->join("users","users.id","=","activity_logs.user_id")
+        ->orderBy("activity_logs.id","DESC")
         ->where('activity_logs.business_id',$data['business_id'])
         ->paginate(15)->toArray();
     }
