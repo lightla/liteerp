@@ -6,8 +6,11 @@ import api from "../common/api";
   show: (data) => api.get("/business-access/shippings/" 
     + data.id + '?order_id=' 
     + data.order_id),
-  list: (data) => api.get("/business-access/shippings?page=" + data.page 
-    + '&keywords=' + data.keywords),
+  list: ({
+    page = 0,
+    keywords = ''
+  }) => api.get("/business-access/shippings?page=" + page 
+    + '&keywords=' + keywords),
   delete: (data) => api.delete("/business-access/shippings/" + data.id),
 };
 export default ShippingService;

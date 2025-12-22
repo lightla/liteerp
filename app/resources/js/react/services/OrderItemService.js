@@ -5,7 +5,11 @@ import api from "../common/api";
   update: (data) => api.put("/business-access/orderitems/" + data.id,data),
   delete: (data) => api.delete("/business-access/orderitems/" + data.id),
   show: (id) => api.get("/business-access/orderitems/" + id),
-  list: (data) => api.get("/business-access/orderitems?order_id=" + data.order_id + '&page=' + data.page),
+  list: ({
+    order_id = 0,
+    page = 0
+  }) => api.get("/business-access/orderitems?order_id=" 
+      + order_id + '&page=' + page),
   summary: (data) => api.get("/business-access/orderitems?order_id=" 
     + data.order_id 
     + '&summary=1')
