@@ -17,8 +17,7 @@ export default function PurchaseInformation({
     const getSuppliers = useCallback((keywords = '',callback = null) => {
         SupplierService.list({
             page: 0,
-            keywords: keywords,
-            active: ''
+            keywords: keywords
         })
             .then((resp) => {
                 setSupplierData(resp.message?.data);
