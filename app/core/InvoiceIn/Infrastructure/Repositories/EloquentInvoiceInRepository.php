@@ -34,12 +34,12 @@ class EloquentInvoiceInRepository implements InvoiceInRepositoryInterface
             ->join("suppliers", "suppliers.id", "=", "purchases.supplier_id")
             ->where('invoice_ins.business_id', $data['business_id']);
             if(!empty($data['keywords'])) {
-                $list = $list->where('invoice_ins.document_no','like','%'. ($data['keywords'] ?? NULL) .'%');
+                $list = $list->where('invoice_ins.document_no','like','%'. $data['keywords'] .'%');
             }
             if(!empty($data['payment_status'])) {
                 $list = $list->where('invoice_ins.payment_status',$data['payment_status']);
             }
-            return $list->orderBy("invoice_ins.id","DESC")->paginate(15)->toArray();
+            return $list->orderBy("invoice_ins.id",$data['order_by'])->paginate(15)->toArray();
     }
     public function checkExists(array $data): bool {
         return InvoiceInModel::select("invoice_ins.*")

@@ -10,7 +10,8 @@ class IndexInvoiceInRequest extends FormRequest
     {
         return [
             'payment_status' => 'nullable|in:pending,partial_payment,paid',
-            'keywords' => 'nullable|string|max:150'
+            'keywords' => 'nullable|string|max:150',
+            'order_by' => 'nullable|in:DESC,ASC'
         ];
     }
 
