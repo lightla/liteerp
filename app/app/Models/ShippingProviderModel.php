@@ -11,9 +11,6 @@ class ShippingProviderModel extends Model
 
     protected $table = 'shipping_providers';
 
-    /**
-     * Các cột được phép gán
-     */
     protected $fillable = [
         'name',
         'code',
@@ -21,17 +18,9 @@ class ShippingProviderModel extends Model
         'active',
         'business_id'
     ];
-
-    /**
-     * Ép kiểu dữ liệu
-     */
     protected $casts = [
         'active' => 'boolean',
     ];
-
-    /**
-     * Scope: Chỉ lấy đơn vị đang hoạt động
-     */
     public function scopeActive($query)
     {
         return $query->where('active', true);

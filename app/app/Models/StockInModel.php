@@ -15,9 +15,6 @@ class StockInModel extends Model
 
     protected $table = 'stock_ins';
 
-    /**
-     * Các cột có thể gán hàng loạt.
-     */
     protected $fillable = [
         'business_id',
         'invoice_in_id',

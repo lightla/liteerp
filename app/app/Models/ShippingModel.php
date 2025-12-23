@@ -38,18 +38,10 @@ class ShippingModel extends Model
      * Relationships
      * ============================
      */
-
-    /**
-     * Shipping thuộc về một đơn hàng
-     */
     public function order(): BelongsTo
     {
         return $this->belongsTo(OrderModel::class, 'order_id');
     }
-
-    /**
-     * Shipping thuộc về một provider (GHN, GHTK…)
-     */
     public function provider(): BelongsTo
     {
         return $this->belongsTo(ShippingProviderModel::class, 'preferred_unit');
