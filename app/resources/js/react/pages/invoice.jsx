@@ -7,6 +7,7 @@ import { useSearchParams } from "react-router-dom";
 import InvoiceInDetail from "../components/Invoice/InvoiceIns/InvoiceInDetail";
 import InvoiceOutDetail from "../components/Invoice/InvoiceOuts/InvoiceOutsDetail";
 import PageHead from "../components/PageHead";
+import CustomInvoiceOuts from "../components/Invoice/CustomInvoiceOuts";
 export default function Invoice() {
   const [searchParams] = useSearchParams();
   return (
@@ -24,10 +25,12 @@ export default function Invoice() {
 
           <TabsCommon navs={[
             { key: 'InvoiceIn', label: 'Invoice Ins' },
-            { key: 'InvoiceOut', label: 'Invoice Outs' }
+            { key: 'InvoiceOut', label: 'Invoice Outs' },
+            { key: 'CustomInvoiceOut', label: 'Custom Invoice Outs' }
           ]} contents={[
             <InvoiceIns />,
-            <InvoiceOuts />
+            <InvoiceOuts />,
+            <CustomInvoiceOuts />
           ]} />
 
         </div>
