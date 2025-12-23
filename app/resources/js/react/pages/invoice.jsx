@@ -8,6 +8,7 @@ import InvoiceInDetail from "../components/Invoice/InvoiceIns/InvoiceInDetail";
 import InvoiceOutDetail from "../components/Invoice/InvoiceOuts/InvoiceOutsDetail";
 import PageHead from "../components/PageHead";
 import CustomInvoiceOuts from "../components/Invoice/CustomInvoiceOuts";
+import CustomInvoiceIns from "../components/Invoice/CustomInvoiceIns";
 export default function Invoice() {
   const [searchParams] = useSearchParams();
   return (
@@ -26,11 +27,13 @@ export default function Invoice() {
           <TabsCommon navs={[
             { key: 'InvoiceIn', label: 'Invoice Ins' },
             { key: 'InvoiceOut', label: 'Invoice Outs' },
-            { key: 'CustomInvoiceOut', label: 'Custom Invoice Outs' }
+            { key: 'CustomInvoiceOut', label: 'Custom Invoice Outs' },
+            { key: 'CustomInvoiceIn', label: 'Custom Invoice Ins' }
           ]} contents={[
             <InvoiceIns />,
             <InvoiceOuts />,
-            <CustomInvoiceOuts />
+            <CustomInvoiceOuts />,
+            <CustomInvoiceIns/>
           ]} />
 
         </div>
