@@ -15,6 +15,7 @@ import TextArea from '../UI/Input/Textarea'
 import SearchSelect from '../UI/Input/SearchSelect'
 import SupplierService from '../../services/SupplierService';
 import CustomInvoiceInService from '../../services/CustomInvoiceInService';
+import ContentOnTable from '../ContentOnTable'
 export default function CustomInvoiceIns() {
     const [suppliers,setSuppliers] = useState([]);
     const search = useForm();
@@ -26,6 +27,17 @@ export default function CustomInvoiceIns() {
         {
             label: "ID",
             key: "id"
+        },
+        {
+            label: "Supplier",
+            key: "unit_name"
+        },
+        {
+            label: "Description",
+            key: "description",
+            render: (value) => {
+                return <ContentOnTable value={value}/>
+            }
         },
         {
             label: "Document No",

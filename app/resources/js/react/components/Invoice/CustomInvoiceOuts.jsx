@@ -15,8 +15,9 @@ import CustomInvoiceOutService from '../../services/CustomInvoiceOutService';
 import TextArea from '../UI/Input/Textarea'
 import SearchSelect from '../UI/Input/SearchSelect'
 import CustomerService from '../../services/CustomerService';
+import ContentOnTable from '../ContentOnTable';
 export default function CustomInvoiceOuts() {
-    const [customers,setCustomers] = useState([]);
+    const [customers, setCustomers] = useState([]);
     const search = useForm();
     const form = useForm();
     const table = useTable();
@@ -26,6 +27,17 @@ export default function CustomInvoiceOuts() {
         {
             label: "ID",
             key: "id"
+        },
+        {
+            label: "Customer",
+            key: "customer_name"
+        },
+        {
+            label: "Description",
+            key: "description",
+            render: (value) => {
+                return <ContentOnTable value={value} />
+            }
         },
         {
             label: "Document No",
@@ -103,7 +115,7 @@ export default function CustomInvoiceOuts() {
                         message: error.response.data?.message
                     })
                 }
-                 form.setLoading(false)
+                form.setLoading(false)
             })
     }, [form.formData]);
     const add = useCallback(() => {
@@ -173,20 +185,20 @@ export default function CustomInvoiceOuts() {
             }
         })
     }
-    const getCustomers = useCallback((keywords = '',callback = null) => {
+    const getCustomers = useCallback((keywords = '', callback = null) => {
         CustomerService.list({
             keywords: keywords
         })
-        .then((resp) => {
-            if(callback) {
-                callback();
-            }
-            setCustomers(resp.message.data)
-        })
-        .catch((error) => {
+            .then((resp) => {
+                if (callback) {
+                    callback();
+                }
+                setCustomers(resp.message.data)
+            })
+            .catch((error) => {
 
-        })
-    },[])
+            })
+    }, [])
     useEffect(() => {
         getInvoices();
     }, [search.formData?.payment_status, search.formData?.order_by])
@@ -247,7 +259,7 @@ export default function CustomInvoiceOuts() {
                 setShowForm(false)
                 resetForm();
             }}
-            onConfirm={form.isEdit ? update :  add}
+            onConfirm={form.isEdit ? update : add}
             confirmText={form.isEdit ? 'Save change' : 'Add new'}
             title='Custom invoice out'>
             <div>
@@ -263,7 +275,7 @@ export default function CustomInvoiceOuts() {
                     </div>
                     <div className='form-group col-6'>
                         <label>Customer</label>
-                        <SearchSelect 
+                        <SearchSelect
                             search={getCustomers}
                             value={form.formData?.customer_id}
                             errorMessage={form.formErrors?.customer_id}
