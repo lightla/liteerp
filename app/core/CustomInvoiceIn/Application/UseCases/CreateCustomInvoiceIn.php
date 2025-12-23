@@ -4,6 +4,8 @@ namespace Core\CustomInvoiceIn\Application\UseCases;
 
 use Core\CustomInvoiceIn\Application\DTOs\CreateCustomInvoiceInRequest;
 use Core\CustomInvoiceIn\Domain\Services\CustomInvoiceInService;
+use Core\CustomInvoiceIn\Infrastructure\Events\CustomInvoiceInEvent;
+use Illuminate\Support\Facades\DB;
 
 class CreateCustomInvoiceIn
 {
@@ -11,6 +13,13 @@ class CreateCustomInvoiceIn
 
     public function handle(CreateCustomInvoiceInRequest $dto)
     {
-        return $this->service->create($dto->toArray());
+        DB::beginTransaction();
+        $create = $this->service->create($dto->toArray());
+        CustomInvoiceInEvent::handle('create',[
+            ...$dto->toArray(),
+            ...$create->toArray()
+        ]);
+        DB::commit();
+        return $create;
     }
 }

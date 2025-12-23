@@ -121,6 +121,11 @@ return [
             'erp.custominvoiceout.delete',
             'erp.custominvoiceout.index',
 
+            'erp.custominvoicein.create',
+            'erp.custominvoicein.update',
+            'erp.custominvoicein.delete',
+            'erp.custominvoicein.index',
+
             // PURCHASE
             'erp.purchase.index',
             'erp.purchase.show',
@@ -308,6 +313,11 @@ return [
             'erp.custominvoiceout.delete',
             'erp.custominvoiceout.index',
 
+            'erp.custominvoicein.create',
+            'erp.custominvoicein.update',
+            'erp.custominvoicein.delete',
+            'erp.custominvoicein.index',
+
             // PURCHASE
             'erp.purchase.index',
             'erp.purchase.show',
@@ -489,6 +499,11 @@ return [
             'erp.custominvoiceout.update',
             'erp.custominvoiceout.delete',
             'erp.custominvoiceout.index',
+            // Custom invoice in
+            'erp.custominvoicein.create',
+            'erp.custominvoicein.update',
+            'erp.custominvoicein.delete',
+            'erp.custominvoicein.index',
         ],
 
 
