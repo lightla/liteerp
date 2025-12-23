@@ -4,6 +4,8 @@ namespace Core\CustomInvoiceOut\Application\UseCases;
 
 use Core\CustomInvoiceOut\Application\DTOs\CreateCustomInvoiceOutRequest;
 use Core\CustomInvoiceOut\Domain\Services\CustomInvoiceOutService;
+use Core\CustomInvoiceOut\Infrastructure\Events\CustomInvoiceOutEvent;
+use Illuminate\Support\Facades\DB;
 
 class UpdateCustomInvoiceOut
 {
@@ -11,6 +13,13 @@ class UpdateCustomInvoiceOut
 
     public function handle(CreateCustomInvoiceOutRequest $dto)
     {
-        return $this->service->update($dto->toArray());
+        DB::transaction();
+        $update = $this->service->update($dto->toArray());
+        CustomInvoiceOutEvent::handle('update', [
+            ...$dto->toArray(),
+            ...$update->toArray()
+        ]);
+        DB::commit();
+        return $update;
     }
 }

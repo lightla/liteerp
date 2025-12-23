@@ -4,6 +4,8 @@ namespace Core\CustomInvoiceOut\Application\UseCases;
 
 use Core\CustomInvoiceOut\Application\DTOs\DeleteCustomInvoiceOutRequest;
 use Core\CustomInvoiceOut\Domain\Services\CustomInvoiceOutService;
+use Core\CustomInvoiceOut\Infrastructure\Events\CustomInvoiceOutEvent;
+use Illuminate\Support\Facades\DB;
 
 class DeleteCustomInvoiceOut
 {
@@ -11,6 +13,13 @@ class DeleteCustomInvoiceOut
 
     public function handle(DeleteCustomInvoiceOutRequest $dto)
     {
-        return $this->service->delete($dto->toArray());
+        DB::beginTransaction();
+        $delete = $this->service->delete($dto->toArray());
+        CustomInvoiceOutEvent::handle('delete', [
+            ...$dto->toArray(),
+            ...$delete->toArray()
+        ]);
+        DB::commit();
+        return $delete;
     }
 }

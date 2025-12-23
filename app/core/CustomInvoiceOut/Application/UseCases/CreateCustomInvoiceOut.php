@@ -4,6 +4,8 @@ namespace Core\CustomInvoiceOut\Application\UseCases;
 
 use Core\CustomInvoiceOut\Application\DTOs\CreateCustomInvoiceOutRequest;
 use Core\CustomInvoiceOut\Domain\Services\CustomInvoiceOutService;
+use Core\CustomInvoiceOut\Infrastructure\Events\CustomInvoiceOutEvent;
+use Illuminate\Support\Facades\DB;
 
 class CreateCustomInvoiceOut
 {
@@ -11,6 +13,16 @@ class CreateCustomInvoiceOut
 
     public function handle(CreateCustomInvoiceOutRequest $dto)
     {
-        return $this->service->create($dto->toArray());
+        DB::beginTransaction();
+        
+        $create = $this->service->create($dto->toArray());
+
+        CustomInvoiceOutEvent::handle('create', [
+            ...$dto->toArray(),
+            ...$create->toArray()
+        ]);
+        DB::commit();
+
+        return $create;
     }
 }
