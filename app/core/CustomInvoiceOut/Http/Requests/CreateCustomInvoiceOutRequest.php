@@ -14,7 +14,8 @@ class CreateCustomInvoiceOutRequest extends FormRequest
             'invoice_date'   => 'required|date',
             'approved'       => 'nullable|boolean',
             'payment_status' => 'sometimes|in:paid,partial_payment,pending',
-            'document_no' => 'nullable|max:150'
+            'document_no' => 'nullable|max:150',
+            'customer_id'    => 'nullable|exists:customers,id'
         ];
     }
 

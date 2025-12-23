@@ -41,6 +41,7 @@ class CustomInvoiceOutServiceImpl implements CustomInvoiceOutService
         $entity->approved = $data['approved'];
         $entity->payment_status = $data['payment_status'];
         $entity->document_no = $data['document_no'];
+        $entity->customer_id = $data['customer_id'];
         $entity->makeDocumentNo();
         return $this->repo->update($entity);
     }

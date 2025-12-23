@@ -19,7 +19,8 @@ class CustomInvoiceOutModel extends Model
         'invoice_date',
         'approved',
         'payment_status',
-        'document_no'
+        'document_no',
+        'customer_id'
     ];
 
     protected $casts = [

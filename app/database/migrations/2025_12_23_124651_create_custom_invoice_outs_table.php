@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('custom_invoice_outs', function (Blueprint $table) {
             $table->id();
+            $table->unsignedBigInteger('customer_id');
             $table->unsignedBigInteger('created_by'); 
             $table->unsignedBigInteger('business_id'); 
             $table->string('document_no')->nullable()->unique();
@@ -25,6 +26,7 @@ return new class extends Migration
             $table->timestamps();
             $table->foreign('created_by')->references('id')->on('users')->onDelete('cascade');
             $table->foreign('business_id')->references('id')->on('business')->onDelete('cascade');
+            $table->foreign('customer_id')->references('id')->on('customers')->onDelete('cascade');
         });
     }
 

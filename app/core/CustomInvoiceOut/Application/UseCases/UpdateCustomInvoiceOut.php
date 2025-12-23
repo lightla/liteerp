@@ -13,7 +13,7 @@ class UpdateCustomInvoiceOut
 
     public function handle(CreateCustomInvoiceOutRequest $dto)
     {
-        DB::transaction();
+        DB::beginTransaction();
         $update = $this->service->update($dto->toArray());
         CustomInvoiceOutEvent::handle('update', [
             ...$dto->toArray(),

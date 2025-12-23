@@ -13,7 +13,8 @@ class CustomInvoiceOut
         public ?bool $approved = null,
         public string $payment_status = 'pending',
         public ?int $id = null,
-        public ?string $document_no = null 
+        public ?string $document_no = null,
+        public ?int $customer_id 
     ) {}
 
     public static function fromArray(array $data): self
@@ -27,7 +28,8 @@ class CustomInvoiceOut
             approved: $data['approved'] ?? null,
             payment_status: $data['payment_status'] ?? 'pending',
             id: $data['id'] ?? null,
-            document_no: $data['document_no'] ?? null 
+            document_no: $data['document_no'] ?? null,
+            customer_id: $data['customer_id'] 
         );
     }
 
@@ -42,7 +44,8 @@ class CustomInvoiceOut
             'approved' => $this->approved,
             'payment_status' => $this->payment_status,
             'id'    => $this->id,
-            'document_no'   => $this->document_no
+            'document_no'   => $this->document_no,
+            'customer_id'   => $this->customer_id
         ];
     }
     public function markApproved(){

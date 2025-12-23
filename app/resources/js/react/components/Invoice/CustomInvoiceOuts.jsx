@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import CommonDataTable from '../CommonDataTable';
 import useTable from '../../libraries/handleTable';
 import { isoToDateTime } from '../../libraries/common';
@@ -13,8 +13,10 @@ import SearchInput from '../UI/Input/SearchInput';
 import StatusBadge from '../StatusBadge';
 import CustomInvoiceOutService from '../../services/CustomInvoiceOutService';
 import TextArea from '../UI/Input/Textarea'
+import SearchSelect from '../UI/Input/SearchSelect'
+import CustomerService from '../../services/CustomerService';
 export default function CustomInvoiceOuts() {
-    const navigate = useNavigate();
+    const [customers,setCustomers] = useState([]);
     const search = useForm();
     const form = useForm();
     const table = useTable();
@@ -171,6 +173,20 @@ export default function CustomInvoiceOuts() {
             }
         })
     }
+    const getCustomers = useCallback((keywords = '',callback = null) => {
+        CustomerService.list({
+            keywords: keywords
+        })
+        .then((resp) => {
+            if(callback) {
+                callback();
+            }
+            setCustomers(resp.message.data)
+        })
+        .catch((error) => {
+
+        })
+    },[])
     useEffect(() => {
         getInvoices();
     }, [search.formData?.payment_status, search.formData?.order_by])
@@ -235,14 +251,33 @@ export default function CustomInvoiceOuts() {
             confirmText={form.isEdit ? 'Save change' : 'Add new'}
             title='Custom invoice out'>
             <div>
-                <div className='form-group'>
-                    <label>Document no</label>
-                    <InputForm type='text'
-                        value={form.formData?.document_no}
-                        errorMessage={form.formErrors?.document_no}
-                        name='document_no'
-                        handleChange={form.handleChange}
-                    />
+                <div className='row'>
+                    <div className='form-group col-6'>
+                        <label>Document no</label>
+                        <InputForm type='text'
+                            value={form.formData?.document_no}
+                            errorMessage={form.formErrors?.document_no}
+                            name='document_no'
+                            handleChange={form.handleChange}
+                        />
+                    </div>
+                    <div className='form-group col-6'>
+                        <label>Customer</label>
+                        <SearchSelect 
+                            search={getCustomers}
+                            value={form.formData?.customer_id}
+                            errorMessage={form.formErrors?.customer_id}
+                            name='customer_id'
+                            changeValue={form.handleChangeByKey}
+                            options={customers.map((item) => {
+                                return {
+                                    value: item.id,
+                                    label: item.name
+                                }
+                            })}
+                            defaultKeywords={form.formData?.customer_name}
+                        />
+                    </div>
                 </div>
                 <div className='form-group mt-3'>
                     <label>Invoice date</label>

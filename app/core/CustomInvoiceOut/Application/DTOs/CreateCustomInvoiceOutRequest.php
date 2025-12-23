@@ -7,6 +7,7 @@ class CreateCustomInvoiceOutRequest
     public function __construct(
         public int $createdBy,
         public int $business_id,
+        public int $customer_id,
         public string $description,
         public float $amount,
         public ?string $invoice_date,
@@ -21,6 +22,7 @@ class CreateCustomInvoiceOutRequest
         return new self(
             createdBy: (int) $data['user_id'],
             business_id: (int) $data['business_id'],
+            customer_id: (int) $data['customer_id'],
             description: $data['description'],
             amount: (float) $data['amount'],
             invoice_date: $data['invoice_date'],
@@ -42,7 +44,8 @@ class CreateCustomInvoiceOutRequest
             'approved' => $this->approved,
             'payment_status' => $this->payment_status,
             'document_no'   => $this->document_no,
-            'id'    => $this->id
+            'id'    => $this->id,
+            'customer_id'   => $this->customer_id
         ];
     }
 }

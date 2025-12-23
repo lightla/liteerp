@@ -27,7 +27,7 @@ class IndexCustomInvoiceOutRequest
             'created_by' => $this->createdBy,
             'business_id' => $this->business_id,
             'approved' => $this->approved,
-            'payment_status' => $this->paymentStatus,
+            'payment_status' => $this->paymentStatus
         ];
     }
 }
