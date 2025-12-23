@@ -116,6 +116,11 @@ return [
             'erp.invoiceout.unapproved',
             'erp.invoiceout.approved',
 
+            'erp.custominvoiceout.create',
+            'erp.custominvoiceout.update',
+            'erp.custominvoiceout.delete',
+            'erp.custominvoiceout.index',
+
             // PURCHASE
             'erp.purchase.index',
             'erp.purchase.show',
@@ -298,6 +303,11 @@ return [
             'erp.invoiceout.unapproved',
             'erp.invoiceout.approved',
 
+            'erp.custominvoiceout.create',
+            'erp.custominvoiceout.update',
+            'erp.custominvoiceout.delete',
+            'erp.custominvoiceout.index',
+
             // PURCHASE
             'erp.purchase.index',
             'erp.purchase.show',
@@ -473,6 +483,12 @@ return [
             'erp.notification.update',
             'erp.notification.delete',
             'erp.notification.many',
+
+            // Custom invoice out
+            'erp.custominvoiceout.create',
+            'erp.custominvoiceout.update',
+            'erp.custominvoiceout.delete',
+            'erp.custominvoiceout.index',
         ],
 
 
