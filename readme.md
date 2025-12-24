@@ -8,6 +8,17 @@
   Lightweight Open-Source ERP for internal business use.
 </p>
 
+---
+
+
+<p align="center">
+  <img src="screenshoot.PNG" alt="LiteERP Logo" />
+</p>
+
+
+---
+
+
 # 🏢 LiteERP – Clean Architecture & Domain Driven Design
 
 This LiteERP is built with **ReactJS**, **Laravel**, and **MySQL8**, following modern software architecture principles including **Clean Architecture**, **Domain-Driven Design (DDD)**, and **Domain Events**.  
