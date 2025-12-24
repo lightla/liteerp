@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use Core\Business\Application\UseCases\AllBusiness;
 use Core\Overview\Application\UseCases\CreateOverview;
 use Illuminate\Console\Command;
 
@@ -24,10 +25,10 @@ class OverviewCommand extends Command
     /**
      * Execute the console command.
      */
-    public function handle(CreateOverview $CreateOverview)
+    public function handle(CreateOverview $CreateOverview,AllBusiness $AllBusiness)
     {
         //
-        $CreateOverview->handle();
+        $CreateOverview->handle($AllBusiness);
         $this->info("Done!");
     }
 }

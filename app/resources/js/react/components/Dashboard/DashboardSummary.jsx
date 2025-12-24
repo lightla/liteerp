@@ -1,14 +1,8 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { CurrencyDollar, Cart, People, BoxArrowUp } from "react-bootstrap-icons";
-import OverviewService from "../../services/OverviewService";
-
-
 
 export default function DashboardSummary({
   summaryData = []
 }) {
-
-
 
   return (
     <div className="erp-summary-container d-flex flex-wrap gap-3 mt-3">
@@ -27,7 +21,7 @@ export default function DashboardSummary({
             </div>
           </div>
           <div className="mt-2">
-            <span className="erp-summary-change">{item.change}</span>{" "}
+            <span className={ (item.change >= 1 ? 'text-success ' : 'text-danger ') +  "erp-summary-change"}>{item.change}%</span>{" "}
             <small className="text-secondary">{item.note}</small>
           </div>
         </div>

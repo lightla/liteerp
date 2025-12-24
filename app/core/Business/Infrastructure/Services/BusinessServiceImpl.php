@@ -52,4 +52,7 @@ class BusinessServiceImpl implements BusinessService
         $entity->bank_account_name = $data['bank_account_name'] ?? $entity->bank_account_name;
         return $this->repo->update($entity);
     }
+    public function all() : array {
+        return $this->repo->all();
+    }
 }

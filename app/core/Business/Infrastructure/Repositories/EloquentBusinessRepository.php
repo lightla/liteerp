@@ -64,4 +64,7 @@ class EloquentBusinessRepository implements BusinessRepositoryInterface
         ->update($entity->toArray());
         return $entity;
     }
+    public function all() : array {
+        return BusinessModel::get()->toArray();
+    }
 }
