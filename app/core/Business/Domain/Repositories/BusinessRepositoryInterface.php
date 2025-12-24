@@ -13,4 +13,5 @@ interface BusinessRepositoryInterface
     public function findByName(array $data): ?Business;
     public function findByIdWithFullData(array $data): ?array;
     public function update(Business $entity): Business;
+    public function all() : array;
 }
