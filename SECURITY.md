@@ -8,7 +8,7 @@ If you discover a security issue, **please do NOT open a public GitHub issue**.
 
 Instead, report it privately using one of the following methods:
 
-* 📧 Email: **[hoang.le.tn91@gmail.com](mailto:hoang.le.tn91@gmail.com)** *(replace with your actual email)*
+* 📧 Email: **[hoang.le.tn91@gmail.com](mailto:hoang.le.tn91@gmail.com)**
 * 💬 GitHub: Send a **private message to the repository owner / maintainer**
 
 Please include as much information as possible:
