@@ -73,11 +73,12 @@ It has extremely low framework dependencies.
 
 ## 🛠️ Technologies Used
 - **ReactJS**
-- **Laravel**
+- **Laravel 12**
 - **MySQL 8**
 - **Clean Architecture**
 - **Domain Driven Design**
 - **Domain Events**
+- **PHP 8.3 or greater than**
 
 ---
 
