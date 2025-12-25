@@ -3,8 +3,6 @@ import InvoiceOutService from '../../services/InvoiceOutService';
 import CommonDataTable from '../CommonDataTable';
 import useTable from '../../libraries/handleTable';
 import { isoToDateTime } from '../../libraries/common';
-import { PopupLayout } from '../../layouts/PopupLayout'
-import { InputForm } from '../UI/Input/InputForm'
 import { useForm } from '../../libraries/handleInput';
 import { Select } from '../UI/Input/Select';
 import { usePopup } from '../popups/PopupContext'
@@ -18,7 +16,6 @@ export default function InvoiceOuts() {
     const form = useForm();
     const table = useTable();
     const { openPopup } = usePopup();
-    const [showForm, setShowForm] = useState(false);
     const columns = [
         {
             label: "Customer",
@@ -102,32 +99,7 @@ export default function InvoiceOuts() {
                 }
             })
     }, [table, search.formData]);
-    const update = useCallback(() => {
-        form.setFormErrors(null);
-        InvoiceOutService.update(form.formData)
-            .then((resp) => {
-                getInvoices();
-                openPopup({
-                    type: 'success',
-                    message: 'You has been updated'
-                })
-                setShowForm(false)
-            })
-            .catch((error) => {
-                if (error.response.data?.errors) {
-                    form.setFormErrors(error.response.data?.errors);
-                }
-                if (error.response.data?.message) {
-                    openPopup({
-                        type: 'error',
-                        message: error.response.data?.message
-                    })
-                }
-            })
-    }, [form.formData]);
     const onEdit = (row) => {
-        {/* setShowForm(true);
-        form.setFormData(row) */}
         navigate('/invoices?form=invoiceout&id=' + row.id)
     }
     useEffect(() => {
@@ -180,53 +152,6 @@ export default function InvoiceOuts() {
             onEdit={onEdit}
             movePage={getInvoices}
         />
-        {showForm ? <PopupLayout
-            onClose={() => setShowForm(false)}
-            onConfirm={update}
-            title='Update invoice out'>
-            <div>
-                <div className='form-group'>
-                    <label>Document no</label>
-                    <InputForm type='text'
-                        value={form.formData?.document_no}
-                        errorMessage={form.formErrors?.document_no}
-                        name='document_no'
-                        handleChange={form.handleChange}
-                    />
-                </div>
-                <div className='form-group mt-3'>
-                    <label>Invoice date</label>
-                    <InputForm type='date'
-                        value={isoToDateTime(form.formData?.invoice_date)}
-                        errorMessage={form.formErrors?.invoice_date}
-                        name='invoice_date'
-                        handleChange={form.handleChange}
-                    />
-                </div>
-                <div className='form-group mt-3'>
-                    <label>Due date</label>
-                    <InputForm type='date'
-                        value={isoToDateTime(form.formData?.due_date)}
-                        errorMessage={form.formErrors?.due_date}
-                        name='due_date'
-                        handleChange={form.handleChange}
-                    />
-                </div>
-                <div className='form-group mt-3'>
-                    <label>Status</label>
-                    <Select
-                        value={form.formData?.status}
-                        errorMessage={form.formErrors?.due_date}
-                        name='status'
-                        handleChange={form.handleChange}
-                        options={[
-                            { value: 'approved', label: 'Not change' },
-                            { value: 'invoiced', label: 'Approved' }
-                        ]}
-                    />
-                </div>
-            </div>
-        </PopupLayout> : null}
 
     </div>
 }
