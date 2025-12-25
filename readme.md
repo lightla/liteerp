@@ -38,6 +38,16 @@ not replace accounting or government e-invoicing software.
 
 --- 
 
+## What LiteERP is NOT
+
+❌ Not an accounting software
+
+❌ Not a tax-compliant invoicing system
+
+❌ Not a replacement for government e-invoice providers
+
+--- 
+
 ## 📦 Document 
 
 <a href="./development.md">Development document</a>
