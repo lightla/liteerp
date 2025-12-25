@@ -29,7 +29,7 @@ It has extremely low framework dependencies.
 
 ## 📦 Document 
 
-<a href="./development.md">Document development</a>
+<a href="./development.md">Development document</a>
 
 ---
 
