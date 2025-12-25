@@ -25,6 +25,17 @@ This LiteERP is built with **ReactJS**, **Laravel**, and **MySQL8**, following m
 The project is designed for scalability, multi-business support, maintainability, and high performance.
 It has extremely low framework dependencies.
 
+LiteERP is built with a simple and “pure core” philosophy.
+Instead of trying to cover every possible business scenario,
+it focuses on essential operational workflows and keeps them clear, predictable, and easy to maintain.
+
+Compared to comprehensive platforms like Odoo, LiteERP intentionally stays lightweight.
+This makes it easier to deploy, understand, and adapt — especially for small teams and internal use.
+
+LiteERP invoices are operational invoices, not tax invoices.
+They help you manage sales, payments, and customers —
+not replace accounting or government e-invoicing software.
+
 --- 
 
 ## 📦 Document 
