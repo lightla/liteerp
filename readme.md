@@ -25,6 +25,12 @@ This LiteERP is built with **ReactJS**, **Laravel**, and **MySQL8**, following m
 The project is designed for scalability, multi-business support, maintainability, and high performance.
 It has extremely low framework dependencies.
 
+--- 
+
+## 📦 Document 
+
+<a href="./development.md">Document development</a>
+
 ---
 
 ## 🚀 Features
