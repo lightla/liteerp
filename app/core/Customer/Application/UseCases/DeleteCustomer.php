@@ -11,9 +11,10 @@ class DeleteCustomer
 {
     public function __construct(private CustomerService $service) {}
 
-    public function handle(DeleteCustomerRequest $dto)
+    public function handle(array $data)
     {
         DB::beginTransaction();
+        $dto = DeleteCustomerRequest::fromArray($data);
         $update = $this->service->delete($dto->toArray());
         Event::dispatch("erp.customer.delete", [
             ...$update->toArray(),

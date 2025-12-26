@@ -23,14 +23,5 @@ class OrderShippingCustomer
             'user_id' => $dto->created_by,
             ...$customer->toArray()
         ]);
-        // Event::dispatch('erp.ordershipping.triggerCreate', [
-        //     'order_id' => $data['id'],
-        //     'receiver_name' => $customer->name,
-        //     'receiver_phone' => $customer->phone,
-        //     'receiver_address' => $customer->address,
-        //     'business_id' => $data['business_id'],
-        //     'user_id' => $data['user_id'],
-        //     'id' => $data['customer_id']
-        // ]);
     }
 }

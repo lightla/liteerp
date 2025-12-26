@@ -11,9 +11,10 @@ class UpdateCustomer
 {
     public function __construct(private CustomerService $service) {}
 
-    public function handle(CreateCustomerRequest $dto)
+    public function handle(array $data)
     {
         DB::beginTransaction();
+        $dto = CreateCustomerRequest::fromArray($data);
         $update = $this->service->update($dto->toArray());
         Event::dispatch("erp.customer.update", [
             ...$update->toArray(),

@@ -14,25 +14,29 @@ use Core\Customer\Http\Requests\DeleteCustomerRequest;
 use Core\Customer\Http\Requests\IndexCustomerRequest;
 use Core\Customer\Http\Requests\UpdateCustomerRequest;
 
-class CustomerController
+class ViewController
 {
     public function store(FormRequest $request, CreateCustomer $useCase)
     {
-        $entity = $useCase->handle($request->all());
+        $dto = CreateCustomerRequest::fromArray($request->all());
+        $entity = $useCase->handle($dto);
         return response()->json(['message' => $entity]);
     }
     public function index(IndexCustomerRequest $request, IndexCustomer $useCase) {
-        $entity = $useCase->handle($request->all());
+        $dto = DTOsIndexCustomerRequest::fromArray($request->all());
+        $entity = $useCase->handle($dto);
         return response()->json(['message' => $entity]);
     }
     public function update(UpdateCustomerRequest $request,UpdateCustomer $useCase,string $id) {
         $request->merge(['id' => $id]);
-        $entity = $useCase->handle($request->all());
+        $dto = CreateCustomerRequest::fromArray($request->all());
+        $entity = $useCase->handle($dto);
         return response()->json(['message' => $entity]);
     }
     public function destroy(DeleteCustomerRequest $request,DeleteCustomer $useCase,string $id) {
         $request->merge(['id' => $id]);
-        $entity = $useCase->handle($request->all());
+        $dto = DTOsDeleteCustomerRequest::fromArray($request->all());
+        $entity = $useCase->handle($dto);
         return response()->json(['message' => $entity]);
     }
 }

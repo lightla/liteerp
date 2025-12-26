@@ -10,8 +10,9 @@ class IndexCustomer
 {
     public function __construct(private CustomerService $service) {}
 
-    public function handle(IndexCustomerRequest $dto)
+    public function handle(array $data)
     {
+        $dto = IndexCustomerRequest::fromArray($data);
         return $this->service->index($dto->toArray());
     }
 }

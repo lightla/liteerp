@@ -2,13 +2,28 @@
 
 namespace Core\Customer\Http\Requests;
 
+use App\Contracts\Hooks\HookAction;
+use App\Contracts\Hooks\HookContext;
+use App\Contracts\Hooks\HookPhase;
+use App\Contracts\Hooks\HookTiming;
+use App\Supports\Hooks\HookDispatcher;
 use Illuminate\Foundation\Http\FormRequest;
 
 class IndexCustomerRequest extends FormRequest
 {
-    public function rules(): array
+    public function rules(HookDispatcher $hooks): array
     {
+        $hooks = $hooks->dispatch(
+            new HookContext(
+                action: HookAction::INDEX,
+                phase: HookPhase::VALIDATE,
+                timing: HookTiming::ON,
+                payload: [],
+                module: 'Customer'
+            )
+        );
         return [
+            ...$hooks,
             'keywords' => 'nullable|string|max:150',
             'type'     => 'nullable|in:company,individual',
             'order_by' => 'nullable|in:ASC,DESC',
