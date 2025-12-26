@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Supports\Hooks\HookDispatcher;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\ServiceProvider;
 
@@ -13,6 +14,7 @@ class AppServiceProvider extends ServiceProvider
     public function register(): void
     {
         $this->registerCoreModules();
+        $this->app->singleton(HookDispatcher::class);
     }
 
     /**
@@ -23,6 +25,11 @@ class AppServiceProvider extends ServiceProvider
         //
     }
     protected function registerCoreModules(): void
+    {
+        $this->autoloadModule();
+        $this->autoloadExtension();
+    }
+    protected function autoloadModule()
     {
         $corePath = base_path('core');
         if (!File::exists($corePath)) {
@@ -39,10 +46,51 @@ class AppServiceProvider extends ServiceProvider
 
                 try {
                     $this->app->register($providerClass);
-                    //logger()->info("✅ Loaded module provider: {$providerClass}");
                 } catch (\Throwable $e) {
-                    //logger()->error("⚠️ Failed to register {$providerClass}: " . $e->getMessage());
+                    logger()->error("Failed to register {$providerClass}: " . $e->getMessage());
                 }
+            }
+        }
+    }
+
+    protected function autoloadExtension(): void
+    {
+        $extensionsPath = base_path('extensions');
+
+        if (! File::exists($extensionsPath)) {
+            return;
+        }
+
+        foreach (File::directories($extensionsPath) as $extensionPath) {
+            $moduleName = basename($extensionPath);
+            $configPath = "{$extensionPath}/extension.json";
+            $providerPath = "{$extensionPath}/ExtensionServiceProvider.php";
+
+            if (! File::exists($configPath)) {
+                continue;
+            }
+            try {
+                $config = json_decode(File::get($configPath), true, 512, JSON_THROW_ON_ERROR);
+            } catch (\Throwable $e) {
+                logger()->error("Invalid extension.json in {$moduleName}: {$e->getMessage()}");
+                continue;
+            }
+
+            if (! ($config['status'] ?? false)) {
+                continue;
+            }
+
+            if (! File::exists($providerPath)) {
+                logger()->warning("Extension {$moduleName} enabled but ExtensionServiceProvider.php not found");
+                continue;
+            }
+
+            $providerClass = "Extensions\\{$moduleName}\\ExtensionServiceProvider";
+
+            try {
+                $this->app->register($providerClass);
+            } catch (\Throwable $e) {
+                logger()->error("Failed to register extension {$moduleName}: {$e->getMessage()}");
             }
         }
     }
