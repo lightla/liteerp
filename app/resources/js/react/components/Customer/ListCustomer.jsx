@@ -139,7 +139,17 @@ export default function ListCustomer() {
 
             })
     }, [search.formData]);
+    const renderForm = useCallback(() => {
+        CustomerService.view()
+        .then((resp) => {
+            form.setHookRender(resp.message?.form);
+        })
+        .catch((error) => {
+
+        })
+    },[])
     useEffect(() => {
+        renderForm();
         getCustomers();
     }, [search.formData?.type,search.formData?.order_by,search.formData?.active]);
     return <div>

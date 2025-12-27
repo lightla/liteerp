@@ -2,10 +2,10 @@
 
 namespace Core\Customer\Application\UseCases;
 
-use App\Contracts\Hooks\HookAction;
-use App\Contracts\Hooks\HookContext;
-use App\Contracts\Hooks\HookPhase;
-use App\Contracts\Hooks\HookTiming;
+use App\Supports\Hooks\HookAction;
+use App\Supports\Hooks\HookContext;
+use App\Supports\Hooks\HookPhase;
+use App\Supports\Hooks\HookTiming;
 use App\Supports\Hooks\HookDispatcher;
 use Core\Customer\Application\DTOs\CreateCustomerRequest;
 use Core\Customer\Domain\Services\CustomerService;

@@ -9,7 +9,8 @@ export default function CustomerForm({
     form = {
         handleChange: null,
         formErrors: null,
-        handleChangeByKey: null
+        handleChangeByKey: null,
+        formData: null
     }
 }) {
     const [group, setGroup] = useState([]);
@@ -132,6 +133,33 @@ export default function CustomerForm({
                     errorMessage={form.formErrors?.active} />
                 <span>This mean customer can take a order or else</span>
             </div>
+            {form?.hookRender.map((item, index) => {
+                return <div key={index}>
+                    <label>{item.label ?? 'label'}</label>
+                    {item.type === 'textarea' ? <TextArea
+                        name={item.key}
+                        handleChange={form.handleChange}
+                        value={form.formData?.[item.key]}
+                        errorMessage={form.formErrors?.[item.key]}
+                        placeholder={item.placeHolder}
+                    />
+                        : item.type === 'select' ? <Select
+                            name={item.key}
+                            handleChange={form.handleChange}
+                            value={form.formData?.[item.key]}
+                            errorMessage={form.formErrors?.[item.key]}
+                            placeholder={item.placeHolder}
+                            options={item.options}
+                        />
+                            : <InputForm 
+                            name={item.key}
+                            handleChange={form.handleChange}
+                            value={form.formData?.[item.key]}
+                            errorMessage={form.formErrors?.[item.key]}
+                            placeholder={item.placeHolder}
+                            />}
+                </div>
+            })}
         </div>
     </div>
 }
