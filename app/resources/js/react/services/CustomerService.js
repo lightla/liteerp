@@ -13,6 +13,7 @@ import api from "../common/api";
   }) => api.get("/business-access/customers" 
       + `?keywords=${keywords}&page=${page}&type=${type}
       &order_by=${order_by}&active=${active}`),
-  delete: (data) => api.delete("/business-access/customers/" + data.id)
+  delete: (data) => api.delete("/business-access/customers/" + data.id),
+  view: () => api.get("/business-access/view/customers"),
 };
 export default CustomerService;
