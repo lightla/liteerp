@@ -2,9 +2,9 @@
 
 namespace App\Supports\Hooks;
 
-use App\Contracts\Hooks\HookContext;
+use App\Supports\Hooks\HookContext;
 use App\Contracts\Hooks\HookInterface;
-use App\Contracts\Hooks\HookResult;
+use App\Supports\Hooks\HookResult;
 use Illuminate\Contracts\Container\Container;
 
 class HookDispatcher

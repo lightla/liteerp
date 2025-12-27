@@ -1,5 +1,5 @@
 <?php 
-namespace App\Contracts\Hooks;
+namespace App\Supports\Hooks;
 
 final class HookAction
 {

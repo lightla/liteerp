@@ -6,6 +6,7 @@ export function useForm() {
     const [loading, setLoading] = useState(false);
     const [isEdit, setIsEdit] = useState(false);
     const [isDestroy, setIsDestroy] = useState(false);
+    const [hookRender,setHookRender] = useState([]);
 
     const handleChange = (e) => {
         const { name, type, value, checked } = e.target;
@@ -53,6 +54,8 @@ export function useForm() {
         setLoading,
         isEdit,
         setIsEdit,
-        handleChangeByKey
+        handleChangeByKey,
+        setHookRender,
+        hookRender
     };
 }
