@@ -1,6 +1,6 @@
 <?php
 namespace App\Abstracts;
-use App\Contracts\Hooks\HookContext;
+use App\Supports\Hooks\HookContext;
 use App\Contracts\Hooks\HookInterface;
 
 abstract class AbstractHook implements HookInterface
