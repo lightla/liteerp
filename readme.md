@@ -48,6 +48,16 @@ not replace accounting or government e-invoicing software.
 
 --- 
 
+
+## Extensions
+
+List extension example
+
+<a href="https://github.com/steveleetn91/liteerp-extension-example">Extensions</a>
+
+
+--- 
+
 ## 📦 Document 
 
 <a href="./development.md">Development document</a>
