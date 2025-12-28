@@ -8,4 +8,5 @@ final class HookAction
     public const DELETE = 'delete';
     public const SHOW = 'show';
     public const INDEX  = 'index';
+    public const SEARCH = 'search';
 }

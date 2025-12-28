@@ -5,15 +5,15 @@ final class HookResult
 {
     public function __construct(
         public bool $stop = false,
-        public ?array $payload = null
+        public mixed $payload
     ) {}
 
-    public static function pass(array $payload): self
+    public static function pass(mixed $payload): self
     {
         return new self(false, $payload);
     }
 
-    public static function abort(array $payload = []): self
+    public static function abort(mixed $payload = []): self
     {
         return new self(true, $payload);
     }

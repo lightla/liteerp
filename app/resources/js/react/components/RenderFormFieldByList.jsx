@@ -1,0 +1,47 @@
+import React from 'react'
+import TextArea from './UI/Input/Textarea'
+import { Select } from './UI/Input/Select'
+import { InputForm } from './UI/Input/InputForm'
+import UploadImage from './UI/Input/UploadImage'
+export default function RenderFormFieldByList({
+    item = {
+        label: '',
+        key: '',
+        value: '',
+        type: ''
+    },
+    form = {
+        formData: null
+    }
+}) {
+    return <div>
+        <label>{item.label ?? 'label'}</label>
+        {item.type === 'textarea' ? <TextArea
+            name={item.key}
+            handleChange={form.handleChange}
+            value={form.formData?.[item.key]}
+            errorMessage={form.formErrors?.[item.key]}
+            placeholder={item.placeHolder}
+        />
+            : item.type === 'select' ? <Select
+                name={item.key}
+                handleChange={form.handleChange}
+                value={form.formData?.[item.key]}
+                errorMessage={form.formErrors?.[item.key]}
+                placeholder={item.placeHolder}
+                options={item.options}
+            /> : item.type === 'image' ? <UploadImage
+                name={item.key}
+                handleChangeByKey={form.handleChangeByKey}
+                value={form.formData?.[item.key]}
+                errorMessage={form.formErrors?.[item.key]}
+            />
+                : <InputForm
+                    name={item.key}
+                    handleChange={form.handleChange}
+                    value={form.formData?.[item.key]}
+                    errorMessage={form.formErrors?.[item.key]}
+                    placeholder={item.placeHolder}
+                />}
+    </div>
+}

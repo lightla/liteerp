@@ -19,7 +19,7 @@ class HookDispatcher
     /**
      * Dispatch hook theo context
      */
-    public function dispatch(HookContext $context): array
+    public function dispatch(HookContext $context): mixed
     {
         foreach ($this->hooks as $hook) {
             if (! $hook instanceof HookInterface) {
