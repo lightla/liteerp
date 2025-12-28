@@ -9,30 +9,14 @@ import { PopupLayout } from '../../layouts/PopupLayout';
 import CustomerService from '../../services/CustomerService';
 import CustomerForm from './ListCustomer/CustomerForm';
 import StatusBadge from '../StatusBadge'
+import RenderFormTableByList from '../RenderFieldTableByList';
+import ButtonPrimary from '../../components/UI/Buttons/PrimaryButton'
 export default function ListCustomer() {
     const table = useTable();
     const search = useForm();
     const { openPopup } = usePopup();
     const form = useForm();
     const [showAdd, setShowAdd] = useState(false);
-    const columns = [
-        { label: "ID", key: "id" },
-        { label: "Name", key: "name" },
-        { label: "Email", key: "email" },
-        { label: "Number phone", key: "phone" },
-        { label: "Ordered", key: "total_order" },
-        { label: "Group", key: "group_name" },
-        {
-            label: 'Type', key: 'type', render: (value) => {
-                return <span className={'badge text-uppercase ' + (value === 'company' ? 'bg-primary' : 'bg-secondary')}>
-                    {value}
-                </span>
-            }
-        },
-        { label: "Status", key: "active",render: (value) => {
-            return <StatusBadge status={value ? 'active' : 'inactive'}/>
-        } },
-    ];
 
     const handleEdit = (row) => {
         console.log("Edit clicked:", row);
@@ -123,17 +107,11 @@ export default function ListCustomer() {
     };
     const getCustomers = useCallback((page = 0) => {
         table.setLoading(true)
-        CustomerService.list({
-            keywords: search.formData?.keywords ?? '',
-            page: page,
-            type: search.formData?.type ?? '',
-            order_by: search.formData?.order_by ?? '',
-            active: search.formData?.active ?? ''
-        })
+        CustomerService.list(search.formData)
             .then((resp) => {
                 table.setData(resp.message.data);
                 table.setLinks(resp.message.links);
-                table.setLoading(false)
+                table.setLoading(false);
             })
             .catch((error) => {
 
@@ -141,17 +119,57 @@ export default function ListCustomer() {
     }, [search.formData]);
     const renderForm = useCallback(() => {
         CustomerService.view()
-        .then((resp) => {
-            form.setHookRender(resp.message?.form);
-        })
-        .catch((error) => {
+            .then((resp) => {
+                form.setHookRender(resp.message?.form);
+                table.setColums((prev) => {
+                    const existingKeys = new Set(prev.map((i) => i.key));
 
-        })
-    },[])
+                    const next = [...prev];
+
+                    resp.message.index.forEach((item) => {
+                        if (!existingKeys.has(item.key)) {
+                            next.push({
+                                ...item,
+                                render: (data) => {
+                                    return <RenderFormTableByList item={item} data={data} />
+                                }
+                            });
+                        }
+                    });
+
+                    return next;
+                });
+                search.setHookRender(resp.message?.search ?? [])
+
+            })
+            .catch((error) => {
+
+            })
+    }, [])
     useEffect(() => {
+        table.setColums([
+            { label: "ID", key: "id" },
+            { label: "Name", key: "name" },
+            { label: "Email", key: "email" },
+            { label: "Number phone", key: "phone" },
+            { label: "Ordered", key: "total_order" },
+            { label: "Group", key: "group_name" },
+            {
+                label: 'Type', key: 'type', render: (value) => {
+                    return <span className={'badge text-uppercase ' + (value === 'company' ? 'bg-primary' : 'bg-secondary')}>
+                        {value}
+                    </span>
+                }
+            },
+            {
+                label: "Status", key: "active", render: (value) => {
+                    return <StatusBadge status={value ? 'active' : 'inactive'} />
+                }
+            },
+        ]);
         renderForm();
         getCustomers();
-    }, [search.formData?.type,search.formData?.order_by,search.formData?.active]);
+    }, []);
     return <div>
         <CommonDataTable
             add={() => setShowAdd(true)}
@@ -190,6 +208,26 @@ export default function ListCustomer() {
                             { value: 'DESC', label: 'Newest' }
                         ]} />
                 </div>
+                {search.hookRender.map((item, index) => {
+                    return item.type === 'select' ? <div className='col-2 ml-2'>
+                        <label>{item.label}</label>
+                        <Select
+                            name={item.key}
+                            value={search.formData?.[item.key]}
+                            handleChange={search.handleChange}
+                            errorMessage={search.formErrors?.[item.key]}
+                            options={item.options} />
+                    </div> : item.type === 'search' ? <div className='col-3  ml-2'>
+                        <label>{item.label}</label>
+                        <SearchInput
+                            submit={getCustomers}
+                            placeholder={item.placeholder}
+                            value={search.formData?.[item.key]}
+                            name={item.key}
+                            handleChange={search.handleChange}
+                        />
+                    </div> : null
+                })}
                 <div className='col-6 mx-2'>
                     <label>Search</label>
                     <SearchInput
@@ -200,9 +238,12 @@ export default function ListCustomer() {
                         handleChange={search.handleChange}
                     />
                 </div>
+                <div className='col-2 mx-2'>
+                    <ButtonPrimary onClick={getCustomers} label='Search'/>
+                </div>
             </div>}
             movePage={getCustomers}
-            columns={columns}
+            columns={table.colums}
             data={table?.data}
             links={table?.links}
             onEdit={handleEdit}

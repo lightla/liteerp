@@ -3,7 +3,6 @@
 namespace Core\Customer\Infrastructure\Listeners;
 
 use Core\Customer\Application\DTOs\OrderShippingCustomerRequest;
-use Core\Customer\Application\DTOs\ShowCustomerRequest;
 use Core\Customer\Application\UseCases\OrderShippingCustomer;
 use Illuminate\Support\Facades\Event;
 

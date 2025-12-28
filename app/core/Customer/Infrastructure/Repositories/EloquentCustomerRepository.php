@@ -37,25 +37,6 @@ class EloquentCustomerRepository implements CustomerRepositoryInterface
         $entity->id = $create['id'];
         return $entity;
     }
-    public function all(array $data): array {
-        $list = CustomerModel::select("customers.*","customer_group.name as group_name",
-        DB::raw("count(orders.id) as total_order" ))
-        ->join("customer_group","customer_group.id","=","customers.group")
-        ->leftJoin("orders","orders.customer_id","=","customers.id")
-        ->where('customers.business_id',$data['business_id'])
-        ->groupBy("customers.id")
-        ->orderBy("customers.id",$data['order_by']);
-        if(!empty($data['type'])) {
-            $list = $list->where('customers.type',$data['type']);
-        }
-        if(!empty($data['keywords'])) {
-            $list = $list->where('customers.name','like','%'.$data['keywords'].'%');
-        }
-        if(isset($data['active'])) {
-            $list = $list->where('customers.active',$data['active']);
-        }
-        return $list->paginate(15)->toArray();
-    }
     public function update(Customer $entity) : Customer {
         CustomerModel::where('id',$entity->id)
         ->where('business_id',$entity->business_id)

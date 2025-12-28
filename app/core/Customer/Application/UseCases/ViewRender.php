@@ -34,13 +34,23 @@ class ViewRender
                 module: 'Customer'
             )
         );
+        $search = $this->hooks->dispatch(
+            new HookContext(
+                action: HookAction::SEARCH,
+                phase: HookPhase::UI,
+                timing: HookTiming::ON,
+                payload: $data,
+                module: 'Customer'
+            )
+        );
         return [
             'form' => [
                 ...$form
             ],
             'index' => [
                 ...$index
-            ]
+            ],
+            'search' => $search
         ];
     }
 }
