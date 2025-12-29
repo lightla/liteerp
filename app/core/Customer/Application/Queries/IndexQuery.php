@@ -39,8 +39,9 @@ class IndexQuery implements QueryInterface
                 module: 'Customer'
             )
         );
+        $list = $hooks['query'];
         if ($dto->type) {
-            $list = $hooks['query']->where('customers.type', $dto->type);
+            $list = $list->where('customers.type', $dto->type);
         }
         if ($dto->keywords) {
             $list = $list->where('customers.name', 'like', '%' . $dto->keywords . '%');

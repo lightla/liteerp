@@ -11,6 +11,7 @@ import CustomerForm from './ListCustomer/CustomerForm';
 import StatusBadge from '../StatusBadge'
 import RenderFormTableByList from '../RenderFieldTableByList';
 import ButtonPrimary from '../../components/UI/Buttons/PrimaryButton'
+import { RenderTableSearch } from '../RenderTableSearch';
 export default function ListCustomer() {
     const table = useTable();
     const search = useForm();
@@ -121,24 +122,9 @@ export default function ListCustomer() {
         CustomerService.view()
             .then((resp) => {
                 form.setHookRender(resp.message?.form);
-                table.setColums((prev) => {
-                    const existingKeys = new Set(prev.map((i) => i.key));
-
-                    const next = [...prev];
-
-                    resp.message.index.forEach((item) => {
-                        if (!existingKeys.has(item.key)) {
-                            next.push({
-                                ...item,
-                                render: (data) => {
-                                    return <RenderFormTableByList item={item} data={data} />
-                                }
-                            });
-                        }
-                    });
-
-                    return next;
-                });
+                table.addColums(resp.message.index,(item,data) => {
+                    return <RenderFormTableByList item={item} data={data} /> 
+                })
                 search.setHookRender(resp.message?.search ?? [])
 
             })
@@ -209,24 +195,9 @@ export default function ListCustomer() {
                         ]} />
                 </div>
                 {search.hookRender.map((item, index) => {
-                    return item.type === 'select' ? <div className='col-2 ml-2'>
-                        <label>{item.label}</label>
-                        <Select
-                            name={item.key}
-                            value={search.formData?.[item.key]}
-                            handleChange={search.handleChange}
-                            errorMessage={search.formErrors?.[item.key]}
-                            options={item.options} />
-                    </div> : item.type === 'search' ? <div className='col-3  ml-2'>
-                        <label>{item.label}</label>
-                        <SearchInput
-                            submit={getCustomers}
-                            placeholder={item.placeholder}
-                            value={search.formData?.[item.key]}
-                            name={item.key}
-                            handleChange={search.handleChange}
-                        />
-                    </div> : null
+                    return <div key={index} className='col-3 ml-2'>
+                        <RenderTableSearch item={item} search={search}/>
+                    </div>
                 })}
                 <div className='col-6 mx-2'>
                     <label>Search</label>
