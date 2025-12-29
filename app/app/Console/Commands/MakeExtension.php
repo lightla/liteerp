@@ -64,6 +64,10 @@ class ExtensionServiceProvider extends ServiceProvider
     public function register()
     {
         //
+        \$this->app->tag(
+            \Extensions\\{$name}\\Hooks\ViewShowHook::class,
+            'liteerp.hooks'
+        );
     }
 
     public function boot()
@@ -88,29 +92,54 @@ Route::middleware(['web'])
 PHP);
 
         // Hook example
-        $fs->put("{$base}/Hooks/ExampleHook.php", <<<PHP
+        $fs->put("{$base}/Hooks/ViewShowHook.php", <<<PHP
 <?php
 
-namespace {$namespace}\Hooks;
+namespace Extensions\\{$name}\\Hooks;
 
-class ExampleHook
+use App\Supports\Forms\FormFieldRender;
+use App\Supports\Forms\FormFieldType;
+use App\Supports\Hooks\HookContext;
+use App\Contracts\Hooks\HookInterface;
+use App\Supports\Hooks\HookAction;
+use App\Supports\Hooks\HookPhase;
+use App\Supports\Hooks\HookResult;
+use App\Supports\Hooks\HookTiming;
+
+class ViewShowHook implements HookInterface
 {
-    public function handle(object \$event): array
+    public static function supports(HookContext \$context): bool
     {
-        return \$event;
+        return \$context->action === HookAction::SHOW
+            && \$context->phase === HookPhase::UI
+            && \$context->timing === HookTiming::ON;
+    }
+
+    public function handle(HookContext \$context): HookResult
+    {
+        \$form = new FormFieldRender(
+            type: FormFieldType::TEXT,
+            value: '',
+            key: 'fax',
+            label: 'Fax'
+        );
+        return HookResult::pass([
+            ...\$context->payload,
+            \$form->toArray()
+        ]);
     }
 }
 PHP);
 
         // Model
-        $fs->put("{$base}/Models/ExampleModel.php", <<<PHP
+        $fs->put("{$base}/Models/{$name}Model.php", <<<PHP
 <?php
 
 namespace {$namespace}\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class ExampleModel extends Model
+class {$name}Model extends Model
 {
     protected \$guarded = [];
 }
