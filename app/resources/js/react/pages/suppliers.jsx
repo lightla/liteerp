@@ -13,49 +13,16 @@ import { usePopup } from '../components/popups/PopupContext'
 import PageHead from '../components/PageHead';
 import { substring } from '../libraries/common';
 import StatusBadge from '../components/StatusBadge';
+import RenderFormFieldByList from '../components/RenderFormFieldByList'
+import PrimaryButton from '../components/UI/Buttons/PrimaryButton'
+import RenderFormTableByList from '../components/RenderFieldTableByList';
+import { RenderTableSearch } from '../components/RenderTableSearch'
 export default function Suppliers() {
     const { openPopup } = usePopup();
     const [addShow, setAddShow] = useState(false);
     const search = useForm();
     const form = useForm();
     const table = useTable();
-    const columns = [
-        { label: "ID", key: "id" },
-        {
-            label: "Unit Name", key: "unit_name", render: (name) => {
-                return <span>
-                    {substring(name, 0, 30)}
-                </span>
-            }
-        },
-        { label: "Email", key: "email" },
-        { label: "Phone Number", key: "phone" },
-        {
-            label: "Address", key: "address", render: (address) => {
-                return <span>
-                    {substring(address, 0, 30)}
-                </span>
-            }
-        },
-        { label: "Tax Code", key: "tax_code" },
-        { label: "Bank Name", key: "bank_name" },
-        { label: "Bank Account", key: "bank_account" },
-        {
-            label: "Website", key: "website", render: (website) => {
-                return <span>
-                    {substring(website, 0, 30)}
-                </span>
-            }
-        },
-        {
-            label: "Status",
-            key: "active",
-            render: (value) => (
-                <StatusBadge status={value ? 'active' : 'inactive'}/>
-            ),
-        },
-    ];
-
 
     const handleEdit = (row) => {
         console.log("Edit clicked:", row);
@@ -67,10 +34,8 @@ export default function Suppliers() {
     const getSupliers = useCallback((page = 0) => {
         table.setLoading(true);
         SupplierService.list({
-            page: page,
-            keywords: search.formData?.keyword ?? '',
-            active: search.formData?.active ?? '',
-            order_by : search.formData?.order_by ?? ''
+            ...search.formData,
+            page: page
         })
             .then((resp) => {
                 table.setData(resp.message.data);
@@ -169,9 +134,65 @@ export default function Suppliers() {
             })
     }, [form.formData]);
 
+    const getView = useCallback(() => {
+        SupplierService.view()
+            .then((resp) => {
+                form.setHookRender(resp.message?.form)
+                search.setHookRender(resp.message?.search)
+                table.addColums(resp.message.index, (item, data) => {
+                    return <RenderFormTableByList item={item} data={data} />
+                })
+            })
+            .catch((error) => {
+                if (error.response.data?.message) {
+                    openPopup({
+                        type: 'error',
+                        message: error.response.data?.message
+                    })
+                }
+            })
+    }, []);
+
     useEffect(() => {
         getSupliers();
-    }, [search.formData?.active,search.formData?.order_by]);
+        getView();
+        table.setColums([
+            { label: "ID", key: "id" },
+            {
+                label: "Unit Name", key: "unit_name", render: (name) => {
+                    return <span>
+                        {substring(name, 0, 30)}
+                    </span>
+                }
+            },
+            { label: "Email", key: "email" },
+            { label: "Phone Number", key: "phone" },
+            {
+                label: "Address", key: "address", render: (address) => {
+                    return <span>
+                        {substring(address, 0, 30)}
+                    </span>
+                }
+            },
+            { label: "Tax Code", key: "tax_code" },
+            { label: "Bank Name", key: "bank_name" },
+            { label: "Bank Account", key: "bank_account" },
+            {
+                label: "Website", key: "website", render: (website) => {
+                    return <span>
+                        {substring(website, 0, 30)}
+                    </span>
+                }
+            },
+            {
+                label: "Status",
+                key: "active",
+                render: (value) => (
+                    <StatusBadge status={value ? 'active' : 'inactive'} />
+                ),
+            },
+        ])
+    }, []);
     return (
         <DashboardLayout>
             <div>
@@ -185,6 +206,7 @@ export default function Suppliers() {
 
                 <div>
                     <CommonDataTable
+                        columns={table.colums}
                         filter={<div className='d-flex'>
                             <div className='col-3'>
                                 <label>Status</label>
@@ -196,7 +218,8 @@ export default function Suppliers() {
                                         { value: 0, label: 'Inactive' }
                                     ]} />
                             </div>
-                            <div className='col-3 mx-2'>
+                            <div className='col-3 ml-2'>
+
                                 <label>Order by</label>
                                 <Select
                                     name='order_by'
@@ -208,7 +231,12 @@ export default function Suppliers() {
                                         { value: 'DESC', label: 'Newest' }
                                     ]} />
                             </div>
-                            <div className='col-6'>
+                            {search.hookRender.map((item, index) => {
+                                return <div className='col-3 ml-2' key={index}>
+                                    <RenderTableSearch item={item} search={search} />
+                                </div>
+                            })}
+                            <div className='col-6 ml-2'>
                                 <label>Keywords</label>
                                 <SearchInput
                                     name='keywords'
@@ -217,13 +245,15 @@ export default function Suppliers() {
                                     handleChange={search.handleChange}
                                     placeholder='search by name' />
                             </div>
+                            <div className='col-2 mx-2'>
+                                <PrimaryButton onClick={getSupliers} label='Search' />
+                            </div>
                         </div>}
                         add={() => {
                             setAddShow(true);
                             form.setIsEdit(false);
                         }}
                         loading={table.loading}
-                        columns={columns}
                         data={table.data}
                         links={table.links}
                         onEdit={handleEdit}
@@ -329,6 +359,13 @@ export default function Suppliers() {
                                     If it is not active then you can not select on the purchases
                                 </span>
                             </div>
+                            {form.hookRender.map((item, index) => {
+                                return <div key={index}>
+                                    <RenderFormFieldByList
+                                        form={form}
+                                        item={item} />
+                                </div>
+                            })}
                         </div>
                     </PopupLayout> : null}
 
