@@ -13,32 +13,15 @@ import SearchInput from '../components/UI/Input/SearchInput';
 import PageHead from '../components/PageHead';
 import FlatIcon32 from '../components/UI/FlatIcons/FlatIcon32'
 import UploadImage from '../components/UI/Input/UploadImage';
+import RenderFormTableByList from '../components/RenderFieldTableByList';
+import RenderFormFieldByList from '../components/RenderFormFieldByList'
+import {RenderTableSearch} from '../components/RenderTableSearch'
 export default function Shipping() {
     const { openPopup } = usePopup();
     const table = useTable();
     const form = useForm();
     const search = useForm();
     const [showAdd, setShowAdd] = useState(false);
-    const columns = [
-        {
-            label: "Logo", key: "logo", render: (value) => {
-                return value ? <img width={45} height={45} src={value} alt='' /> :
-                    <FlatIcon32 />
-            }
-        },
-        { label: "ID", key: "id" },
-        { label: "Name", key: "name" },
-        { label: "Code", key: "code" },
-        {
-            label: "Status", key: "active", render: (active) => {
-                return active ? <span className='badge bg-success'>
-                    Working
-                </span> : <span className='badge bg-secondary'>
-                    Stop
-                </span>
-            }
-        }
-    ];
     const handEdit = (row) => {
         form.setFormData(row);
         form.setIsEdit(true);
@@ -103,7 +86,7 @@ export default function Shipping() {
         table.setLoading(true)
         ShippingService.list({
             page: page,
-            keywords: form.formData?.keywords ?? ''
+            ...search.formData
         })
             .then((resp) => {
                 table.setData(resp.message.data)
@@ -118,7 +101,26 @@ export default function Shipping() {
                     })
                 }
             })
-    }, [table, form.formData?.keywords]);
+    }, [search.formData]);
+    const getView = useCallback(() => {
+        table.setLoading(true)
+        ShippingService.view()
+            .then((resp) => {
+                table.addColums(resp.message.index, (item, data) => {
+                    return <RenderFormTableByList item={item} data={data} />
+                });
+                form.setHookRender(resp.message.form);
+                search.setHookRender(resp.message.search)
+            })
+            .catch((error) => {
+                if (error.response.data?.message) {
+                    openPopup({
+                        type: 'error',
+                        message: error.response.data?.message
+                    })
+                }
+            })
+    }, []);
     const destroy = useCallback((row) => {
         ShippingService.delete(row)
             .then((resp) => {
@@ -148,6 +150,27 @@ export default function Shipping() {
     }
     useEffect(() => {
         getShippings();
+        getView();
+        table.setColums([
+            {
+                label: "Logo", key: "logo", render: (value) => {
+                    return value ? <img width={45} height={45} src={value} alt='' /> :
+                        <FlatIcon32 />
+                }
+            },
+            { label: "ID", key: "id" },
+            { label: "Name", key: "name" },
+            { label: "Code", key: "code" },
+            {
+                label: "Status", key: "active", render: (active) => {
+                    return active ? <span className='badge bg-success'>
+                        Working
+                    </span> : <span className='badge bg-secondary'>
+                        Stop
+                    </span>
+                }
+            }
+        ]);
     }, []);
     return <DashboardLayout>
         <div>
@@ -161,8 +184,13 @@ export default function Shipping() {
                         setShowAdd(true);
                         form.setIsEdit(false);
                     }}
-                    filter={<div>
-                        <div>
+                    filter={<div className='d-flex'>
+                        {search.hookRender.map((item,index) => {
+                            return <div className='col-3' key={index}>
+                                <RenderTableSearch item={item} search={search} />
+                            </div>
+                        })}
+                        <div className='col-6 ml-2'>
                             <label>Keywords</label>
                             <SearchInput
                                 submit={getShippings}
@@ -171,12 +199,15 @@ export default function Shipping() {
                                 value={search.formData?.keywords}
                             />
                         </div>
+                        <div className='col-2 ml-2'>
+                            <PrimaryButton label='search' onClick={() => getShippings(0)} />
+                        </div>
                     </div>}
                     loading={table.loading}
                     movePage={getShippings}
                     data={table.data}
                     links={table.links}
-                    columns={columns}
+                    columns={table.colums}
                     onEdit={handEdit}
                     onDelete={handleDelete} />
             </div>
@@ -231,6 +262,11 @@ export default function Shipping() {
                                 />
                             </div>
                         </div>
+                        {form.hookRender.map((item, index) => {
+                            return <div className='form-group mt-3' key={index}>
+                                <RenderFormFieldByList item={item} form={form}/>
+                            </div>
+                        })}
                     </div>
                 </PopupLayout> : null}
 

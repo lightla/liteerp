@@ -30,17 +30,6 @@ class EloquentShippingRepository implements ShippingRepositoryInterface
         ->where('id',$entity->id)->update($entity->toArray());
         return $entity;
     }
-    public function index(array $data): array
-    {
-        $index = ShippingProviderModel::where('business_id',$data['business_id']);
-        if(!empty($data['keywords'])) {
-            $index->where('name','like','%' . $data['keywords'] . '%');
-        }
-        if(isset($data['active'])) {
-            $index->where('name',$data['active']);
-        }
-        return $index->paginate(15)->toArray();
-    }
     public function findByName(array $data): ?Shipping
     {
         $row = ShippingProviderModel::where('business_id',$data['business_id'])

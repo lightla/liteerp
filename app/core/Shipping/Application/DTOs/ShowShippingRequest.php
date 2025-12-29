@@ -2,31 +2,28 @@
 
 namespace Core\Shipping\Application\DTOs;
 
-class IndexShippingRequest
+class ShowShippingRequest
 {
     public function __construct(
-        public ?bool $active = null,
-        public ?string $keywords = null,
         public int $business_id,
-        public int $created_by  
+        public ?int $id = null,
+        public ?int $created_by = null  
     ) {}
 
     public static function fromArray(array $data): self
     {
         return new self(
-            active: $data['active'] ?? false,
-            business_id: $data['business_id'],
-            keywords: $data['keywords'] ?? null,
-            created_by: $data['user_id'] 
+            business_id: (int) $data['business_id'] ?? null,
+            id: $data['id'] ?? null,
+            created_by: $data['user_id'] ?? null 
         );
     }
 
     public function toArray(): array
     {
         return [
-            'active' => $this->active,
             'business_id' => $this->business_id,
-            'keywords'     => $this->keywords,
+            'id'     => $this->id,
             'created_by'    => $this->created_by
         ];
     }

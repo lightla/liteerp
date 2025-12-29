@@ -24,10 +24,6 @@ class ShippingServiceImpl implements ShippingService
     {
         return $this->repo->findById($data) ?? throw new BadException(__("Not found data"));
     }
-    public function index(array $data): array
-    {
-        return $this->repo->index($data);
-    }
     public function update(array $data): Shipping | BadException
     {
         $row = $this->repo->findByName($data);

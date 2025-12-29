@@ -1,0 +1,50 @@
+<?php
+
+namespace Core\Shipping\Application\Queries;
+
+use App\Contracts\Queries\QueryInterface;
+use App\Models\ShippingProviderModel;
+use App\Supports\Hooks\HookAction;
+use App\Supports\Hooks\HookContext;
+use App\Supports\Hooks\HookDispatcher;
+use App\Supports\Hooks\HookPhase;
+use App\Supports\Hooks\HookTiming;
+use Core\Shipping\Application\DTOs\IndexShippingRequest;
+use Illuminate\Support\Facades\Event;
+
+class IndexQuery implements QueryInterface
+{
+    function __construct(private HookDispatcher $dispatch) {}
+    public function handle(array $data): array
+    {
+        $dto = IndexShippingRequest::fromArray($data);
+        Event::dispatch("erp.shipping.index", [
+            ...$dto->toArray(),
+            'user_id' => $dto->created_by,
+            'business_id' => $dto->business_id
+        ]);
+        $index = ShippingProviderModel::select("shipping_providers.*")
+        ->where('shipping_providers.business_id', $data['business_id']);
+        $hooks = $this->dispatch->dispatch(
+            new HookContext(
+                action: HookAction::INDEX,
+                phase: HookPhase::RESPONSE,
+                timing: HookTiming::ON,
+                payload: [
+                    'query' => $index,
+                    'data' => $data
+                ],
+                module: 'Shipping'
+            )
+        );
+        $data = $hooks['data'];
+        $index = $hooks['query'];
+        if (!empty($data['keywords'])) {
+            $index->where('shipping_providers.name', 'like', '%' . $data['keywords'] . '%');
+        }
+        if (isset($data['active'])) {
+            $index->where('shipping_providers.active', $data['active']);
+        }
+        return $index->paginate(15)->toArray();
+    }
+}
