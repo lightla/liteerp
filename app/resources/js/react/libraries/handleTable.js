@@ -5,6 +5,7 @@ export default function useTable(){
     const [links,setLinks] = useState([]);
     const [loading,setLoading] = useState(false);
     const [total,setTotal] = useState(0);
+    const [colums,setColums] = useState([]);
     return {
         data,
         setData,
@@ -13,6 +14,8 @@ export default function useTable(){
         loading,
         setLoading,
         total,
-        setTotal
+        setTotal,
+        colums,
+        setColums
     }
 }

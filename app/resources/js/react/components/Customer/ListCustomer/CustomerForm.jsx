@@ -5,6 +5,7 @@ import TextArea from '../../UI/Input/Textarea'
 import useTable from '../../../libraries/handleTable'
 import SearchSelect from '../../UI/Input/SearchSelect'
 import CustomerGroupService from '../../../services/CustomerGroupService'
+import RenderFormFieldByList from '../../RenderFormFieldByList'
 export default function CustomerForm({
     form = {
         handleChange: null,
@@ -135,29 +136,7 @@ export default function CustomerForm({
             </div>
             {form?.hookRender.map((item, index) => {
                 return <div key={index}>
-                    <label>{item.label ?? 'label'}</label>
-                    {item.type === 'textarea' ? <TextArea
-                        name={item.key}
-                        handleChange={form.handleChange}
-                        value={form.formData?.[item.key]}
-                        errorMessage={form.formErrors?.[item.key]}
-                        placeholder={item.placeHolder}
-                    />
-                        : item.type === 'select' ? <Select
-                            name={item.key}
-                            handleChange={form.handleChange}
-                            value={form.formData?.[item.key]}
-                            errorMessage={form.formErrors?.[item.key]}
-                            placeholder={item.placeHolder}
-                            options={item.options}
-                        />
-                            : <InputForm 
-                            name={item.key}
-                            handleChange={form.handleChange}
-                            value={form.formData?.[item.key]}
-                            errorMessage={form.formErrors?.[item.key]}
-                            placeholder={item.placeHolder}
-                            />}
+                    <RenderFormFieldByList item={item} form={form}/>
                 </div>
             })}
         </div>

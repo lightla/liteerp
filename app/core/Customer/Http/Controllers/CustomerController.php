@@ -6,6 +6,7 @@ use Core\Customer\Application\UseCases\CreateCustomer;
 use Core\Customer\Application\DTOs\CreateCustomerRequest;
 use Core\Customer\Application\DTOs\DeleteCustomerRequest as DTOsDeleteCustomerRequest;
 use Core\Customer\Application\DTOs\IndexCustomerRequest as DTOsIndexCustomerRequest;
+use Core\Customer\Application\Queries\IndexQuery;
 use Core\Customer\Application\UseCases\DeleteCustomer;
 use Core\Customer\Application\UseCases\IndexCustomer;
 use Core\Customer\Application\UseCases\UpdateCustomer;
@@ -21,8 +22,8 @@ class CustomerController
         $entity = $useCase->handle($request->all());
         return response()->json(['message' => $entity]);
     }
-    public function index(IndexCustomerRequest $request, IndexCustomer $useCase) {
-        $entity = $useCase->handle($request->all());
+    public function index(IndexCustomerRequest $request, IndexQuery $IndexQuery) {
+        $entity = $IndexQuery->handle($request->all());
         return response()->json(['message' => $entity]);
     }
     public function update(UpdateCustomerRequest $request,UpdateCustomer $useCase,string $id) {

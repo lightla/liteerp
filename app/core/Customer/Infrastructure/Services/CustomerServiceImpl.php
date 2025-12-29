@@ -20,10 +20,6 @@ class CustomerServiceImpl implements CustomerService
         $entity = Customer::fromArray($data);
         return $this->repo->create($entity);
     }
-    public function index(array $data): array
-    {
-        return $this->repo->all($data);
-    }
     public function update(array $data): Customer
     {
         $entity = $this->repo->findByPhone($data);

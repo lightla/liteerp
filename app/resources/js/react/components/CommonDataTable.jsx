@@ -3,6 +3,7 @@ import React from "react";
 export default function CommonDataTable({
   columns = [],
   data = [],
+  extension = [],
   onEdit = null,
   onDelete = null,
   filter = null,
