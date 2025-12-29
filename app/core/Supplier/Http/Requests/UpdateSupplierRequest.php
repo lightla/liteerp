@@ -2,11 +2,16 @@
 
 namespace Core\Supplier\Http\Requests;
 
+use App\Supports\Hooks\HookAction;
+use App\Supports\Hooks\HookContext;
+use App\Supports\Hooks\HookDispatcher;
+use App\Supports\Hooks\HookPhase;
+use App\Supports\Hooks\HookTiming;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdateSupplierRequest extends FormRequest
 {
-    public function rules(): array
+    public function rules(HookDispatcher $hooks): array
     {
         return [
             'unit_name'     => 'required|string|max:150',
@@ -18,7 +23,16 @@ class UpdateSupplierRequest extends FormRequest
             'bank_account'  => 'nullable|string|max:100',
             'website'       => 'nullable|url|max:150',
             'note'          => 'nullable|string|max:250',
-            'active'        => 'required|boolean'
+            'active'        => 'required|boolean',
+            ...$hooks->dispatch(
+                new HookContext(
+                    action: HookAction::UPDATE,
+                    phase: HookPhase::VALIDATE,
+                    timing: HookTiming::ON,
+                    payload: [],
+                    module: 'Supplier'
+                )
+            )
         ];
     }
 

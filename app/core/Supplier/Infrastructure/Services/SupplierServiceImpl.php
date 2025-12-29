@@ -21,10 +21,6 @@ class SupplierServiceImpl implements SupplierService
 
         return $this->repo->create($entity);
     }
-    public function index(array $data): array
-    {
-        return $this->repo->index($data);
-    }
     public function update(array $data) : Supplier | BadException {
         $entity = $this->repo->findByName($data);
         if($entity && $entity->id !== $data['id']) {

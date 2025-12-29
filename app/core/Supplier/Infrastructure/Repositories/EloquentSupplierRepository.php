@@ -14,16 +14,6 @@ class EloquentSupplierRepository implements SupplierRepositoryInterface
         $entity->id = $create['id'];
         return $entity;
     }
-    public function index(array $data): array {
-        $list = SupplierModel::where('business_id',$data['business_id']);
-        if(isset($data['active'])) {
-            $list = $list->where('active',$data['active']);
-        }
-        if(!empty($data['keywords'])) {
-            $list = $list->where('unit_name','like','%'.$data['keywords'].'%');
-        }
-        return $list->orderBy('id',$data['order_by'])->paginate(15)->toArray();
-    }
     public function findById(array $data): ?Supplier
     {
         $row = SupplierModel::where('id',$data['id'])
