@@ -13,7 +13,7 @@ class IndexPriceListRequest
     public static function fromArray(array $data): self
     {
         return new self(
-            keywords: $data['keywords'],
+            keywords: $data['keywords'] ?? null,
             created_by: $data['user_id'],
             business_id: $data['business_id']
         );

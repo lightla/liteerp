@@ -15,7 +15,7 @@ class PriceListServiceImpl implements PriceListService
     {
         $entity = $this->repo->findByProductAndGroup($data);
         if($entity) {
-           throw new BadException(__("This product has been used this warehouse")); 
+           throw new BadException(__("This product has been used this group")); 
         }
         $entity = PriceList::fromArray($data);
         return $this->repo->create($entity);

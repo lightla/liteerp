@@ -12,20 +12,24 @@ import SearchSelect from '../UI/Input/SearchSelect';
 import CustomerGroupService from '../../services/CustomerGroupService'
 import Currency from '../../components/Currencies';
 import { useSelector } from 'react-redux';
+import RenderFormFieldByList from '../RenderFormFieldByList';
+import RenderFieldTableByList from '../RenderFieldTableByList'
+import { RenderTableSearch } from '../RenderTableSearch';
+import PrimaryButton from '../UI/Buttons/PrimaryButton';
 export default function PriceList() {
     const business = useSelector((state) => state.business.data);
     const { openPopup } = usePopup();
     const [showAdd, setShowAdd] = useState(false);
     const search = useForm();
-        const form = useForm();
+    const form = useForm();
     const table = useTable();
-    const [products,setProducts] = useState([]);
-    const [groups,setGroups] = useState([]);
+    const [products, setProducts] = useState([]);
+    const [groups, setGroups] = useState([]);
     const getPriceList = useCallback((page = 0) => {
         table.setLoading(true);
         PriceListService.list({
             page: page,
-            keywords: search.formData?.keywords ?? ''
+            ...search.formData
         })
             .then((resp) => {
                 table.setData(resp.message.data)
@@ -35,15 +39,15 @@ export default function PriceList() {
             .catch((error) => {
 
             })
-    }, [search.formData?.keywords]);
-    const getProducts = useCallback((keywords = '',callback = null) => {
+    }, [search.formData]);
+    const getProducts = useCallback((keywords = '', callback = null) => {
         ProductService.list({
             page: 0,
             keywords: keywords
         })
             .then((resp) => {
                 setProducts(resp.message.data);
-                if(callback) {
+                if (callback) {
                     callback();
                 }
             })
@@ -56,14 +60,14 @@ export default function PriceList() {
                 }
             })
     }, []);
-    const getGroup = useCallback((keywords = '',callback = null) => {
+    const getGroup = useCallback((keywords = '', callback = null) => {
         CustomerGroupService.list({
             keywords: keywords,
             page: 0
         })
             .then((resp) => {
                 setGroups(resp.message.data)
-                if(callback) {
+                if (callback) {
                     callback();
                 }
             })
@@ -123,24 +127,14 @@ export default function PriceList() {
                 form.setLoading(false)
             })
     }, [form.formData]);
-    const columns = [
-        { label: "ID", key: "id" },
-        { label: "Name", key: "name" },
-        { label: "Price", key: "price", render: (value) => {
-            return <strong>
-                <Currency amount={value}/>
-            </strong>
-        } },
-        { label: "Customer Group", key: "group" }
-    ];
     const destroy = useCallback((row) => {
         PriceListService.delete(row)
             .then((resp) => {
                 openPopup({
-                        type: 'success',
-                        message: 'You has been deleted'
-                    });
-                    getPriceList();
+                    type: 'success',
+                    message: 'You has been deleted'
+                });
+                getPriceList();
             })
             .catch((error) => {
                 if (error.response.data?.message) {
@@ -155,24 +149,57 @@ export default function PriceList() {
         openPopup({
             type: 'warning',
             message: 'Are you sure to delete?',
-            onConfirm:() => {
+            onConfirm: () => {
                 destroy(row)
             }
         })
     }
+    const view = useCallback((row) => {
+        PriceListService.view()
+            .then((resp) => {
+                form.setHookRender(resp.message.form)
+                search.setHookRender(resp.message.search)
+                table.addColums(resp.message.index,(item,data) => {
+                    return <RenderFieldTableByList item={item} data={data}/>
+                })
+            })
+            .catch((error) => {
+                if (error.response.data?.message) {
+                    openPopup({
+                        type: 'error',
+                        message: error.response.data?.message
+                    })
+                }
+            })
+    }, []);
     useEffect(() => {
         getPriceList();
-    },[])
+        view();
+        table.setColums([
+            { label: "ID", key: "id" },
+            { label: "Name", key: "name" },
+            {
+                label: "Price", key: "price", render: (value) => {
+                    return <strong>
+                        <Currency amount={value} />
+                    </strong>
+                }
+            },
+            { label: "Customer Group", key: "group" }
+        ]);
+    }, [])
     const hasPermission = useMemo(() => {
-                return business.role === 'manager'
-                    || business.role === 'admin' ? true : false
-            },[business]);
+        return business.role === 'manager'
+            || business.role === 'admin' ? true : false
+    }, [business]);
     return <div>
         <div className='mt-3'>
             <CommonDataTable
                 loading={table.loading}
-                filter={<div>
+                filter={<div className='d-flex'>
+                    
                     <div className='col-4'>
+                        <label>Keywords</label>
                         <SearchInput
                             name='keywords'
                             value={search.formData?.keywords}
@@ -180,13 +207,21 @@ export default function PriceList() {
                             handleChange={search.handleChange}
                             placeholder='Search by name' />
                     </div>
+                    {search.hookRender.map((item,index) => {
+                        return <div className='col-4 ml-2' key={index}>
+                            <RenderTableSearch item={item} search={search}/>
+                        </div>
+                    })}
+                    <div className='col-2 ml-2'>
+                        <PrimaryButton label='Search' onClick={() => getPriceList()} />
+                    </div>
                 </div>}
                 add={!hasPermission ? null : () => {
                     setShowAdd(true);
                     form.setIsEdit(false);
                 }}
                 movePage={getPriceList}
-                columns={columns}
+                columns={table.colums}
                 data={table?.data}
                 links={table?.links}
                 onEdit={!hasPermission ? null : (row) => {
@@ -245,6 +280,11 @@ export default function PriceList() {
                             defaultKeywords={form.formData?.group}
                         />
                     </div>
+                    {form.hookRender.map((item,index) => {
+                        return <div className='form-group mt-3' key={index}>
+                            <RenderFormFieldByList item={item} form={form}/>
+                        </div>
+                    })}
                 </div>
             </PopupLayout> : null}
         </div>
