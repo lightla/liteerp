@@ -28,7 +28,7 @@ class IndexQuery implements QueryInterface
         $hooks = $this->dispatch->dispatch(
             new HookContext(
                 action: HookAction::INDEX,
-                phase: HookPhase::RESPONSE,
+                phase: HookPhase::QUERY,
                 timing: HookTiming::ON,
                 payload: [
                     'query' => $index,
