@@ -9,9 +9,11 @@ import { InputForm } from '../UI/Input/InputForm';
 import TextArea from '../UI/Input/Textarea';
 import { usePopup } from '../popups/PopupContext'
 import { useSelector } from 'react-redux';
-import TabsCommon from '../TabsCustom';
 import PrimaryButton from '../UI/Buttons/PrimaryButton'
 import { Select } from '../UI/Input/Select';
+import RenderFieldTableByList from '../RenderFieldTableByList';
+import RenderFormFieldByList from '../RenderFormFieldByList'
+import {RenderTableSearch} from '../RenderTableSearch'
 export default function Category() {
     const business = useSelector((state) => state.business.data);
     const [attributes, setAttributes] = useState([]);
@@ -26,7 +28,7 @@ export default function Category() {
         tableCategory.setLoading(true);
         ProductService.listCategory({
             page: page,
-            keywords: search.formData?.keywords ?? ''
+            ...search.formData
         })
             .then((resp) => {
                 tableCategory.setData(resp.message.data)
@@ -36,7 +38,7 @@ export default function Category() {
             .catch((error) => {
 
             })
-    }, [search.formData?.keywords]);
+    }, [search.formData]);
     
     const resetAttribute = () => {
         setAttributes([]);
@@ -130,6 +132,24 @@ export default function Category() {
                 }
             })
     }, []);
+    const view = useCallback(() => {
+        ProductService.viewCategory()
+            .then((resp) => {
+                form.setHookRender(resp.message?.form);
+                search.setHookRender(resp.message?.search);
+                tableCategory.addColums(resp.message?.index,(item,data) => {
+                    return <RenderFieldTableByList item={item} data={data}/>
+                })
+            })
+            .catch((error) => {
+                if (error.response.data?.message) {
+                    openPopup({
+                        type: 'error',
+                        message: error.response.data?.message
+                    })
+                }
+            })
+    }, []);
     const handleDelete = useCallback((row) => {
         openPopup({
             type: 'warning',
@@ -199,8 +219,8 @@ export default function Category() {
     };
     useEffect(() => {
         getCategorires();
-    }, [])
-    const columns = [
+        view();
+        tableCategory.setColums([
         { label: "ID", key: "id" },
         { label: "Name", key: "name" },
         {
@@ -214,7 +234,8 @@ export default function Category() {
                 return <span className='badge bg-primary'>{name}</span>
             }
         }
-    ];
+    ])
+    }, [])
     const hasPermission = useMemo(() => {
         return business.role === 'manager'
             || business.role === 'admin' ? true : false
@@ -223,8 +244,9 @@ export default function Category() {
         <div className='mt-3'>
             <CommonDataTable
                 loading={tableCategory.loading}
-                filter={<div>
+                filter={<div className='d-flex'>
                     <div className='col-4'>
+                        <label>Keywords</label>
                         <SearchInput
                             name='keywords'
                             value={search.formData?.keywords}
@@ -232,13 +254,21 @@ export default function Category() {
                             handleChange={search.handleChange}
                             placeholder='Search by name' />
                     </div>
+                    {search.hookRender.map((item,index) => {
+                        return <div className='col-3 ml-2' key={index}>
+                            <RenderTableSearch item={item} search={search} />
+                        </div>
+                    })}
+                    <div className='col-2 ml-2'>
+                        <PrimaryButton onClick={() => getCategorires()} label='Search'  />
+                    </div>
                 </div>}
                 add={!hasPermission ? null : () => {
                     setShowAdd(true);
                     form.setIsEdit(false);
                 }}
                 movePage={getCategorires}
-                columns={columns}
+                columns={tableCategory.colums}
                 data={tableCategory?.data}
                 links={tableCategory?.links}
                 onEdit={!hasPermission ? null : handleEdit}
@@ -299,6 +329,11 @@ export default function Category() {
                                     <i className="bi bi-x"></i>
                                 </div>
                             </div>
+                        </div>
+                    })}
+                    {form.hookRender.map((item,index) => {
+                        return <div className='form-group mt-3' key={index}>
+                            <RenderFormFieldByList item={item} form={form} />
                         </div>
                     })}
                     <div className='row mt-3'>

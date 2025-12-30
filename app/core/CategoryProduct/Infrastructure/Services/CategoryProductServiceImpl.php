@@ -19,10 +19,6 @@ class CategoryProductServiceImpl implements CategoryProductService
         $entity = CategoryProduct::fromArray($data);
         return $this->repo->create($entity);
     }
-    public function index(array $data): array
-    {
-        return $this->repo->index($data);
-    }
     public function show(array $data) : CategoryProduct | BadException {
         return $this->repo->findById($data) ?? throw new BadException(__("Not found data"));
     }

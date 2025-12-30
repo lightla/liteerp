@@ -19,16 +19,6 @@ class EloquentCategoryProductRepository implements CategoryProductRepositoryInte
     {
         return CategoryProductModel::where('name',$data['name'])->where('business_id',$data['business_id'])->count() == false ? false : true;
     }
-    public function index(array $data): array
-    {
-        $index = CategoryProductModel::with(['attributes'])->select("category_product.*","users.name as created_by_name")
-        ->join("users","users.id","=","category_product.created_by")
-        ->where('category_product.business_id',$data['business_id']);
-        if(!empty($data['keywords'])) {
-            $index = $index->where('category_product.name','like','%' . $data['keywords'] . '%');
-        }
-        return $index->paginate(15)->toArray();
-    }
     public function findById(array $data): ?CategoryProduct
     {
         $exists = CategoryProductModel::where('id',$data['id'])

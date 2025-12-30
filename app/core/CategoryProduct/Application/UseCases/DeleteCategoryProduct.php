@@ -12,9 +12,10 @@ class DeleteCategoryProduct
 {
     public function __construct(private CategoryProductService $service) {}
 
-    public function handle(DeleteCategoryProductRequest $dto)
+    public function handle(array $data)
     {
         DB::beginTransaction();
+        $dto = DeleteCategoryProductRequest::fromArray($data);
         $update = $this->service->delete($dto->toArray());
         Event::dispatch("erp.categoryproduct.delete", [
             ...$update->toArray(),

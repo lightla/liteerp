@@ -13,7 +13,7 @@ class IndexCategoryProductRequest
     public static function fromArray(array $data): self
     {
         return new self(
-            keywords: $data['keywords'],
+            keywords: $data['keywords'] ?? null,
             business_id: $data['business_id'],
             created_by: $data['user_id'] ?? null
         );
