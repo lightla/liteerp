@@ -5,6 +5,7 @@ import { Select } from '../../UI/Input/Select'
 import TextArea from '../../UI/Input/Textarea'
 import SupplierService from '../../../services/SupplierService'
 import { isoToDateTime } from '../../../libraries/common'
+import RenderFormFieldByList from '../../RenderFormFieldByList'
 export default function PurchaseInformation({
     form= {
         formData: null,
@@ -122,5 +123,10 @@ export default function PurchaseInformation({
                 />
             </div>
         </div>
+        {form.hookRender.map((item,index) => {
+            return <div className='row' key={index}>
+                <RenderFormFieldByList item={item} form={form}/>
+            </div>
+        })}
     </div>
 }

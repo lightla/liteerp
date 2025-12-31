@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import FormStep from '../FormStep'
 import { useNavigate } from 'react-router-dom';
 import { usePopup } from '../popups/PopupContext';
@@ -40,6 +40,23 @@ export default function AddPurchase() {
                 form.setLoading(false)
             });
     }, [form]);
+    const view = useCallback(() => {
+        PurchaseService.view()
+            .then((resp) => {
+                form.setHookRender(resp.message.form)
+            })
+            .catch((error) => {
+                if (error.response.data?.message) {
+                    openPopup({
+                        type: 'error',
+                        message: error.response.data?.message
+                    })
+                }
+            });
+    }, []);
+    useEffect(() => {
+        view();
+    },[])
     return <div>
         <PageHead 
                 containerClass="mx-4"

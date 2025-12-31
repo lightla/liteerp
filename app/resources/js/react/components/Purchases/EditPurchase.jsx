@@ -141,8 +141,23 @@ export default function EditPurchase() {
         }
         setCurrentStep((pre) => pre - 1);
     }
+    const view = useCallback(() => {
+        PurchaseService.view()
+            .then((resp) => {
+                form.setHookRender(resp.message.form)
+            })
+            .catch((error) => {
+                if (error.response.data?.message) {
+                    openPopup({
+                        type: 'error',
+                        message: error.response.data?.message
+                    })
+                }
+            });
+    }, []);
     useEffect(() => {
         getPurchaseDetail();
+        view();
     }, []);
     return <div>
         <PageHead

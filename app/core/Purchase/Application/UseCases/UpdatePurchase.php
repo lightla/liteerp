@@ -3,6 +3,11 @@
 namespace Core\Purchase\Application\UseCases;
 
 use App\Exceptions\BadException;
+use App\Supports\Hooks\HookAction;
+use App\Supports\Hooks\HookContext;
+use App\Supports\Hooks\HookDispatcher;
+use App\Supports\Hooks\HookPhase;
+use App\Supports\Hooks\HookTiming;
 use Core\Purchase\Application\DTOs\UpdatePurchaseRequest;
 use Core\PurchaseItem\Application\UseCases\IndexPurchaseItem;
 use Core\Purchase\Domain\Services\PurchaseService;
@@ -13,26 +18,32 @@ use Illuminate\Support\Facades\Log;
 
 class UpdatePurchase
 {
-    public function __construct(private PurchaseService $service, 
-    private IndexPurchaseItem $purchaseItem) {}
+    public function __construct(private PurchaseService $service,
+    private HookDispatcher $hooks) {}
 
-    public function handle(UpdatePurchaseRequest $dto): Purchase
+    public function handle(array $data): Purchase
     {
         DB::beginTransaction();
-
+        $data = $this->hooks->dispatch(
+            new HookContext(
+                action: HookAction::UPDATE,
+                phase: HookPhase::RESPONSE,
+                timing: HookTiming::BEFORE,
+                payload: $data,
+                module: 'Purchase'
+            )
+        );
+        $dto = UpdatePurchaseRequest::fromArray($data);
         $update = $this->service->update($dto->toArray());
-
-        /**
-         * Check items 
-         */
-        $pItem = $this->purchaseItem->handle([
-            ...$dto->toArray(),
-            'purchase_id' => $dto->id
-        ]);
-        if(count($pItem) === 0) {
-            throw new BadException(__("You has not yet add product"));
-        }
-        
+        $data = $this->hooks->dispatch(
+            new HookContext(
+                action: HookAction::UPDATE,
+                phase: HookPhase::RESPONSE,
+                timing: HookTiming::AFTER,
+                payload: $data,
+                module: 'Purchase'
+            )
+        );
         if($update->isApproved()) {
             $forInvoice = $this->service->show($dto->toArray());
             $updateData = [

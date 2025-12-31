@@ -1,15 +1,53 @@
 <?php
 
 namespace Core\Purchase\Application\UseCases;
+
+use App\Supports\Hooks\HookAction;
+use App\Supports\Hooks\HookContext;
+use App\Supports\Hooks\HookDispatcher;
+use App\Supports\Hooks\HookPhase;
+use App\Supports\Hooks\HookTiming;
+use Core\Purchase\Application\DTOs\ShowPurchaseRequest;
 use Core\Purchase\Domain\Services\PurchaseService;
 use Core\Purchase\Domain\Entities\Purchase;
+use Illuminate\Support\Facades\Event;
 
 class ShowPurchase
 {
-    public function __construct(private PurchaseService $service) {}
+    public function __construct(private PurchaseService $service,
+    private HookDispatcher $hooks) {}
 
-    public function handle(array $dto): array
+    public function handle(array $data): array
     {
-        return $this->service->show($dto);
+        
+        $data = $this->hooks->dispatch(
+            new HookContext(
+                action: HookAction::SHOW,
+                phase: HookPhase::RESPONSE,
+                timing: HookTiming::BEFORE,
+                payload: $data,
+                module: 'Purchase'
+            )
+        );
+        $dto = ShowPurchaseRequest::fromArray($data);
+        $show = $this->service->show($data);
+        Event::dispatch("erp.purchase.show", [
+            ...$show,
+            'user_id' => $dto->created_by,
+            'business_id' => $dto->business_id
+        ]);
+        $data = $this->hooks->dispatch(
+            new HookContext(
+                action: HookAction::SHOW,
+                phase: HookPhase::RESPONSE,
+                timing: HookTiming::AFTER,
+                payload: [
+                    ...$data,
+                    ...$show
+                ],
+                module: 'Purchase'
+            )
+        );
+        return $data;
     }
 }

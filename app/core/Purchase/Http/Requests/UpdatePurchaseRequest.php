@@ -2,11 +2,16 @@
 
 namespace Core\Purchase\Http\Requests;
 
+use App\Supports\Hooks\HookAction;
+use App\Supports\Hooks\HookContext;
+use App\Supports\Hooks\HookDispatcher;
+use App\Supports\Hooks\HookPhase;
+use App\Supports\Hooks\HookTiming;
 use Illuminate\Foundation\Http\FormRequest;
 
 class UpdatePurchaseRequest extends FormRequest
 {
-    public function rules(): array
+    public function rules(HookDispatcher $hooks): array
     {
         return [
             'supplier_id'    => 'required|exists:suppliers,id',
@@ -15,7 +20,16 @@ class UpdatePurchaseRequest extends FormRequest
             'note'           => 'nullable|string|max:1000',
             'shipping_fee'   => 'required|numeric|min:0',
             'payment_method' => 'required|in:cash,bank,transfer,other',
-            'status'         => 'required|in:draft,requested,approved,cancelled'
+            'status'         => 'required|in:draft,requested,approved,cancelled',
+            ...$hooks->dispatch(
+                new HookContext(
+                    action: HookAction::INDEX,
+                    phase: HookPhase::VALIDATE,
+                    timing: HookTiming::ON,
+                    payload: [],
+                    module: 'Purchase'
+                )
+            )
         ];
     }
 

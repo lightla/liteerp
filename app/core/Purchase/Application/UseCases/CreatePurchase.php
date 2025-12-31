@@ -2,6 +2,11 @@
 
 namespace Core\Purchase\Application\UseCases;
 
+use App\Supports\Hooks\HookAction;
+use App\Supports\Hooks\HookContext;
+use App\Supports\Hooks\HookDispatcher;
+use App\Supports\Hooks\HookPhase;
+use App\Supports\Hooks\HookTiming;
 use Core\Purchase\Application\DTOs\CreatePurchaseRequest;
 use Core\Purchase\Domain\Services\PurchaseService;
 use Core\Purchase\Domain\Entities\Purchase;
@@ -11,12 +16,37 @@ use Illuminate\Support\Facades\Log;
 
 class CreatePurchase
 {
-    public function __construct(private PurchaseService $service) {}
+    public function __construct(
+        private PurchaseService $service,
+        private HookDispatcher $hooks
+    ) {}
 
-    public function handle(CreatePurchaseRequest $dto): Purchase
+    public function handle(array $data): Purchase
     {
         DB::beginTransaction();
+        $data = $this->hooks->dispatch(
+            new HookContext(
+                action: HookAction::CREATE,
+                phase: HookPhase::RESPONSE,
+                timing: HookTiming::BEFORE,
+                payload: $data,
+                module: 'Purchase'
+            )
+        );
+        $dto = CreatePurchaseRequest::fromArray($data);
         $create = $this->service->create($dto->toArray());
+        $data = $this->hooks->dispatch(
+            new HookContext(
+                action: HookAction::CREATE,
+                phase: HookPhase::RESPONSE,
+                timing: HookTiming::AFTER,
+                payload: [
+                    ...$data,
+                    ...$create->toArray()
+                ],
+                module: 'Purchase'
+            )
+        );
         Event::dispatch("erp.purchase.create", [
             ...$create->toArray(),
             'user_id' => $dto->created_by,
@@ -29,7 +59,7 @@ class CreatePurchase
             'entity_type' => 'purchase',
             'entity_id' => $create->id,
             'chanels' => ['db'],
-            'roles' => ['admin','manager']
+            'roles' => ['admin', 'manager']
         ]);
         Event::dispatch("erp.notification.create", [
             'user_id' => $dto->created_by,

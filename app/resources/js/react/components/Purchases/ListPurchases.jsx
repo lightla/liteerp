@@ -13,64 +13,31 @@ import { isoToDateTime } from '../../libraries/common';
 import StatusBadge from '../StatusBadge';
 import PaymentMethod from '../PaymentMethod';
 import ContentOnTable from '../ContentOnTable';
+import RenderFormTableByList from '../RenderFieldTableByList';
+import {RenderTableSearch} from '../RenderTableSearch'
+import PrimaryButton from '../UI/Buttons/PrimaryButton';
 export default function ListPurchases() {
     const navigate = useNavigate();
     const { openPopup } = usePopup();
     const search = useForm();
     const table = useTable();
-
-    const columns = [
-        {
-            label: "ID", key: "id", render: (id) => {
-                return <span>PU{id}</span>
-            }
-        },
-        { label: "Supplier", key: "supplier_name",render: (value) => {
-            return <ContentOnTable value={value} max={15}/>
-        } },
-        {
-            label: "Purchase date", key: "purchase_date", render: (date) => {
-                return isoToDateTime(date);
-            }
-        },
-        {
-            label: "Expected date", key: "expected_date", render: (date) => {
-                return isoToDateTime(date);
-            }
-        },
-        {
-            label: "Shipping fee", key: "shipping_fee", render: (value) => {
-                return <strong>
-                    <Currencies amount={value} />
-                </strong>
-            }
-        },
-        { label: "Payment method", key: "payment_method", render:(value) => {
-            return <PaymentMethod value={value}/>
-        } },
-        { label: "Buy", key: "buy_quantity" },
-        { label: "Compensation", key: "compensation_quantity" },
-        { label: "Conversion", key: "conversion_quantity" },
-        { label: "Gift", key: "gift_quantity" },
-        {
-            label: "Tax", key: "tax", render: (value) => {
-                return <strong>
-                    <Currencies amount={value} />
-                </strong>
-            }
-        },
-        {
-            label: "Status", key: "status", render: (value) => {
-                return <StatusBadge status={value} />
-            },
-        },
-        { label: "Approved by", key: "approved_name", render:(value) => {
-            return <span className='badge bg-primary text-uppercase'>{value}</span>
-        } },
-        { label: "Created by", key: "created_name", render:(value) => {
-            return <span className='badge bg-primary text-uppercase'>{value}</span>
-        } },
-    ];
+    const view = useCallback(() => {
+        PurchaseService.view()
+            .then((resp) => {
+                table.addColums(resp.message.index,(item,data) => {
+                    return <RenderFormTableByList item={item} data={data}/>
+                });
+                search.setHookRender(resp.message.search)
+            })
+            .catch((error) => {
+                if (error.response.data?.message) {
+                    openPopup({
+                        type: 'error',
+                        message: error.response.data?.message
+                    })
+                }
+            });
+    }, []);
 
     const handleEdit = (row) => {
         navigate('/purchases?form=edit&id=' + row.id)
@@ -78,10 +45,8 @@ export default function ListPurchases() {
     const getPurchases = useCallback((page = 0) => {
         table.setLoading(true);
         PurchaseService.list({
-            keywords: search.formData?.keywords ?? '',
             page: page,
-            status: search.formData?.status ?? '',
-            order_by: search.formData?.order_by ?? '',
+            ...search.formData
         })
             .then((resp) => {
                 //setPurchaseData(resp.message.data)
@@ -100,7 +65,68 @@ export default function ListPurchases() {
     }, [search.formData]);
     useEffect(() => {
         getPurchases();
-    }, [search.formData?.status,search.formData?.order_by])
+        view();
+        table.setColums([
+            {
+                label: "ID", key: "id", render: (id) => {
+                    return <span>PU{id}</span>
+                }
+            },
+            {
+                label: "Supplier", key: "supplier_name", render: (value) => {
+                    return <ContentOnTable value={value} max={15} />
+                }
+            },
+            {
+                label: "Purchase date", key: "purchase_date", render: (date) => {
+                    return isoToDateTime(date);
+                }
+            },
+            {
+                label: "Expected date", key: "expected_date", render: (date) => {
+                    return isoToDateTime(date);
+                }
+            },
+            {
+                label: "Shipping fee", key: "shipping_fee", render: (value) => {
+                    return <strong>
+                        <Currencies amount={value} />
+                    </strong>
+                }
+            },
+            {
+                label: "Payment method", key: "payment_method", render: (value) => {
+                    return <PaymentMethod value={value} />
+                }
+            },
+            { label: "Buy", key: "buy_quantity" },
+            { label: "Compensation", key: "compensation_quantity" },
+            { label: "Conversion", key: "conversion_quantity" },
+            { label: "Gift", key: "gift_quantity" },
+            {
+                label: "Tax", key: "tax", render: (value) => {
+                    return <strong>
+                        <Currencies amount={value} />
+                    </strong>
+                }
+            },
+            {
+                label: "Status", key: "status", render: (value) => {
+                    return <StatusBadge status={value} />
+                },
+            },
+            {
+                label: "Approved by", key: "approved_name", render: (value) => {
+                    return <span className='badge bg-primary text-uppercase'>{value}</span>
+                }
+            },
+            {
+                label: "Created by", key: "created_name", render: (value) => {
+                    return <span className='badge bg-primary text-uppercase'>{value}</span>
+                }
+            },
+        ])
+    }, [])
     return <div>
         <div>
             <PageHead
@@ -139,7 +165,12 @@ export default function ListPurchases() {
                                 { value: 'DESC', label: 'Newest' }
                             ]} />
                     </div>
-                    <div className='col-6'>
+                    {search.hookRender.map((item,index) => {
+                        return  <div key={index} className='col-3 ml-2'>
+                            <RenderTableSearch item={item} search={search}/>
+                        </div>
+                    })}
+                    <div className='col-6 ml-2'>
                         <label>Search</label>
                         <SearchInput
                             submit={getPurchases}
@@ -149,9 +180,12 @@ export default function ListPurchases() {
                             errorMessage={search.formErrors?.keywords}
                             placeholder='Search by supplier' />
                     </div>
+                    <div className='col-2 ml-2'>
+                        <PrimaryButton label='Search' onClick={() => getPurchases()}/>
+                    </div>
                 </div>}
                 add={() => navigate('/purchases?form=add')}
-                columns={columns}
+                columns={table.colums}
                 data={table.data}
                 links={table.links}
                 onEdit={handleEdit}
