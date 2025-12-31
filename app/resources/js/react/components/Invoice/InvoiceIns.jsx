@@ -10,76 +10,12 @@ import { Select } from '../UI/Input/Select';
 import { useNavigate } from 'react-router-dom';
 import Currencies from '../../components/Currencies'
 import StatusBadge from '../StatusBadge'
+import RenderFieldTableByList from '../RenderFieldTableByList'
 export default function InvoiceIns() {
     const navigate = useNavigate();
     const { openPopup } = usePopup();
     const table = useTable();
     const search = useForm();
-    const form = useForm();
-
-    const columns = [
-        {
-            label: "Supplier",
-            key: "unit_name",
-            render: (value) => value ?? <span className="text-muted fst-italic">{value}</span>,
-        },
-        {
-            label: "Purchase ID",
-            key: "purchase_id",
-            render: (value) => {
-                return <span className="">PU{value}</span>
-            },
-        },
-        {
-            label: "Document no",
-            key: "document_no",
-            render: (value) => value ?? <span className="text-muted fst-italic">{value}</span>,
-        },
-        {
-            label: "Subtotal",
-            key: "subtotal",
-            render: (value) => <span>
-                <Currencies amount={value} />
-            </span>,
-        },
-        {
-            label: "Tax",
-            key: "tax",
-            render: (value) => <span><Currencies amount={value} /></span>,
-        },
-        {
-            label: "Total paid",
-            key: "total",
-            render: (value) => <strong><Currencies amount={value} /></strong>,
-        },
-        {
-            label: "Status",
-            key: "approved",
-            render: (value) => {
-                return <StatusBadge status={value ? 'approved' : 'unapproved'} />
-            },
-        },
-        {
-            label: "Invoice date",
-            key: "invoice_date",
-            render: (value) =>
-                value ?? "",
-        },
-        {
-            label: "Payment",
-            key: "payment_status",
-            render: (value) => {
-                return <StatusBadge status={value} />
-            }
-        },
-        {
-            label: "Purchase status",
-            key: "purchase_status",
-            render: (value) => {
-                return <StatusBadge status={value} />
-            }
-        },
-    ];
 
     const handleEdit = useCallback((row) => {
         navigate('/invoices?form=invoicein&id=' + row.id)
@@ -88,9 +24,7 @@ export default function InvoiceIns() {
         table.setLoading(true);
         InvoiceInService.list({
             page: page,
-            keywords: search.formData?.keywords ?? '',
-            payment_status: search.formData?.payment_status ?? '',
-            order_by: search.formData?.order_by ?? ''
+            ...search.formData
         })
             .then((resp) => {
                 table.setData(resp.message.data);
@@ -107,9 +41,90 @@ export default function InvoiceIns() {
             });
     }, [search.formData]);
 
+    const view = useCallback((page = 0) => {
+        InvoiceInService.view()
+            .then((resp) => {
+                table.addColums(resp.message.index,(item,data) => {
+                    return <RenderFieldTableByList item={item} data={data}/>
+                })
+            })
+            .catch((error) => {
+                if (error.response.data?.message) {
+                    openPopup({
+                        type: 'error',
+                        message: error.response.data?.message
+                    })
+                }
+            });
+    }, []);
+
     useEffect(() => {
         listInvoice();
-    }, [search.formData?.payment_status,search.formData?.order_by]);
+        view();
+        table.setColums([
+            {
+                label: "Supplier",
+                key: "unit_name",
+                render: (value) => value ?? <span className="text-muted fst-italic">{value}</span>,
+            },
+            {
+                label: "Purchase ID",
+                key: "purchase_id",
+                render: (value) => {
+                    return <span className="">PU{value}</span>
+                },
+            },
+            {
+                label: "Document no",
+                key: "document_no",
+                render: (value) => value ?? <span className="text-muted fst-italic">{value}</span>,
+            },
+            {
+                label: "Subtotal",
+                key: "subtotal",
+                render: (value) => <span>
+                    <Currencies amount={value} />
+                </span>,
+            },
+            {
+                label: "Tax",
+                key: "tax",
+                render: (value) => <span><Currencies amount={value} /></span>,
+            },
+            {
+                label: "Total paid",
+                key: "total",
+                render: (value) => <strong><Currencies amount={value} /></strong>,
+            },
+            {
+                label: "Status",
+                key: "approved",
+                render: (value) => {
+                    return <StatusBadge status={value ? 'approved' : 'unapproved'} />
+                },
+            },
+            {
+                label: "Invoice date",
+                key: "invoice_date",
+                render: (value) =>
+                    value ?? "",
+            },
+            {
+                label: "Payment",
+                key: "payment_status",
+                render: (value) => {
+                    return <StatusBadge status={value} />
+                }
+            },
+            {
+                label: "Purchase status",
+                key: "purchase_status",
+                render: (value) => {
+                    return <StatusBadge status={value} />
+                }
+            },
+        ])
+    }, []);
     return <div>
         <CommonDataTable
             loading={table.loading}
@@ -151,7 +166,7 @@ export default function InvoiceIns() {
                     />
                 </div>
             </div>}
-            columns={columns}
+            columns={table.colums}
             data={table.data}
             links={table.links}
             onEdit={handleEdit}

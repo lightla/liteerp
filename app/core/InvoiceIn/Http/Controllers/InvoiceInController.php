@@ -3,10 +3,7 @@
 namespace Core\InvoiceIn\Http\Controllers;
 
 use Core\InvoiceIn\Application\UseCases\CreateInvoiceIn;
-use Core\InvoiceIn\Application\DTOs\CreateInvoiceInRequest;
-use Core\InvoiceIn\Application\DTOs\IndexInvoiceInRequest as DTOsIndexInvoiceInRequest;
-use Core\InvoiceIn\Application\DTOs\ShowInvoiceInRequest as DTOsShowInvoiceInRequest;
-use Core\InvoiceIn\Application\UseCases\IndexInvoiceIn;
+use Core\InvoiceIn\Application\Queries\IndexQuery;
 use Core\InvoiceIn\Application\UseCases\ShowInvoiceIn;
 use Core\InvoiceIn\Application\UseCases\UpdateInvoiceIn;
 use Core\InvoiceIn\Http\Requests\CreateInvoiceInRequest as FormRequest;
@@ -18,25 +15,22 @@ class InvoiceInController
 {
     public function store(FormRequest $request, CreateInvoiceIn $useCase)
     {
-        $dto = CreateInvoiceInRequest::fromArray($request->validated());
-        $entity = $useCase->handle($dto);
+        
+        $entity = $useCase->handle($request->all());
         return response()->json(['message' => $entity]);
     }
-    public function index(IndexInvoiceInRequest $request,IndexInvoiceIn $useCase) {
-        $dto = DTOsIndexInvoiceInRequest::fromArray($request->all());
-        $entity = $useCase->handle($dto);
+    public function index(IndexInvoiceInRequest $request,IndexQuery $useCase) {
+        $entity = $useCase->handle($request->all());
         return response()->json(['message' => $entity]);
     }
     public function update(string $id,UpdateInvoiceInRequest $request,UpdateInvoiceIn $useCase) {
         $request->merge(['id' => $id]);
-        $dto = CreateInvoiceInRequest::fromArray($request->all());
-        $entity = $useCase->handle($dto);
+        $entity = $useCase->handle($request->all());
         return response()->json(['message' => $entity]);
     }
     public function show(ShowInvoiceInRequest $request,ShowInvoiceIn $useCase,string $id) {
         $request->merge(['id' => $id]);
-        $dto = DTOsShowInvoiceInRequest::fromArray($request->all());
-        $entity = $useCase->handle($dto);
+        $entity = $useCase->handle($request->all());
         return response()->json(['message' => $entity]);
     }
 }

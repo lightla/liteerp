@@ -15,6 +15,7 @@ import PageHead from "../../PageHead";
 import LoadingBox from "../../LoadingBox";
 import Currencies from "../../Currencies";
 import UploadImage from "../../UI/Input/UploadImage";
+import RenderFormFieldByList from '../../RenderFormFieldByList'
 export default function InvoiceInDetail() {
     const [loading, setLoading] = useState(false);
     const { openPopup } = usePopup();
@@ -23,33 +24,6 @@ export default function InvoiceInDetail() {
     const [detail, setDetail] = useState(null);
     const table = useTable();
     const [showEdit, setShowEdit] = useState(false);
-    const columns = useMemo(() => {
-        return [
-            { label: "Name", key: "name" },
-            { label: "Buy", key: "buy_quantity" },
-            { label: "Compensation", key: "compensation_quantity" },
-            { label: "Conversion", key: "conversion_quantity" },
-            { label: "Gift", key: "gift_quantity" },
-            {
-                label: 'Sku', key: 'sku'
-            },
-            {
-                label: 'Total tax', key: 'total_tax'
-            },
-            {
-                label: 'Unit cost', key: 'unit_cost',
-                render: (value) => {
-                    return <span><Currencies amount={value} /></span>
-                }
-            },
-            {
-                label: 'Total', key: 'total',
-                render: (value) => {
-                    return <span><Currencies amount={value} /></span>
-                }
-            }
-        ];
-    }, []);
     const getDetail = useCallback(() => {
         setLoading(true)
         InvoiceInService.show(searchParams.get('id'))
@@ -125,6 +99,21 @@ export default function InvoiceInDetail() {
         })
 
     }, [form.formData]);
+    const view = useCallback((page = 0) => {
+        InvoiceInService.view()
+            .then((resp) => {
+                form.setHookRender(resp.message.form)
+            })
+            .catch((error) => {
+                if (error.response.data?.message) {
+                    openPopup({
+                        type: 'error',
+                        message: error.response.data?.message
+                    })
+                }
+            });
+    }, []);
+
     useEffect(() => {
         if (form?.formData?.approved === true && detail?.approved === false) {
             update();
@@ -132,6 +121,32 @@ export default function InvoiceInDetail() {
     }, [form.formData?.approved, detail?.approved])
     useEffect(() => {
         getDetail();
+        view();
+        table.setColums([
+            { label: "Name", key: "name" },
+            { label: "Buy", key: "buy_quantity" },
+            { label: "Compensation", key: "compensation_quantity" },
+            { label: "Conversion", key: "conversion_quantity" },
+            { label: "Gift", key: "gift_quantity" },
+            {
+                label: 'Sku', key: 'sku'
+            },
+            {
+                label: 'Total tax', key: 'total_tax'
+            },
+            {
+                label: 'Unit cost', key: 'unit_cost',
+                render: (value) => {
+                    return <span><Currencies amount={value} /></span>
+                }
+            },
+            {
+                label: 'Total', key: 'total',
+                render: (value) => {
+                    return <span><Currencies amount={value} /></span>
+                }
+            }
+        ]);
     }, [])
     return (
         <div className="min-vh-100">
@@ -221,6 +236,27 @@ export default function InvoiceInDetail() {
                                     </div>
                                 </div>
                             </div>
+                            {form.hookRender.length >= 1 ? <div className="p-4 rounded border mt-3">
+                                <div className="d-flex justify-content-between mb-3">
+                                    <h5 className="fw-semibold">
+                                        Extras
+                                    </h5>
+
+                                </div>
+                                <div className="row mt-3">
+                                    {form.hookRender.map((item,index) => {
+                                        return <div key={index} className="col-md-6">
+                                        <div className="mb-2">
+                                            <div className="theme-title small">
+                                                {item.label}</div>
+                                            <div className="theme-title">{form.formData?.[item.key]}</div>
+                                        </div>
+                                    </div>
+                                    })}
+                                </div>
+                            </div> : null
+                            }
+                            
 
 
                             {/* Product List */}
@@ -229,12 +265,8 @@ export default function InvoiceInDetail() {
                                     <h5 className="fw-semibold">Products</h5>
                                     <div className="theme-title small">{table.total} products</div>
                                 </div>
-
-                                {/* {products.map((p, idx) => {
-                                return <ProductItem key={idx} product={p} />
-                            })} */}
                                 <CommonDataTable
-                                    columns={columns}
+                                    columns={table.colums}
                                     data={table.data}
                                     links={table.links}
                                     loading={table.loading}
@@ -352,7 +384,7 @@ export default function InvoiceInDetail() {
                             ]} />
                     </div>
                     <div className="form-group mt-3">
-                        <label>Invoice image 
+                        <label>Invoice image
                             <a target="_blank" href={form.formData?.image}>View full</a>
                         </label>
                         <UploadImage
@@ -362,6 +394,11 @@ export default function InvoiceInDetail() {
                             value={form.formData?.image}
                         />
                     </div>
+                    {form.hookRender.map((item,index) => {
+                        return <div className="form-group mt-3" key={index}>
+                            <RenderFormFieldByList item={item} form={form}/>
+                        </div>
+                    })}
                 </div>
             </PopupLayout> : null}
 

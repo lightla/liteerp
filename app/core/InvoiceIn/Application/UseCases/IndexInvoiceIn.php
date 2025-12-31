@@ -11,8 +11,9 @@ class IndexInvoiceIn
 {
     public function __construct(private InvoiceInService $service) {}
 
-    public function handle(IndexInvoiceInRequest $dto)
+    public function handle(array $data)
     {
+        $dto = IndexInvoiceInRequest::fromArray($data);
         Event::dispatch('erp.invoicein.index',[
             ...$dto->toArray(),
             'user_id' => $dto->created_by

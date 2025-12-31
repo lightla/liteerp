@@ -17,6 +17,10 @@ export default function RenderFormTableByList({
                     />
                     : item?.type === 'html' ?
                         <div dangerouslySetInnerHTML={{ __html: data }} ></div>
+                    : item?.type === 'link' ?
+                        <div>
+                            <a href={data} target='_blank' >{item.label}</a>
+                        </div>
                     : null}
     </div>
 }

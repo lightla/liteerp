@@ -2,11 +2,16 @@
 
 namespace Core\InvoiceIn\Http\Requests;
 
+use App\Supports\Hooks\HookAction;
+use App\Supports\Hooks\HookContext;
+use App\Supports\Hooks\HookDispatcher;
+use App\Supports\Hooks\HookPhase;
+use App\Supports\Hooks\HookTiming;
 use Illuminate\Foundation\Http\FormRequest;
 
 class CreateInvoiceInRequest extends FormRequest
 {
-    public function rules(): array
+    public function rules(HookDispatcher $hooks): array
     {
         return [
             'document_no'   => 'required|string|max:255',
@@ -18,8 +23,16 @@ class CreateInvoiceInRequest extends FormRequest
             'invoice_date'  => 'required|date_format:Y-m-d',
             'due_date'      => 'required|date_format:Y-m-d|after_or_equal:invoice_date',
             'approved'      => 'required|boolean',
-            'payment_status' => 'required|in:paid,pending,partial_payment'
-
+            'payment_status' => 'required|in:paid,pending,partial_payment',
+            ...$hooks->dispatch(
+                new HookContext(
+                    action: HookAction::CREATE,
+                    phase: HookPhase::VALIDATE,
+                    timing: HookTiming::ON,
+                    payload: [],
+                    module: 'InvoiceIn'
+                )
+            )
         ];
     }
 

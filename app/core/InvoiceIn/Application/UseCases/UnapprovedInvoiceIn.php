@@ -2,6 +2,11 @@
 
 namespace Core\InvoiceIn\Application\UseCases;
 
+use App\Supports\Hooks\HookAction;
+use App\Supports\Hooks\HookContext;
+use App\Supports\Hooks\HookDispatcher;
+use App\Supports\Hooks\HookPhase;
+use App\Supports\Hooks\HookTiming;
 use Core\InvoiceIn\Application\DTOs\ChangeToUnapprovedRequest;
 use Core\InvoiceIn\Application\DTOs\CreateInvoiceInRequest;
 use Core\InvoiceIn\Domain\Services\InvoiceInService;
@@ -11,7 +16,8 @@ use Illuminate\Support\Facades\Event;
 class UnapprovedInvoiceIn
 {
     public function __construct(
-        private InvoiceInService $service
+        private InvoiceInService $service,
+        private HookDispatcher $hooks
     ) {}
 
     public function handle(ChangeToUnapprovedRequest $dto)
@@ -32,10 +38,30 @@ class UnapprovedInvoiceIn
             return;
         }
         DB::beginTransaction();
+        $data = $this->hooks->dispatch(
+            new HookContext(
+                action: HookAction::CREATE,
+                phase: HookPhase::RESPONSE,
+                timing: HookTiming::BEFORE,
+                payload: $dto->toArray(),
+                module: 'InvoiceIn'
+            )
+        );
         $update = $this->service->changeToUnApproved($dto->toArray());
-        
+        $data = $this->hooks->dispatch(
+            new HookContext(
+                action: HookAction::CREATE,
+                phase: HookPhase::RESPONSE,
+                timing: HookTiming::AFTER,
+                payload: [
+                    ...$data,
+                    ...$update->toArray()
+                ],
+                module: 'InvoiceIn'
+            )
+        );
         Event::dispatch("erp.invoicein.cancelled", [
-            ...$update->toArray(),
+            ...$data,
             'user_id' => $dto->created_by,
             'business_id' => $dto->business_id,
             'invoice_in_id' => $update->id,
