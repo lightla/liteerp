@@ -2,11 +2,8 @@
 namespace Core\OrderShipping\Infrastructure\Listeners;
 
 use Core\OrderShipping\Application\DTOs\CheckReadyOrderShippingRequest;
-use Core\OrderShipping\Application\DTOs\CreateOrderShippingRequest;
-use Core\OrderShipping\Application\DTOs\UpdateShippingFeeActualRequest;
 use Core\OrderShipping\Application\UseCases\CheckReadyOrderShipping;
 use Core\OrderShipping\Application\UseCases\CreateOrderShipping;
-use Core\OrderShipping\Application\UseCases\UpdateShippingFeeActual;
 use Illuminate\Support\Facades\Event;
 
 class OrderShippingListener {
@@ -14,7 +11,7 @@ class OrderShippingListener {
         CheckReadyOrderShipping $CheckReadyOrderShipping){
         Event::listen('erp.customer.*',function(string $eventName, array $data) use($createOrderShipping) {
             if($eventName === 'erp.customer.creatordershipping') {
-                $createOrderShipping->handle(CreateOrderShippingRequest::fromArray($data));
+                $createOrderShipping->handle($data);
             }
         });
         Event::listen('erp.order.*',function(string $eventName, array $data) 

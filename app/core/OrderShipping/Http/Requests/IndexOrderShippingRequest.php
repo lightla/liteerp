@@ -2,13 +2,29 @@
 
 namespace Core\OrderShipping\Http\Requests;
 
+use App\Supports\Hooks\HookAction;
+use App\Supports\Hooks\HookContext;
+use App\Supports\Hooks\HookDispatcher;
+use App\Supports\Hooks\HookPhase;
+use App\Supports\Hooks\HookTiming;
 use Illuminate\Foundation\Http\FormRequest;
 
 class IndexOrderShippingRequest extends FormRequest
 {
-    public function rules(): array
+    public function rules(HookDispatcher $hooks): array
     {
+        $hookRules = $hooks->dispatch(
+            new HookContext(
+                action: HookAction::INDEX,
+                phase: HookPhase::VALIDATE,
+                timing: HookTiming::ON,
+                payload: [],
+                module: 'OrderShipping'
+            )
+        );
+
         return [
+            ...$hookRules,
             'order_id'               => 'required|integer|exists:orders,id|unique:shippings,order_id',
 
             'receiver_name'          => 'nullable|string|max:255',

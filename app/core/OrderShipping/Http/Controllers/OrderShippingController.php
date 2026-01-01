@@ -2,8 +2,8 @@
 
 namespace Core\OrderShipping\Http\Controllers;
 
+use Core\OrderShipping\Application\Queries\IndexQuery;
 use Core\OrderShipping\Application\UseCases\CreateOrderShipping;
-use Core\OrderShipping\Application\DTOs\CreateOrderShippingRequest;
 use Core\OrderShipping\Application\UseCases\IndexOrderShipping;
 use Core\OrderShipping\Application\UseCases\ShowOrderShipping;
 use Core\OrderShipping\Application\UseCases\UpdateOrderShipping;
@@ -16,11 +16,10 @@ class OrderShippingController
 {
     public function store(FormRequest $request, CreateOrderShipping $useCase)
     {
-        $dto = CreateOrderShippingRequest::fromArray($request->all());
-        $entity = $useCase->handle($dto);
+        $entity = $useCase->handle($request->all());
         return response()->json(['message' => $entity]);
     }
-    public function index(IndexOrderShippingRequest $request, IndexOrderShipping $useCase)
+    public function index(IndexOrderShippingRequest $request, IndexQuery $useCase)
     {
         $entity = $useCase->handle($request->all());
         return response()->json(['message' => $entity]);
@@ -33,8 +32,7 @@ class OrderShippingController
     }
     public function update(UpdateOrderShipping $useCase,UpdateOrderShippingRequest $request,string $id) {
         $request->merge(['id' => $id]);
-        $dto = CreateOrderShippingRequest::fromArray($request->all());
-        $entity = $useCase->handle($dto);
+        $entity = $useCase->handle($request->all());
         return response()->json(['message' => $entity]);
     }
 }

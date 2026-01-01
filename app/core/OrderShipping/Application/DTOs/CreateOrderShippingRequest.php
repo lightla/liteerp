@@ -21,9 +21,6 @@ class CreateOrderShippingRequest
         public ?int $created_by = null
     ) {}
 
-    /**
-     * Nhận dữ liệu từ FormRequest
-     */
     public static function fromArray(array $data): self
     {
         return new self(
@@ -44,9 +41,6 @@ class CreateOrderShippingRequest
         );
     }
 
-    /**
-     * Convert DTO → array để lưu DB
-     */
     public function toArray(): array
     {
         return [

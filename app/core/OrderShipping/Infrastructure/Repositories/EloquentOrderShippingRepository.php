@@ -62,17 +62,6 @@ class EloquentOrderShippingRepository implements OrderShippingRepositoryInterfac
         ->update($entity->toArray());
         return $entity;
     }
-    public function index(array $data): array
-    {
-        return ShippingModel::select("shippings.*",
-        "shipping_providers.name as shipping_provider_name")
-        ->join("orders","orders.id","=","shippings.order_id")
-        ->join("shipping_providers","shipping_providers.id",
-        "=","shippings.preferred_unit")
-        ->where('orders.business_id',$data['business_id'])
-        ->paginate(15)
-        ->toArray();
-    }
     public function show(array $data): ?array
     {
         $row = ShippingModel::select("shippings.*",

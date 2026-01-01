@@ -11,6 +11,5 @@ interface OrderShippingRepositoryInterface
     public function findByIdWithFullData(array $data): ?array;
     public function findByOrderId(array $data): ?OrderShipping;
     public function show(array $data) : ?array;
-    public function index(array $data) : array;
     public function update(OrderShipping $entity) : OrderShipping;
 }

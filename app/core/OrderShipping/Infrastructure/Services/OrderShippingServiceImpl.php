@@ -21,9 +21,6 @@ class OrderShippingServiceImpl implements OrderShippingService
         $entity = OrderShipping::fromArray($data);
         return $this->repo->create($entity);
     }
-    public function index(array $data) : array {
-        return $this->repo->index($data);
-    }
     public function show(array $data): array | BadException
     {
         return $this->repo->findByIdWithFullData($data) ?? throw new BadException(__("Not found data"));

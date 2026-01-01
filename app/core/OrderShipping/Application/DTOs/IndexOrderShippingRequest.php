@@ -2,12 +2,13 @@
 
 namespace Core\OrderShipping\Application\DTOs;
 
-class CheckReadyOrderShippingRequest
+class IndexOrderShippingRequest
 {
     public function __construct(
         public int $order_id,
         public int $business_id,
-        public ?int $created_by = null
+        public int $created_by,
+        public ?string $keywords = null
     ) {}
 
     public static function fromArray(array $data): self
@@ -15,7 +16,8 @@ class CheckReadyOrderShippingRequest
         return new self(
             order_id: $data['order_id'],
             business_id: $data['business_id'],
-            created_by: $data['user_id']
+            created_by: $data['user_id'],
+            keywords: $data['keywords'] ?? null 
         );
     }
 
@@ -24,7 +26,8 @@ class CheckReadyOrderShippingRequest
         return [
             'order_id'               => $this->order_id,
             'business_id'   => $this->business_id,
-            'created_by'    => $this->created_by
+            'created_by'    => $this->created_by,
+            'keywords'  => $this->keywords
         ];
     }
 }
