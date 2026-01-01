@@ -4,7 +4,6 @@ namespace Core\StockIn\Infrastructure\Listeners;
 
 use Core\StockIn\Application\DTOs\CancelledStockInRequest;
 use Core\StockIn\Application\DTOs\CheckForStockMovementInRequest;
-use Core\StockIn\Application\DTOs\CreateStockInRequest;
 use Core\StockIn\Application\UseCases\CancelledStockIn;
 use Core\StockIn\Application\UseCases\CheckForStockMovementIn;
 use Core\StockIn\Application\UseCases\CreateStockIn;
@@ -20,7 +19,7 @@ class StockInListener
         Event::listen('erp.invoicein.*', function (string $eventName, array $data)
         use ($createStockIn, $cancelledStockIn) {
             if ($eventName === 'erp.invoicein.approved') {
-                $createStockIn->handle(CreateStockInRequest::fromArray($data));
+                $createStockIn->handle($data);
             } else if ($eventName === 'erp.invoicein.cancelled') {
                 $cancelledStockIn->handle(CancelledStockInRequest::fromArray($data));
             }

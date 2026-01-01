@@ -2,24 +2,20 @@
 
 namespace Core\StockIn\Application\DTOs;
 
-class IndexStockInRequest
+class ShowStockInRequest
 {
     public function __construct(
         public int $business_id,
         public int $created_by,
-        public ?string $keywords,
-        public ?string $status,
-        public ?string $order_by = null 
+        public int $id,
     ) {}
 
     public static function fromArray(array $data): self
     {
         return new self(
             business_id: (int) $data['business_id'],
-            status : $data['status'] ?? null,
+            id : $data['id'],
             created_by: $data['user_id'],
-            keywords: $data['keywords'] ?? null,
-            order_by: $data['order_by'] ?? 'DESC' 
         );
     }
 
@@ -27,10 +23,8 @@ class IndexStockInRequest
     {
         return [
             'business_id' => $this->business_id,
-            'keywords' => $this->keywords,
-            'status'      => $this->status,
+            'id'      => $this->id,
             'created_by'  => $this->created_by,
-            'order_by'  => $this->order_by
         ];
     }
 }

@@ -10,8 +10,9 @@ class IndexStockIn
 {
     public function __construct(private StockInService $service) {}
 
-    public function handle(IndexStockInRequest $dto)
+    public function handle(array $data)
     {
+        $dto = IndexStockInRequest::fromArray($data);
         Event::dispatch('erp.stockin.index',[
             ...$dto->toArray(),
             'user_id' => $dto->created_by

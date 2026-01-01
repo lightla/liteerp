@@ -2,6 +2,11 @@
 
 namespace Core\StockIn\Application\UseCases;
 
+use App\Supports\Hooks\HookAction;
+use App\Supports\Hooks\HookContext;
+use App\Supports\Hooks\HookDispatcher;
+use App\Supports\Hooks\HookPhase;
+use App\Supports\Hooks\HookTiming;
 use Core\StockIn\Application\DTOs\CreateStockInRequest;
 use Core\StockIn\Domain\Services\StockInService;
 use Illuminate\Support\Facades\DB;
@@ -9,12 +14,35 @@ use Illuminate\Support\Facades\Event;
 
 class UpdateStockIn
 {
-    public function __construct(private StockInService $service) {}
+    public function __construct(private StockInService $service,
+        private HookDispatcher $hooks) {}
 
-    public function handle(CreateStockInRequest $dto)
+    public function handle(array $data)
     {
         DB::beginTransaction();
+        $data = $this->hooks->dispatch(
+            new HookContext(
+                action: HookAction::UPDATE,
+                phase: HookPhase::RESPONSE,
+                timing: HookTiming::BEFORE,
+                payload: $data,
+                module: 'StockIn'
+            )
+        );
+        $dto = CreateStockInRequest::fromArray($data);
         $update = $this->service->update($dto->toArray());
+        $data = $this->hooks->dispatch(
+            new HookContext(
+                action: HookAction::UPDATE,
+                phase: HookPhase::RESPONSE,
+                timing: HookTiming::BEFORE,
+                payload: [
+                    ...$data,
+                    ...$update->toArray()
+                ],
+                module: 'StockIn'
+            )
+        );
         if ($update->isReceived()) {
             Event::dispatch("erp.stockin.received", [
                 ...$update->toArray(),

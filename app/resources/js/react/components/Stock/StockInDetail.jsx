@@ -18,6 +18,8 @@ import InventoryForm from "./StockInDetail/InventoryForm";
 import StockMovementInService from '../../services/StockMovementInService'
 import PageHead from "../PageHead";
 import LoadingBox from '../LoadingBox'
+import RenderFormFieldByList from '../RenderFormFieldByList'
+import { ExtraCard } from "../ExtraCard";
 export default function StockInDetail() {
     const [loading, setLoading] = useState(false);
     const [showForm, setShowForm] = useState(false);
@@ -96,6 +98,22 @@ export default function StockInDetail() {
             }
         })
     }, [form]);
+    const view = useCallback(() => {
+        StockInService.view().then((resp) => {
+            table.addColums(resp.message.index, (item, data) => {
+                return <RenderFieldTableByList item={item} data={data} />
+            })
+            form.setHookRender(resp.message.form)
+        })
+            .catch((error) => {
+                if (error.response.message?.errors) {
+                    openPopup({
+                        type: 'error',
+                        message: error.response.message?.errors
+                    })
+                }
+            })
+    }, [table]);
     useEffect(() => {
         if (form.formData?.status === 'received' &&
             detail?.status === 'pending') {
@@ -168,6 +186,8 @@ export default function StockInDetail() {
             getProducts();
             getInventories();
         }
+        
+        view();
     }, [form.formData?.purchase_id]);
     return (
         <div className="min-vh-100">
@@ -208,6 +228,7 @@ export default function StockInDetail() {
                                     <div>{form.formData?.purchase_note ?? '-'}</div>
                                 </div>
                             </div>
+                            <ExtraCard form={form}/>
                             {/* Product List */}
                             <div className="rounded mt-4 mb-5">
                                 <div className="d-flex justify-content-between mb-3">
@@ -304,6 +325,11 @@ export default function StockInDetail() {
                             type="date"
                         />
                     </div>
+                    {form.hookRender.map((item,data) => {
+                        return <div className="mt-3">
+                            <RenderFormFieldByList item={item} form={form}/>
+                        </div>
+                    })}
                 </div>
             </PopupLayout> : null}
             {showFormInventory ? <PopupLayout

@@ -3,9 +3,7 @@
 namespace Core\StockIn\Http\Controllers;
 
 use Core\StockIn\Application\UseCases\CreateStockIn;
-use Core\StockIn\Application\DTOs\CreateStockInRequest;
-use Core\StockIn\Application\DTOs\IndexStockInRequest as DTOsIndexStockInRequest;
-use Core\StockIn\Application\UseCases\IndexStockIn;
+use Core\Stockin\Application\Queries\IndexQuery;
 use Core\StockIn\Application\UseCases\ShowStockIn;
 use Core\StockIn\Application\UseCases\UpdateStockIn;
 use Core\StockIn\Http\Requests\CreateStockInRequest as FormRequest;
@@ -17,13 +15,11 @@ class StockInController
 {
     public function store(FormRequest $request, CreateStockIn $useCase)
     {
-        $dto = CreateStockInRequest::fromArray($request->all());
-        $entity = $useCase->handle($dto);
+        $entity = $useCase->handle($request->all());
         return response()->json(['message' => $entity]);
     }
-    public function index(IndexStockInRequest $request, IndexStockIn $useCase){
-        $dto = DTOsIndexStockInRequest::fromArray($request->all());
-        $entity = $useCase->handle($dto);
+    public function index(IndexStockInRequest $request, IndexQuery $useCase){
+        $entity = $useCase->handle($request->all());
         return response()->json(['message' => $entity]);
     }
     public function show(string $id,ShowStockInRequest $request, ShowStockIn $useCase){
@@ -33,8 +29,7 @@ class StockInController
     }
     public function update(string $id, UpdateStockIn $useCase, UpdateStockInRequest $request) {
         $request->merge(['id' => $id]);
-        $dto = CreateStockInRequest::fromArray($request->all());
-        $entity = $useCase->handle($dto);
+        $entity = $useCase->handle($request->all());
         return response()->json(['message' => $entity]);
     }
 }
