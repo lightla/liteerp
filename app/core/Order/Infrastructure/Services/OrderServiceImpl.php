@@ -3,12 +3,9 @@
 namespace Core\Order\Infrastructure\Services;
 
 use App\Exceptions\BadException;
-use App\Models\OrderModel;
 use Core\Order\Domain\Services\OrderService;
 use Core\Order\Domain\Repositories\OrderRepositoryInterface;
 use Core\Order\Domain\Entities\Order;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Log;
 
 class OrderServiceImpl implements OrderService
 {
@@ -32,10 +29,6 @@ class OrderServiceImpl implements OrderService
             throw new BadException(__("Not found data"));
         }
         return $row;
-    }
-    public function index(array $data): array
-    {
-        return $this->repo->index($data);
     }
     public function findOneById(array $data): Order | BadException
     {

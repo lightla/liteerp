@@ -2,11 +2,8 @@
 
 namespace Core\Order\Http\Controllers;
 
+use Core\Order\Application\Queries\IndexQuery;
 use Core\Order\Application\UseCases\CreateOrder;
-use Core\Order\Application\DTOs\CreateOrderRequest;
-use Core\Order\Application\DTOs\IndexOrderRequest as DTOsIndexOrderRequest;
-use Core\Order\Application\DTOs\UpdateOrderRequest as DTOsUpdateOrderRequest;
-use Core\Order\Application\UseCases\IndexOrder;
 use Core\Order\Application\UseCases\ShowOrder;
 use Core\Order\Application\UseCases\UpdateOrder;
 use Core\Order\Http\Requests\CreateOrderRequest as FormRequest;
@@ -18,13 +15,11 @@ class OrderController
 {
     public function store(FormRequest $request, CreateOrder $useCase)
     {
-        $dto = CreateOrderRequest::fromArray($request->all());
-        $entity = $useCase->handle($dto);
+        $entity = $useCase->handle($request->all());
         return response()->json(['message' => $entity]);
     }
-    public function index(IndexOrderRequest $request, IndexOrder $useCase) {
-        $dto = DTOsIndexOrderRequest::fromArray($request->all());
-        $entity = $useCase->handle($dto);
+    public function index(IndexOrderRequest $request, IndexQuery $useCase) {
+        $entity = $useCase->handle($request->all());
         return response()->json(['message' => $entity]);
     }
     public function show(ShowOrderRequest $request, ShowOrder $useCase, string $id) {
@@ -34,8 +29,7 @@ class OrderController
     }
     public function update(string $id,UpdateOrderRequest $request,UpdateOrder $useCase) {
         $request->merge(['id' => $id]);
-        $dto = DTOsUpdateOrderRequest::fromArray($request->all());
-        $entity = $useCase->handle($dto);
+        $entity = $useCase->handle($request->all());
         return response()->json(['message' => $entity]);
     }
 }

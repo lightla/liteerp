@@ -2,6 +2,11 @@
 
 namespace Core\Order\Application\UseCases;
 
+use App\Supports\Hooks\HookAction;
+use App\Supports\Hooks\HookContext;
+use App\Supports\Hooks\HookDispatcher;
+use App\Supports\Hooks\HookPhase;
+use App\Supports\Hooks\HookTiming;
 use Core\Order\Application\DTOs\UpdateOrderRequest;
 use Core\Order\Domain\Services\OrderService;
 use Illuminate\Support\Facades\DB;
@@ -10,13 +15,38 @@ use Illuminate\Support\Facades\Event;
 class UpdateOrder
 {
     public function __construct(
-        private OrderService $service
+        private OrderService $service, 
+        private HookDispatcher $hooks
     ) {}
 
-    public function handle(UpdateOrderRequest $dto)
+    public function handle(array $data)
     {
         DB::beginTransaction();
+        $data = $this->hooks->dispatch(
+            new HookContext(
+                action: HookAction::UPDATE,
+                phase: HookPhase::RESPONSE,
+                timing: HookTiming::BEFORE,
+                payload: [
+                    ...$data
+                ],
+                module: 'Order'
+            )
+        );
+        $dto = UpdateOrderRequest::fromArray($data);
         $update = $this->service->update($dto->toArray());
+        $data = $this->hooks->dispatch(
+            new HookContext(
+                action: HookAction::UPDATE,
+                phase: HookPhase::RESPONSE,
+                timing: HookTiming::AFTER,
+                payload: [
+                    ...$data,
+                    ...$update->toArray()
+                ],
+                module: 'Order'
+            )
+        );
         $notificationStatus = 'update';
         if($update->isApproved()) {
             Event::dispatch("erp.order.approved", [
@@ -61,6 +91,6 @@ class UpdateOrder
             'chanels' => ['db']
         ]);
         DB::commit();
-        return $update;
+        return $data;
     }
 }

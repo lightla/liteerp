@@ -10,6 +10,5 @@ interface OrderRepositoryInterface
     public function findById(array $data) : ?Order;
     public function findByOrderNo(array $data) : ?Order;
     public function update(Order $data) : Order;
-    public function index(array $data): array;
     public function findByIdWithData(array $data): ?array;
 }

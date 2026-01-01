@@ -70,33 +70,4 @@ class EloquentOrderRepository implements OrderRepositoryInterface
             ->update($entity->toArray());
         return $entity;
     }
-    public function index(array $data): array
-    {
-        $list = OrderModel::select(
-            "orders.*",
-            "customers.name as customer_name",
-            "customers.address as customer_address",
-            "created_user.name as created_name",
-            "approved_user.name as approved_name",
-            DB::raw("SUM(order_items.buy_quantity) as total_buy"),
-            DB::raw("SUM(order_items.gift_quantity) as total_gift"),
-            DB::raw("SUM(order_items.compensation_quantity) as total_comp"),
-            DB::raw("SUM(order_items.conversion_quantity) as total_convert"),
-            DB::raw("SUM(order_items.discount) as total_discount"),
-            DB::raw("COUNT(order_items.id) as total_product")
-        )->join("customers", "customers.id", "=", "orders.customer_id")
-            ->join("users as created_user", "created_user.id", "=", "orders.created_by")
-            ->leftJoin("users as approved_user", "approved_user.id", "=", "orders.approved_by")
-            ->leftJoin("order_items", "order_items.order_id", "=", "orders.id")
-            ->groupBy("orders.id")
-            ->orderBy("orders.id",$data['order_by'])
-            ->where('orders.business_id',$data['business_id']);
-        if (!empty($data['status'])) {
-            $list = $list->where('orders.status', $data['status']);
-        }
-        if (!empty($data['keywords'])) {
-            $list = $list->where('orders.order_no', 'like', '%' . $data['keywords'] . '%');
-        }
-        return $list->paginate(15)->toArray();
-    }
 }

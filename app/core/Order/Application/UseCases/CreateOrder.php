@@ -2,6 +2,11 @@
 
 namespace Core\Order\Application\UseCases;
 
+use App\Supports\Hooks\HookAction;
+use App\Supports\Hooks\HookContext;
+use App\Supports\Hooks\HookDispatcher;
+use App\Supports\Hooks\HookPhase;
+use App\Supports\Hooks\HookTiming;
 use Core\Order\Application\DTOs\CreateOrderRequest;
 use Core\Order\Domain\Services\OrderService;
 use Illuminate\Support\Facades\DB;
@@ -9,12 +14,35 @@ use Illuminate\Support\Facades\Event;
 
 class CreateOrder
 {
-    public function __construct(private OrderService $service, ) {}
+    public function __construct(private OrderService $service, 
+        private HookDispatcher $hooks) {}
 
-    public function handle(CreateOrderRequest $dto)
+    public function handle(array $data)
     {
         DB::beginTransaction();
+        $data = $this->hooks->dispatch(
+            new HookContext(
+                action: HookAction::CREATE,
+                phase: HookPhase::RESPONSE,
+                timing: HookTiming::BEFORE,
+                payload: $data,
+                module: 'Order'
+            )
+        );
+        $dto = CreateOrderRequest::fromArray($data);
         $create = $this->service->create($dto->toArray());
+        $data = $this->hooks->dispatch(
+            new HookContext(
+                action: HookAction::CREATE,
+                phase: HookPhase::RESPONSE,
+                timing: HookTiming::AFTER,
+                payload: [
+                    ...$data,
+                    ...$create->toArray()
+                ],
+                module: 'Order'
+            )
+        );
         Event::dispatch("erp.order.create", [
             ...$create->toArray(),
             'user_id' => $dto->created_by,
@@ -38,6 +66,6 @@ class CreateOrder
             'chanels' => ['db']
         ]);
         DB::commit();
-        return $create;
+        return $data;
     }
 }
