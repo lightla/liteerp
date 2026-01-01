@@ -11,6 +11,8 @@ import SearchInput from '../../UI/Input/SearchInput'
 import { usePopup } from '../../popups/PopupContext';
 import StatusBadge from '../../StatusBadge'
 import RenderFieldTableByList from '../../RenderFieldTableByList'
+import {RenderTableSearch} from '../../RenderTableSearch'
+import PrimaryButton from '../../UI/Buttons/PrimaryButton';
 export default function StockIns() {
     const navigate = useNavigate();
     const search = useForm();
@@ -21,9 +23,7 @@ export default function StockIns() {
         table.setLoading(true)
         StockInService.list({
             page: page,
-            keywords: search.formData?.keywords ?? '',
-            status: search.formData?.status ?? '',
-            order_by: search.formData?.order_by ?? ''
+            ...search.formData
         }).then((resp) => {
             table.setData(resp.message.data);
             table.setLinks(resp.message.links);
@@ -45,6 +45,7 @@ export default function StockIns() {
             table.addColums(resp.message.index, (item, data) => {
                 return <RenderFieldTableByList item={item} data={data} />
             })
+            search.setHookRender(resp.message.search)
         })
             .catch((error) => {
                 if (error.response.message?.errors) {
@@ -143,7 +144,12 @@ export default function StockIns() {
                                 { value: 'DESC', label: 'Newest' }
                             ]} />
                     </div>
-                    <div className='col-6'>
+                    {search.hookRender.map((item,index) => {
+                        return <div className='col-3 ml-2' key={index}>
+                            <RenderTableSearch item={item} search={search}/>
+                        </div>
+                    })}
+                    <div className='col-6 ml-2'>
                         <label>Search</label>
                         <SearchInput
                             submit={getListStockIn}
@@ -152,6 +158,9 @@ export default function StockIns() {
                             value={search.formData?.keywords}
                             handleChange={search.handleChange}
                         />
+                    </div>
+                    <div className='col-3 ml-2'>
+                        <PrimaryButton label='Search' onClick={() => getListStockIn()} />
                     </div>
                 </div>
             </div>}
