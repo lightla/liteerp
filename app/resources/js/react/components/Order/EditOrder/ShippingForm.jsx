@@ -3,6 +3,7 @@ import { usePopup } from '../../popups/PopupContext';
 import { InputForm } from '../../UI/Input/InputForm';
 import SearchSelect from '../../UI/Input/SearchSelect';
 import ShippingService from '../../../services/ShippingService';
+import RenderFormFieldByList from '../../RenderFormFieldByList';
 export default function ShippingForm({
     form = {
         formData: null,
@@ -113,6 +114,10 @@ export default function ShippingForm({
                 defaultKeywords={form.formData?.shipping_provider_name ?? ''}
             />
         </div>
-
+        {form.hookRender.map((item,index) => {
+            return <div className='form-group mt-3' key={index}>
+                <RenderFormFieldByList item={item} form={form}/>
+            </div>
+        })}        
     </div>
 }

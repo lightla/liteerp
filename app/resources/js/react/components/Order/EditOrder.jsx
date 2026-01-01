@@ -93,6 +93,7 @@ export default function EditOrder() {
     }, [searchParams]);
     const saveShipping = useCallback(() => {
         shippingForm.setLoading(true)
+        shippingForm.setFormErrors(null)
         OrderShippingService.update(shippingForm.formData)
             .then((resp) => {
                 openPopup({
@@ -105,7 +106,7 @@ export default function EditOrder() {
             })
             .catch((error) => {
                 if (error.response.data?.errors) {
-                    form.setFormErrors(error.response.data?.errors)
+                    shippingForm.setFormErrors(error.response.data?.errors)
                 }
                 if (error.response.data?.message) {
                     openPopup({
@@ -206,8 +207,29 @@ export default function EditOrder() {
             })
     }, [detail])
 
+    const shippingView = useCallback(() => {
+        OrderShippingService.view()
+            .then((resp) => {
+                shippingForm.setHookRender(resp.message.form)
+            }).catch((error) => {
+
+            })
+    }, []);
+
+    const detailView = useCallback(() => {
+        OrderService.view()
+            .then((resp) => {
+               form.setHookRender(resp.message.index)
+            })
+            .catch((error) => {
+
+            })
+    }, [searchParams]);
+
     useEffect(() => {
         getDetail();
+        shippingView();
+        detailView();
     }, []);
     useEffect(() => {
         if (detail) {

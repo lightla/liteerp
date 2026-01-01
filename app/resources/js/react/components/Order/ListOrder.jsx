@@ -11,67 +11,14 @@ import PageHead from '../PageHead';
 import StatusBadge from '../StatusBadge';
 import ContentOnTable from '../ContentOnTable'
 import PaymentMethod from '../PaymentMethod'
+import RenderFieldTableByList from '../RenderFieldTableByList'
+import {RenderTableSearch} from '../RenderTableSearch'
+import PrimaryButton from '../UI/Buttons/PrimaryButton';
 export default function ListOrder() {
     const navigate = useNavigate();
     const { openPopup } = usePopup();
     const table = useTable();
     const search = useForm();
-    const columns = [
-        { label: "ID", key: "id" },
-        {
-            label: "Customer name", key: "customer_name", render: (value) => {
-                return <ContentOnTable value={value} />
-            }
-        },
-        {
-            label: "Address shipping", key: "customer_address", render: (value) => {
-                return <ContentOnTable value={value} />
-            }
-        },
-        {
-            label: "Order type", key: "type", render: (value) => {
-                return <span className='badge bg-primary text-uppercase'>{value}</span>
-            }
-        },
-        { label: "Order no", key: "order_no" },
-        {
-            label: "Products",
-            key: "total_product",
-            render: (value) => {
-                return <span>{value}</span>
-            }
-        },
-        {
-            label: "Status",
-            key: "status",
-            render: (value) => {
-                return <StatusBadge status={value} />
-            },
-        },
-        {
-            label: "Payment",
-            key: "payment_method",
-            render: (value) => {
-                return <PaymentMethod value={value} />
-            },
-        },
-        {
-            label: "Created by",
-            key: "created_name",
-            render: (value) => {
-                return <span className='badge bg-primary text-uppercase'>
-                    {value}</span>
-            }
-        },
-        {
-            label: "Approved by",
-            key: "approved_name",
-            render: (value) => {
-                return <span className='badge bg-primary text-uppercase'>
-                    {value}</span>
-            }
-        }
-    ];
 
     const handleEdit = (row) => {
         navigate('/orders?form=edit&id=' + row.id)
@@ -80,9 +27,7 @@ export default function ListOrder() {
         table.setLoading(true);
         OrderService.list({
             page: page,
-            keywords: search.formData?.keywords ?? '',
-            status: search.formData?.status ?? '',
-            order_by: search.formData?.order_by ?? ''
+            ...search.formData
         })
             .then((resp) => {
                 table.setData(resp.message.data);
@@ -98,9 +43,78 @@ export default function ListOrder() {
                 }
             })
     }, [search.formData]);
+    const view = useCallback(() => {
+        OrderService.view()
+            .then((resp) => {
+                table.addColums(resp.message.index,(item,data) => {
+                    return <RenderFieldTableByList item={item} data={data}/>
+                })
+                search.setHookRender(resp.message.search)
+            })
+            .catch((error) => {
+
+            })
+    }, []);
     useEffect(() => {
         getOrders();
-    }, [search.formData?.status,search.formData?.order_by]);
+        table.setColums([
+            { label: "ID", key: "id" },
+            {
+                label: "Customer name", key: "customer_name", render: (value) => {
+                    return <ContentOnTable value={value} />
+                }
+            },
+            {
+                label: "Address shipping", key: "customer_address", render: (value) => {
+                    return <ContentOnTable value={value} />
+                }
+            },
+            {
+                label: "Order type", key: "type", render: (value) => {
+                    return <span className='badge bg-primary text-uppercase'>{value}</span>
+                }
+            },
+            { label: "Order no", key: "order_no" },
+            {
+                label: "Products",
+                key: "total_product",
+                render: (value) => {
+                    return <span>{value}</span>
+                }
+            },
+            {
+                label: "Status",
+                key: "status",
+                render: (value) => {
+                    return <StatusBadge status={value} />
+                },
+            },
+            {
+                label: "Payment",
+                key: "payment_method",
+                render: (value) => {
+                    return <PaymentMethod value={value} />
+                },
+            },
+            {
+                label: "Created by",
+                key: "created_name",
+                render: (value) => {
+                    return <span className='badge bg-primary text-uppercase'>
+                        {value}</span>
+                }
+            },
+            {
+                label: "Approved by",
+                key: "approved_name",
+                render: (value) => {
+                    return <span className='badge bg-primary text-uppercase'>
+                        {value}</span>
+                }
+            }
+        ])
+        view();
+    }, []);
     return <div>
         <div>
             <PageHead
@@ -124,7 +138,7 @@ export default function ListOrder() {
                                 ]}
                             />
                         </div>
-                        <div className='col-3 mx-2'>
+                        <div className='col-3 ml-2'>
                             <label>Order by</label>
                             <Select
                                 name='order_by'
@@ -136,7 +150,12 @@ export default function ListOrder() {
                                     { value: 'DESC', label: 'Newest' }
                                 ]} />
                         </div>
-                        <div className='col-6'>
+                        {search.hookRender.map((item,index) => {
+                            return <div className='col-3 ml-2' key={index}>
+                                <RenderTableSearch item={item} search={search}/>
+                            </div>
+                        })}
+                        <div className='col-6 ml-2'>
                             <label>Search</label>
                             <SearchInput
                                 submit={getOrders}
@@ -146,9 +165,12 @@ export default function ListOrder() {
                                 placeholder='Search by customer name'
                             />
                         </div>
+                        <div className='col-2 ml-2'>
+                            <PrimaryButton label='Search' onClick={() => getOrders()}/>
+                        </div>
                     </div>}
                     add={() => navigate('/orders?form=add')}
-                    columns={columns}
+                    columns={table.colums}
                     data={table?.data}
                     links={table?.links}
                     onEdit={handleEdit}

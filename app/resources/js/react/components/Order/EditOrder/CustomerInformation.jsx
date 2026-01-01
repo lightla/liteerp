@@ -4,6 +4,7 @@ import { Select } from '../../UI/Input/Select';
 import { InputForm } from '../../UI/Input/InputForm';
 import TextArea from '../../UI/Input/Textarea';
 import CustomerService from '../../../services/CustomerService';
+import RenderFormFieldByList from '../../RenderFormFieldByList'
 export default function CustomerInformation({
     form = {
         formData: null,
@@ -97,6 +98,11 @@ export default function CustomerInformation({
                     value={form.formData?.note}
                     errorMessage={form.formErrors?.note} />
             </div>
+            {form.hookRender.map((item,index) => {
+                return <div className='form-group mt-3' key={index}>
+                    <RenderFormFieldByList item={item} form={form}/>
+                </div>
+            })}
         </div>
     </div>
 }

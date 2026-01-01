@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import PageHead from '../PageHead'
 import FormStep from '../FormStep'
 import { useForm } from '../../libraries/handleInput';
@@ -40,6 +40,19 @@ export default function AddOrder() {
                 form.setLoading(false);
             })
     }, [form.formData]);
+
+    const detailView = useCallback(() => {
+        OrderService.view()
+            .then((resp) => {
+               form.setHookRender(resp.message.index)
+            })
+            .catch((error) => {
+
+            })
+    }, []);
+    useEffect(() => {
+        detailView();
+    },[])
     return <div>
         <PageHead title='Order' subtitle='Add new order' />
         <div className='container mt-3'>
