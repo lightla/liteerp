@@ -11,6 +11,5 @@ interface StockOutRepositoryInterface
     public function findById(array $data) : ?StockOut;
     public function getByInvoiceInId(array $data) : ?StockOut;
     public function update(StockOut $entity) : StockOut;
-    public function index(array $data) : array;
     public function findByIdWithFullData(array $data) : array;
 }

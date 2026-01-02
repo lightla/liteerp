@@ -18,10 +18,6 @@ class StockOutServiceImpl implements StockOutService
         $entity->markPending();
         return $this->repo->create($entity);
     }
-    public function index(array $data): array
-    {
-        return $this->repo->index($data);
-    }
     public function update(array $data): StockOut|BadException
     {
         $entity = $this->repo->findById($data);

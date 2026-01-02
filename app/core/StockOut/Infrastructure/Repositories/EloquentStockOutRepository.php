@@ -42,43 +42,6 @@ class EloquentStockOutRepository implements StockOutRepositoryInterface
         ->update($entity->toArray());
         return $entity;
     }
-    public function index(array $data): array
-    {
-        $index = StockOutModel::select("stock_outs.*",
-        DB::raw("SUM(order_items.buy_quantity) + SUM(order_items.gift_quantity) 
-            + SUM(order_items.compensation_quantity) 
-            + SUM(order_items.conversion_quantity) as quantity"),
-            "orders.expected_delivery_date as expected_delivery_date",
-            "orders.order_date as order_date",
-            "orders.status as order_status",
-            "orders.id as order_id",
-            "invoice_outs.document_no as document_no",
-            "customers.name as customer_name",
-            DB::raw("
-            CASE
-                WHEN shippings.shipping_fee_actual > 0
-                    THEN shippings.shipping_fee_actual
-                ELSE shippings.shipping_fee_estimated
-            END AS shipping_fee
-            "))
-        ->join("invoice_outs","invoice_outs.id","=","stock_outs.invoice_out_id")
-        ->join("orders","orders.id","=","invoice_outs.order_id")
-        ->join('shippings','shippings.order_id','=','orders.id')
-        ->join("order_items","order_items.order_id","=","orders.id")
-        ->join("inventories","inventories.id","=","order_items.inventory_id")
-        ->join("products","products.id","=","inventories.product_id")
-        ->join("customers","customers.id","=","orders.customer_id")
-        ->groupBy("stock_outs.id")
-        ->where('stock_outs.business_id',$data['business_id']);
-        if(!empty($data['keywords'])) {
-            $index = $index->where('invoice_outs.document_no','like'
-                ,'%'.$data['keywords'].'%');
-        }
-        if(!empty($data['status'])) {
-            $index = $index->where('stock_outs.status',$data['status']);
-        }
-        return $index->orderBy("stock_outs.id",$data['order_by'])->paginate(15)->toArray();
-    }
     public function findByIdWithFullData(array $data): array
     {
         return StockOutModel::select("stock_outs.*",

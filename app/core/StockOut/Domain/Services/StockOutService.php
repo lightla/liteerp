@@ -8,7 +8,6 @@ use Core\StockOut\Domain\Entities\StockOut;
 interface StockOutService
 {
     public function create(array $data): StockOut;
-    public function index(array $data) : array;
     public function update(array $data) : StockOut | BadException;
     public function show(array $data) : array;
     public function findById(array $data) : StockOut | BadException;
