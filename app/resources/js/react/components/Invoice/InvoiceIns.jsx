@@ -11,6 +11,7 @@ import { useNavigate } from 'react-router-dom';
 import Currencies from '../../components/Currencies'
 import StatusBadge from '../StatusBadge'
 import RenderFieldTableByList from '../RenderFieldTableByList'
+import { RenderTableSearch } from '../RenderTableSearch';
 export default function InvoiceIns() {
     const navigate = useNavigate();
     const { openPopup } = usePopup();
@@ -44,9 +45,10 @@ export default function InvoiceIns() {
     const view = useCallback((page = 0) => {
         InvoiceInService.view()
             .then((resp) => {
-                table.addColums(resp.message.index,(item,data) => {
-                    return <RenderFieldTableByList item={item} data={data}/>
+                table.addColums(resp.message.index, (item, data) => {
+                    return <RenderFieldTableByList item={item} data={data} />
                 })
+                search.setHookRender(resp.message.search)
             })
             .catch((error) => {
                 if (error.response.data?.message) {
@@ -143,7 +145,7 @@ export default function InvoiceIns() {
                         ]}
                     />
                 </div>
-                <div className='col-3 mx-2'>
+                <div className='col-3 ml-2'>
                     <label>Order by</label>
                     <Select
                         name='order_by'
@@ -155,7 +157,12 @@ export default function InvoiceIns() {
                             { value: 'DESC', label: 'Newest' }
                         ]} />
                 </div>
-                <div className="col-6">
+                {search.hookRender.map((item, index) => {
+                    return <div className='col-3 ml-2' key={index}>
+                        <RenderTableSearch item={item} search={search}/>
+                    </div>
+                })}
+                <div className="col-6 ml-2">
                     <label>Search</label>
                     <SearchInput
                         placeholder="Search by document"

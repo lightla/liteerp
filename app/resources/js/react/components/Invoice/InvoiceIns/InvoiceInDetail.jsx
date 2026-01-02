@@ -103,6 +103,7 @@ export default function InvoiceInDetail() {
         InvoiceInService.view()
             .then((resp) => {
                 form.setHookRender(resp.message.form)
+                
             })
             .catch((error) => {
                 if (error.response.data?.message) {
