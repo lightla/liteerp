@@ -2,6 +2,11 @@
 
 namespace Core\StockIn\Http\Requests;
 
+use App\Supports\Hooks\HookAction;
+use App\Supports\Hooks\HookContext;
+use App\Supports\Hooks\HookDispatcher;
+use App\Supports\Hooks\HookPhase;
+use App\Supports\Hooks\HookTiming;
 use Illuminate\Foundation\Http\FormRequest;
 
 class IndexStockInRequest extends FormRequest
@@ -11,12 +16,21 @@ class IndexStockInRequest extends FormRequest
         return true;
     }
 
-    public function rules(): array
+    public function rules(HookDispatcher $dispatch): array
     {
         return [
             'keywords' => 'nullable|string|max:150',
             'status' => 'nullable|in:received,pending,cancelled',
-            'order_by' => 'nullable|in:ASC,DESC'
+            'order_by' => 'nullable|in:ASC,DESC',
+            ...$dispatch->dispatch(
+                new HookContext(
+                    action: HookAction::INDEX,
+                    phase: HookPhase::VALIDATE,
+                    timing: HookTiming::ON,
+                    payload: [],
+                    module: 'StockIn'
+                )
+            )
         ];
     }
 }
