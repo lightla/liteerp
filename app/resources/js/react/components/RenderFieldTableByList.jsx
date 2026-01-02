@@ -1,6 +1,6 @@
 import React from 'react'
 import LoadImage from './LoadImage'
-export default function RenderFormTableByList({
+export default function RenderFieldTableByList({
     item = null,
     data = null
 }) {

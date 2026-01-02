@@ -6,6 +6,7 @@ use Core\InvoiceOut\Application\UseCases\CreateInvoiceOut;
 use Core\InvoiceOut\Application\DTOs\CreateInvoiceOutRequest;
 use Core\InvoiceOut\Application\DTOs\IndexInvoiceOutRequest as DTOsIndexInvoiceOutRequest;
 use Core\InvoiceOut\Application\DTOs\ShowInvoiceOutRequest as DTOsShowInvoiceOutRequest;
+use Core\InvoiceOut\Application\Queries\IndexQuery;
 use Core\InvoiceOut\Application\UseCases\IndexInvoiceOut;
 use Core\InvoiceOut\Application\UseCases\ShowInvoiceOut;
 use Core\InvoiceOut\Application\UseCases\UpdateInvoiceOut;
@@ -18,29 +19,31 @@ class InvoiceOutController
 {
     public function store(FormRequest $request, CreateInvoiceOut $useCase)
     {
-        $dto = CreateInvoiceOutRequest::fromArray($request->all());
-        $entity = $useCase->handle($dto);
+
+        $entity = $useCase->handle($request->all());
         return response()->json(['message' => $entity]);
     }
-    public function index(IndexInvoiceOutRequest $request,IndexInvoiceOut $useCase){
-        $dto = DTOsIndexInvoiceOutRequest::fromArray($request->all());
-        $entity = $useCase->handle($dto);
+    public function index(IndexInvoiceOutRequest $request, IndexQuery $useCase)
+    {
+        $entity = $useCase->handle($request->all());
         return response()->json(['message' => $entity]);
     }
-    public function update(UpdateInvoiceOut $useCase,
+    public function update(
+        UpdateInvoiceOut $useCase,
         UpdateInvoiceOutRequest $request,
-        string $id) {
+        string $id
+    ) {
         $request->merge(['id' => $id]);
-        $dto = CreateInvoiceOutRequest::fromArray($request->all());
-        $entity = $useCase->handle($dto);
+        $entity = $useCase->handle($request->all());
         return response()->json(['message' => $entity]);
     }
-    public function show(string $id,
-    ShowInvoiceOutRequest $request,
-    ShowInvoiceOut $useCase){
+    public function show(
+        string $id,
+        ShowInvoiceOutRequest $request,
+        ShowInvoiceOut $useCase
+    ) {
         $request->merge(['id' => $id]);
-        $dto = DTOsShowInvoiceOutRequest::fromArray($request->all());
-        $entity = $useCase->handle($dto);
+        $entity = $useCase->handle($request->all());
         return response()->json(['message' => $entity]);
     }
 }

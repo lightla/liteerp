@@ -16,6 +16,8 @@ import PageHead from "../../PageHead";
 import LoadingBox from "../../LoadingBox";
 import Currencies from "../../Currencies";
 import UploadImage from '../../UI/Input/UploadImage'
+import RenderFormFieldByList from "../../RenderFormFieldByList";
+import {ExtraCard} from '../../ExtraCard'
 export default function InvoiceOutDetail() {
     const [loading, setLoading] = useState(false)
     const { openPopup } = usePopup();
@@ -24,37 +26,6 @@ export default function InvoiceOutDetail() {
     const table = useTable();
     const [detail, setDetail] = useState(null);
     const [showEdit, setShowEdit] = useState(false);
-    const columns = useMemo(() => {
-        return [
-            { label: "Name", key: "name" },
-            { label: "Buy", key: "buy_quantity" },
-            { label: "Compensation", key: "compensation_quantity" },
-            { label: "Conversion", key: "conversion_quantity" },
-            { label: "Gift", key: "gift_quantity" },
-            {
-                label: 'Sku', key: 'sku'
-            },
-            {
-                label: 'Price', key: 'price'
-            },
-            {
-                label: 'Total tax', key: 'total_tax'
-            },
-            {
-                label: 'Subtotal', key: 'subtotal',
-                render: (value) => {
-                    return <span><Currencies amount={value} /></span>
-                }
-            },
-            {
-                label: 'Total', key: 'total',
-                render: (value) => {
-                    return <span><Currencies amount={value} /></span>
-                }
-            },
-            { label: "Warehouse", key: "warehouse" },
-        ];
-    }, []);
     const getDetail = useCallback(() => {
         setLoading(true)
         InvoiceOutService.show(searchParams.get('id'))
@@ -92,6 +63,20 @@ export default function InvoiceOutDetail() {
             })
             .catch((error) => {
 
+            })
+    }, []);
+    const view = useCallback(() => {
+        InvoiceOutService.view()
+            .then((resp) => {
+                form.setHookRender(resp.message.form)
+            })
+            .catch((error) => {
+                if (error.response.data?.message) {
+                    openPopup({
+                        type: 'error',
+                        message: error.response.data?.message
+                    })
+                }
             })
     }, []);
     useEffect(() => {
@@ -143,6 +128,38 @@ export default function InvoiceOutDetail() {
             update();
         }
     }, [form.formData?.approved, detail?.approved])
+    useEffect(() => {
+        table.setColums([
+            { label: "Name", key: "name" },
+            { label: "Buy", key: "buy_quantity" },
+            { label: "Compensation", key: "compensation_quantity" },
+            { label: "Conversion", key: "conversion_quantity" },
+            { label: "Gift", key: "gift_quantity" },
+            {
+                label: 'Sku', key: 'sku'
+            },
+            {
+                label: 'Price', key: 'price'
+            },
+            {
+                label: 'Total tax', key: 'total_tax'
+            },
+            {
+                label: 'Subtotal', key: 'subtotal',
+                render: (value) => {
+                    return <span><Currencies amount={value} /></span>
+                }
+            },
+            {
+                label: 'Total', key: 'total',
+                render: (value) => {
+                    return <span><Currencies amount={value} /></span>
+                }
+            },
+            { label: "Warehouse", key: "warehouse" },
+        ])
+        view();
+    },[])
     return (
         <div className="text-light min-vh-100">
             <PageHead
@@ -232,6 +249,7 @@ export default function InvoiceOutDetail() {
                                     </div>
                                 </div>
                             </div>
+                            <ExtraCard form={form}/>
                             {/* Shipping Info */}
                             <div className="p-4 rounded border mt-3">
                                 <div className="d-flex justify-content-between mb-3">
@@ -318,12 +336,8 @@ export default function InvoiceOutDetail() {
                                     <h5 className="fw-semibold">Products Order</h5>
                                     <div className="theme-title small">{table.total} products</div>
                                 </div>
-
-                                {/* {products.map((p, idx) => {
-                                return <ProductItem key={idx} product={p} />
-                            })} */}
                                 <CommonDataTable
-                                    columns={columns}
+                                    columns={table.colums}
                                     data={table.data}
                                     links={table.links}
                                     loading={table.loading}
@@ -447,6 +461,11 @@ export default function InvoiceOutDetail() {
                             value={form.formData?.image}
                         />
                     </div>
+                    {form.hookRender.map((item,index) => {
+                        return <div className="form-group mt-3" key={index}>
+                            <RenderFormFieldByList item={item} form={form}/>
+                        </div>
+                    })}
                 </div>
             </PopupLayout> : null}
 

@@ -10,13 +10,58 @@ import { useNavigate } from 'react-router-dom';
 import Currencies from '../Currencies';
 import SearchInput from '../UI/Input/SearchInput';
 import StatusBadge from '../StatusBadge';
+import RenderFieldTableByList from '../RenderFieldTableByList'
+import { RenderTableSearch } from '../RenderTableSearch';
+import PrimaryButton from '../UI/Buttons/PrimaryButton';
 export default function InvoiceOuts() {
     const navigate = useNavigate();
     const search = useForm();
-    const form = useForm();
     const table = useTable();
     const { openPopup } = usePopup();
-    const columns = [
+    const getInvoices = useCallback((page = 0) => {
+        table.setLoading(true);
+        InvoiceOutService.list({
+            page: page,
+            keywords: search?.formData?.keywords ?? '',
+            payment_status: search?.formData?.payment_status ?? '',
+            order_by: search.formData?.order_by ?? ''
+        })
+            .then((resp) => {
+                table.setData(resp.message.data)
+                table.setLinks(resp.message.links)
+                table.setLoading(false);
+            })
+            .catch((error) => {
+                if (error.response.data?.message) {
+                    openPopup({
+                        type: 'error',
+                        message: error.response.data?.message
+                    })
+                }
+            })
+    }, [table, search.formData]);
+    const view = useCallback(() => {
+        InvoiceOutService.view()
+            .then((resp) => {
+                table.addColums(resp.message.index,(item,data) => {
+                    return <RenderFieldTableByList item={item} data={data}/>
+                })
+                search.setHookRender(resp.message.search)
+            })
+            .catch((error) => {
+                if (error.response.data?.message) {
+                    openPopup({
+                        type: 'error',
+                        message: error.response.data?.message
+                    })
+                }
+            })
+    }, []);
+    const onEdit = (row) => {
+        navigate('/invoices?form=invoiceout&id=' + row.id)
+    }
+    useEffect(() => {
+        table.setColums([
         {
             label: "Customer",
             key: "customer_name",
@@ -76,35 +121,10 @@ export default function InvoiceOuts() {
                 return <StatusBadge status={value} />
             }
         },
-    ];
-    const getInvoices = useCallback((page = 0) => {
-        table.setLoading(true);
-        InvoiceOutService.list({
-            page: page,
-            keywords: search?.formData?.keywords ?? '',
-            payment_status: search?.formData?.payment_status ?? '',
-            order_by: search.formData?.order_by ?? ''
-        })
-            .then((resp) => {
-                table.setData(resp.message.data)
-                table.setLinks(resp.message.links)
-                table.setLoading(false);
-            })
-            .catch((error) => {
-                if (error.response.data?.message) {
-                    openPopup({
-                        type: 'error',
-                        message: error.response.data?.message
-                    })
-                }
-            })
-    }, [table, search.formData]);
-    const onEdit = (row) => {
-        navigate('/invoices?form=invoiceout&id=' + row.id)
-    }
-    useEffect(() => {
+    ])
         getInvoices();
-    }, [search.formData?.payment_status,search.formData?.order_by])
+        view();
+    }, [])
     return <div>
         <CommonDataTable
             filter={<div className="d-flex">
@@ -122,7 +142,7 @@ export default function InvoiceOuts() {
                         ]}
                     />
                 </div>
-                <div className='col-3 mx-2'>
+                <div className='col-3 ml-2'>
                     <label>Order by</label>
                     <Select
                         name='order_by'
@@ -134,7 +154,12 @@ export default function InvoiceOuts() {
                             { value: 'DESC', label: 'Newest' }
                         ]} />
                 </div>
-                <div className="col-6">
+                {search.hookRender.map((item,index) => {
+                    return <div className='col-3 ml-2' key={index}>
+                        <RenderTableSearch item={item} search={search} />
+                    </div>
+                })}
+                <div className="col-6 ml-2">
                     <label>Search</label>
                     <SearchInput
                         placeholder="Search by document"
@@ -144,9 +169,12 @@ export default function InvoiceOuts() {
                         handleChange={search.handleChange}
                     />
                 </div>
+                <div className="col-2 ml-2">
+                    <PrimaryButton label='Search' onClick={() => getInvoices()} />
+                </div>
             </div>}
             loading={table.loading}
-            columns={columns}
+            columns={table.colums}
             data={table.data}
             links={table.links}
             onEdit={onEdit}

@@ -17,8 +17,8 @@ class IndexInvoiceOutRequest
         return new self(
             business_id: $data['business_id'],
             created_by: $data['user_id'],
-            keywords: $data['keywords'],
-            payment_status: $data['payment_status'],
+            keywords: $data['keywords'] ?? null,
+            payment_status: $data['payment_status'] ?? null,
             order_by: $data['order_by'] ?? 'DESC'
         );
     }

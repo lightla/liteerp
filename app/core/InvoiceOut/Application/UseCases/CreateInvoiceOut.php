@@ -2,26 +2,51 @@
 
 namespace Core\InvoiceOut\Application\UseCases;
 
-use App\Jobs\CreateNotificationJob;
-use Core\ActivityLog\Application\DTOs\CreateActivityLogRequest;
-use Core\ActivityLog\Application\UseCases\CreateActivityLog;
+use App\Supports\Hooks\HookAction;
+use App\Supports\Hooks\HookContext;
+use App\Supports\Hooks\HookDispatcher;
+use App\Supports\Hooks\HookPhase;
+use App\Supports\Hooks\HookTiming;
 use Core\InvoiceOut\Application\DTOs\CreateInvoiceOutRequest;
 use Core\InvoiceOut\Domain\Services\InvoiceOutService;
-use Core\Notifications\Application\DTOs\InsertManyNotificationRequest;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Event;
-use Illuminate\Support\Facades\URL;
 
 class CreateInvoiceOut
 {
-    public function __construct(private InvoiceOutService $service) {}
+    public function __construct(
+        private InvoiceOutService $service,
+        private HookDispatcher $hooks
+    ) {}
 
-    public function handle(CreateInvoiceOutRequest $dto)
+    public function handle(array $data)
     {
         DB::beginTransaction();
+        $data = $this->hooks->dispatch(
+            new HookContext(
+                action: HookAction::CREATE,
+                phase: HookPhase::RESPONSE,
+                timing: HookTiming::BEFORE,
+                payload: $data,
+                module: 'InvoiceOut'
+            )
+        );
+        $dto = CreateInvoiceOutRequest::fromArray($data);
         $create = $this->service->create($dto->toArray());
+        $data = $this->hooks->dispatch(
+            new HookContext(
+                action: HookAction::CREATE,
+                phase: HookPhase::RESPONSE,
+                timing: HookTiming::AFTER,
+                payload: [
+                    ...$data,
+                    ...$create->toArray()
+                ],
+                module: 'InvoiceOut'
+            )
+        );
         Event::dispatch("erp.invoiceout.create", [
-            ...$create->toArray(),
+            ...$data,
             'user_id' => $dto->created_by,
             'business_id' => $dto->business_id
         ]);
@@ -32,7 +57,7 @@ class CreateInvoiceOut
             'entity_type' => 'stockout',
             'entity_id' => $create->id,
             'chanels' => ['db'],
-            'roles' => ['admin','manager']
+            'roles' => ['admin', 'manager']
         ]);
         Event::dispatch("erp.notification.create", [
             'user_id' => $dto->created_by,
@@ -43,6 +68,6 @@ class CreateInvoiceOut
             'chanels' => ['db']
         ]);
         DB::commit();
-        return $create;
+        return $data;
     }
 }

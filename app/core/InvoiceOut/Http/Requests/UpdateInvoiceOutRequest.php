@@ -2,12 +2,17 @@
 
 namespace Core\InvoiceOut\Http\Requests;
 
+use App\Supports\Hooks\HookAction;
+use App\Supports\Hooks\HookContext;
+use App\Supports\Hooks\HookDispatcher;
+use App\Supports\Hooks\HookPhase;
+use App\Supports\Hooks\HookTiming;
 use Illuminate\Foundation\Http\FormRequest;
 use Core\InvoiceOut\Application\DTOs\CreateInvoiceOutRequest as CreateInvoiceOutDTO;
 
 class UpdateInvoiceOutRequest extends FormRequest
 {
-    public function rules(): array
+    public function rules(HookDispatcher $hooks): array
     {
         $id = $this->route('invoice_out');
         return [
@@ -18,7 +23,16 @@ class UpdateInvoiceOutRequest extends FormRequest
             'invoice_date' => 'required|date_format:Y-m-d',
             'due_date'     => 'nullable|date_format:Y-m-d',
             'approved'     => 'required|boolean',
-            'image'        => 'nullable|string|max:255' 
+            'image'        => 'nullable|string|max:255',
+            ...$hooks->dispatch(
+                new HookContext(
+                    action: HookAction::CREATE,
+                    phase: HookPhase::VALIDATE,
+                    timing: HookTiming::ON,
+                    payload: [],
+                    module: 'InvoiceOut'
+                )
+            )  
         ];
     }
 

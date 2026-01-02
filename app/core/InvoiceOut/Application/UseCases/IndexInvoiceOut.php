@@ -10,8 +10,9 @@ class IndexInvoiceOut
 {
     public function __construct(private InvoiceOutService $service) {}
 
-    public function handle(IndexInvoiceOutRequest $dto)
+    public function handle(array $data)
     {
+        $dto = IndexInvoiceOutRequest::fromArray($data);
         Event::dispatch('erp.invoiceout.index',[
             ...$dto->toArray(),
             'user_id' => $dto->created_by
