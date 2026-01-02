@@ -12,13 +12,14 @@ import Currencies from '../../Currencies';
 import StatusBadge from '../../StatusBadge';
 import RenderFieldTableByList from '../../RenderFieldTableByList';
 import { RenderTableSearch } from '../../RenderTableSearch';
+import PrimaryButton from '../../UI/Buttons/PrimaryButton';
 export default function StockOuts() {
     const navigate = useNavigate();
     const search = useForm();
     const table = useTable();
     const { openPopup } = usePopup();
 
-    const getListStockIn = useCallback((page = 0) => {
+    const getListStockOut = useCallback((page = 0) => {
         table.setLoading(true)
         StockOutService.list({
             page: page,
@@ -42,8 +43,8 @@ export default function StockOuts() {
     const view = useCallback(() => {
         StockOutService.view()
             .then((resp) => {
-                table.addColums(resp.message.index,(item,data) => {
-                    return <RenderFieldTableByList item={item} data={data}/>
+                table.addColums(resp.message.index, (item, data) => {
+                    return <RenderFieldTableByList item={item} data={data} />
                 });
                 search.setHookRender(resp.message.search)
             })
@@ -59,51 +60,51 @@ export default function StockOuts() {
 
     useEffect(() => {
         table.setColums([
-        { label: "ID", key: "id", render: (id) => <Link to={'/stock?id=' + id}>{id}</Link> },
-        {
-            label: "Customer", key: "customer_name", render: (name) => {
-                return <span>{name}</span>
-            }
-        },
-        {
-            label: "Status", key: "status", render: (value) => {
-                return <StatusBadge status={value} />
-            }
-        },
+            { label: "ID", key: "id", render: (id) => <Link to={'/stock?id=' + id}>{id}</Link> },
+            {
+                label: "Customer", key: "customer_name", render: (name) => {
+                    return <span>{name}</span>
+                }
+            },
+            {
+                label: "Status", key: "status", render: (value) => {
+                    return <StatusBadge status={value} />
+                }
+            },
 
-        {
-            label: "Invoice no", key: "document_no", render: (products) => {
-                return <span>{products}</span>
-            }
-        },
+            {
+                label: "Invoice no", key: "document_no", render: (products) => {
+                    return <span>{products}</span>
+                }
+            },
 
-        {
-            label: "Quantity", key: "quantity", render: (products) => {
-                return <span>{products}</span>
-            }
-        },
+            {
+                label: "Quantity", key: "quantity", render: (products) => {
+                    return <span>{products}</span>
+                }
+            },
 
-        {
-            label: "Shipping fee",
-            key: "shipping_fee",
-            render: (name) => {
-                return <span><Currencies amount={name} /></span>
-            }
-        },
-        {
-            label: "Expected delivery date",
-            key: "expected_delivery_date",
-            render: (date) => {
-                return <span>{date}</span>
-            }
-        },
-        {
-            label: "Order status", key: "order_status", render: (value) => {
-                return <StatusBadge status={value} />
-            }
-        },
-    ])
-        getListStockIn();
+            {
+                label: "Shipping fee",
+                key: "shipping_fee",
+                render: (name) => {
+                    return <span><Currencies amount={name} /></span>
+                }
+            },
+            {
+                label: "Expected delivery date",
+                key: "expected_delivery_date",
+                render: (date) => {
+                    return <span>{date}</span>
+                }
+            },
+            {
+                label: "Order status", key: "order_status", render: (value) => {
+                    return <StatusBadge status={value} />
+                }
+            },
+        ])
+        getListStockOut();
         view();
     }, []);
     return <div className='mt-3'>
@@ -136,20 +137,23 @@ export default function StockOuts() {
                                 { value: 'DESC', label: 'Newest' }
                             ]} />
                     </div>
-                    {search.hookRender.map((item,index) => {
-                        return <div className='col-3 ml-2'>
-                            <RenderTableSearch item={item} search={search}/>
+                    {search.hookRender.map((item, index) => {
+                        return <div className='col-3 ml-2' key={index}>
+                            <RenderTableSearch item={item} search={search} />
                         </div>
                     })}
                     <div className='col-6 ml-2'>
                         <label>Search</label>
                         <SearchInput
-                            submit={getListStockIn}
+                            submit={getListStockOut}
                             name='keywords'
                             value={search.formData?.keywords}
                             handleChange={search.handleChange}
                             placeholder='Search by invoice'
                         />
+                    </div>
+                    <div className='col-3 ml-2'>
+                        <PrimaryButton label='Search' onClick={() => getListStockOut()} />
                     </div>
                 </div>
             </div>}
