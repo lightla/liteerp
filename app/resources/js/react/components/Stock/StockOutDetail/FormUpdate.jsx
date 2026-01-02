@@ -3,6 +3,7 @@ import { InputForm } from '../../UI/Input/InputForm'
 import TextArea from '../../UI/Input/Textarea'
 import SearchSelect from '../../UI/Input/SearchSelect'
 import ShippingService from '../../../services/ShippingService';
+import RenderFormFieldByList from '../../RenderFormFieldByList';
 export default function FormUpdate({
     form = {
         formData: null,
@@ -139,5 +140,10 @@ export default function FormUpdate({
                 defaultKeywords={form.formData?.preferred_unit_name}
             />
         </div>
+        {form.hookRender.map((item,index) => {
+            return <div key={index}>
+                <RenderFormFieldByList item={item} form={form}/>
+            </div>
+        })}
     </div>
 }

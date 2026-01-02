@@ -2,6 +2,11 @@
 
 namespace Core\StockOut\Application\UseCases;
 
+use App\Supports\Hooks\HookAction;
+use App\Supports\Hooks\HookContext;
+use App\Supports\Hooks\HookDispatcher;
+use App\Supports\Hooks\HookPhase;
+use App\Supports\Hooks\HookTiming;
 use Core\StockOut\Application\DTOs\CreateStockOutRequest;
 use Core\StockOut\Domain\Entities\StockOut;
 use Core\StockOut\Domain\Services\StockOutService;
@@ -12,16 +17,39 @@ class UpdateStockOut
 {
     public function __construct(
         private StockOutService $service,
+        private HookDispatcher $hooks
     ) {}
 
-    public function handle(CreateStockOutRequest $dto): StockOut
+    public function handle(array $data): array
     {
         DB::beginTransaction();
+        $data = $this->hooks->dispatch(
+            new HookContext(
+                action: HookAction::UPDATE,
+                phase: HookPhase::RESPONSE,
+                timing: HookTiming::BEFORE,
+                payload: $data,
+                module: 'StockOut'
+            )
+        );
+        $dto = CreateStockOutRequest::fromArray($data);
         $update = $this->service->update($dto->toArray());
+        $data = $this->hooks->dispatch(
+            new HookContext(
+                action: HookAction::UPDATE,
+                phase: HookPhase::RESPONSE,
+                timing: HookTiming::AFTER,
+                payload: [
+                    ...$data,
+                    ...$update->toArray()
+                ],
+                module: 'StockOut'
+            )
+        );
         $statusNotify = 'updated';
         if($update->isCompleted()) {
             Event::dispatch("erp.stockout.completed", [
-                ...$update->toArray(),
+                ...$data,
                 'user_id' => $dto->created_by,
                 'business_id' => $dto->business_id,
                 'order_id' => $dto->order_id,
@@ -63,6 +91,6 @@ class UpdateStockOut
             'chanels' => ['db']
         ]);
         DB::commit();
-        return $update;
+        return $data;
     }
 }

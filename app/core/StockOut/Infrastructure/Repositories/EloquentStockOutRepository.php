@@ -57,8 +57,8 @@ class EloquentStockOutRepository implements StockOutRepositoryInterface
             DB::raw("
             CASE
                 WHEN shippings.shipping_fee_actual > 0
-                    THEN shipping_fee_actual
-                ELSE shipping_fee_estimated
+                    THEN shippings.shipping_fee_actual
+                ELSE shippings.shipping_fee_estimated
             END AS shipping_fee
             "))
         ->join("invoice_outs","invoice_outs.id","=","stock_outs.invoice_out_id")
@@ -95,13 +95,13 @@ class EloquentStockOutRepository implements StockOutRepositoryInterface
         "shippings.receiver_note as receiver_note",
         "shippings.shipping_unit as shipping_unit",
         "shippings.shipping_code as shipping_code",
-        // "shippings.shipping_fee_actual as shipping_fee_actual",
-        // "shippings.shipping_fee_estimated as shipping_fee_estimated",
+        "shippings.shipping_fee_actual as shipping_fee_actual",
+        "shippings.shipping_fee_estimated as shipping_fee_estimated",
         DB::raw("
         CASE
             WHEN shippings.shipping_fee_actual > 0
-                THEN shipping_fee_actual
-            ELSE shipping_fee_estimated
+                THEN shippings.shipping_fee_actual
+            ELSE shippings.shipping_fee_estimated
         END AS shipping_fee
         "),
         "shippings.id as shipping_id",

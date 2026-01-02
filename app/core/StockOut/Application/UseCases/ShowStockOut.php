@@ -2,15 +2,45 @@
 
 namespace Core\StockOut\Application\UseCases;
 
-use Core\StockOut\Application\DTOs\CreateStockOutRequest;
+use App\Supports\Hooks\HookAction;
+use App\Supports\Hooks\HookContext;
+use App\Supports\Hooks\HookDispatcher;
+use App\Supports\Hooks\HookPhase;
+use App\Supports\Hooks\HookTiming;
+use Core\StockOut\Application\DTOs\ShowStockOutRequest;
 use Core\StockOut\Domain\Services\StockOutService;
 
 class ShowStockOut
 {
-    public function __construct(private StockOutService $service) {}
+    public function __construct(private StockOutService $service,
+        private HookDispatcher $hooks) {}
 
-    public function handle(array $dto) : array
+    public function handle(array $data) : array
     {
-        return $this->service->show($dto);
+        $data = $this->hooks->dispatch(
+            new HookContext(
+                action: HookAction::SHOW,
+                phase: HookPhase::RESPONSE,
+                timing: HookTiming::BEFORE,
+                payload: $data,
+                module: 'StockOut'
+            )
+        );
+        $dto = ShowStockOutRequest::fromArray($data);
+        
+        $show = $this->service->show($dto->toArray());
+        $data = $this->hooks->dispatch(
+            new HookContext(
+                action: HookAction::SHOW,
+                phase: HookPhase::RESPONSE,
+                timing: HookTiming::AFTER,
+                payload: [
+                    ...$data,
+                    ...$show
+                ],
+                module: 'StockOut'
+            )
+        );
+        return $data;
     }
 }

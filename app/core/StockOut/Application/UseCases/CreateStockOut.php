@@ -2,6 +2,11 @@
 
 namespace Core\StockOut\Application\UseCases;
 
+use App\Supports\Hooks\HookAction;
+use App\Supports\Hooks\HookContext;
+use App\Supports\Hooks\HookDispatcher;
+use App\Supports\Hooks\HookPhase;
+use App\Supports\Hooks\HookTiming;
 use Core\StockOut\Application\DTOs\CreateStockOutRequest;
 use Core\StockOut\Domain\Entities\StockOut;
 use Core\StockOut\Domain\Services\StockOutService;
@@ -9,14 +14,37 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Event;
 class CreateStockOut
 {
-    public function __construct(private StockOutService $service) {}
+    public function __construct(private StockOutService $service,
+        private HookDispatcher $hooks) {}
 
-    public function handle(CreateStockOutRequest $dto) : StockOut
+    public function handle(array $data) : StockOut
     {
         DB::beginTransaction();
+        $data = $this->hooks->dispatch(
+            new HookContext(
+                action: HookAction::CREATE,
+                phase: HookPhase::RESPONSE,
+                timing: HookTiming::BEFORE,
+                payload: $data,
+                module: 'StockOut'
+            )
+        );
+        $dto = CreateStockOutRequest::fromArray($data);
         $create = $this->service->create($dto->toArray());
+        $data = $this->hooks->dispatch(
+            new HookContext(
+                action: HookAction::CREATE,
+                phase: HookPhase::RESPONSE,
+                timing: HookTiming::AFTER,
+                payload: [
+                    ...$data,
+                    ...$create->toArray()
+                ],
+                module: 'StockOut'
+            )
+        );
         Event::dispatch("erp.stockout.create", [
-            ...$create->toArray(),
+            ...$data,
             'user_id' => $dto->created_by,
             'business_id' => $dto->business_id,
             'order_id' => $dto->order_id
@@ -39,6 +67,6 @@ class CreateStockOut
             'chanels' => ['db']
         ]);
         DB::commit();
-        return $create;
+        return $data;
     }
 }

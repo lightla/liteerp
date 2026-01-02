@@ -17,16 +17,19 @@ import OrderShippingService from "../../services/OrderShippingService";
 import SuccessButton from "../UI/Buttons/SuccessButton";
 import ShippingInformation from "./StockOutDetail/ShippingInformation";
 import PaymentInformation from "./StockOutDetail/PaymentInformation";
-import StockMovementOut from "../../services/StockMovementOut";
 import PageHead from "../PageHead";
 import LoadingBox from "../LoadingBox";
 import Currencies from "../Currencies";
 import OrderItemService from "../../services/OrderItemService";
+import { ExtraCard } from "../ExtraCard";
+import RenderFormFieldByList from "../RenderFormFieldByList";
 export default function StockOutDetail() {
     const [loading, setLoading] = useState(false)
     const [showForm, setShowForm] = useState(false);
+    const [showExtraForm, setExtraShowForm] = useState(false);
     const tableInventory = useTable();
     const form = useForm();
+    const shippingForm = useForm();
     const { openPopup } = usePopup();
     const [searchParams] = useSearchParams();
     const navigate = useState();
@@ -36,6 +39,7 @@ export default function StockOutDetail() {
         StockOutService.show(searchParams.get('stockout'))
             .then((resp) => {
                 form.setFormData(resp.message);
+                shippingForm.setFormData(resp.message)
                 setDetail(resp.message);
                 setLoading(false);
             })
@@ -44,13 +48,16 @@ export default function StockOutDetail() {
             });
     }, []);
     const update = useCallback(() => {
+        form.setLoading(true)
+        form.setFormErrors(null)
         StockOutService.update(form.formData)
             .then((resp) => {
                 openPopup({
                     type: 'success',
-                    message: 'You has been confirmed'
+                    message: 'You has been updated'
                 })
                 setDetail(form.formData);
+                form.setLoading(false)
             })
             .catch((error) => {
                 if (error.response.data?.message) {
@@ -62,20 +69,24 @@ export default function StockOutDetail() {
                 if (error.response.data?.errors) {
                     form.setFormErrors(error.response?.data?.errors)
                 }
+                form.setLoading(false)
             })
     }, [form.formData]);
     const updateShipping = useCallback(() => {
+        shippingForm.setLoading(true)
+        shippingForm.setFormErrors(null)
         OrderShippingService.update({
-            ...form.formData,
-            id: form.formData?.shipping_id
+            ...shippingForm.formData,
+            id: shippingForm.formData?.shipping_id
         })
             .then((resp) => {
                 openPopup({
                     type: 'success',
                     message: 'You has been update'
                 })
-                setDetail(form.formData);
                 setShowForm(false);
+                shippingForm.setLoading(false)
+                getDetail();
             })
             .catch((error) => {
                 if (error.response.data?.message) {
@@ -85,10 +96,11 @@ export default function StockOutDetail() {
                     })
                 }
                 if (error.response.data?.errors) {
-                    form.setFormErrors(error.response?.data?.errors)
+                    shippingForm.setFormErrors(error.response?.data?.errors)
                 }
+                shippingForm.setLoading(false)
             })
-    }, [form.formData]);
+    }, [shippingForm.formData]);
     const confirmSent = useCallback(() => {
         openPopup({
             type: 'warning',
@@ -118,30 +130,42 @@ export default function StockOutDetail() {
             .then((resp) => {
                 tableInventory.setData(resp.message.data);
                 tableInventory.setLoading(false);
+                tableInventory.setTotal(resp.message.total)
             })
             .catch((error) => {
                 tableInventory.setLoading(false);
             })
     }, [searchParams,detail?.order_id]);
+    const view = useCallback(() => {
+        StockOutService.view()
+            .then((resp) => {
+                form.setHookRender(resp.message.index)
+            })
+            .catch((error) => {
+                if (error.response?.message?.errors) {
+                    openPopup({
+                        type: 'error',
+                        message: error.response.message?.errors
+                    })
+                }
+            })
+    }, []);
+    const shippingview = useCallback(() => {
+        OrderShippingService.view()
+            .then((resp) => {
+                shippingForm.setHookRender(resp.message.index)
+            })
+            .catch((error) => {
+                if (error.response?.message?.errors) {
+                    openPopup({
+                        type: 'error',
+                        message: error.response.message?.errors
+                    })
+                }
+            })
+    }, []);
     useEffect(() => {
-        if (!searchParams.get('stockout')) {
-            return;
-        }
-        if(!detail?.order_id) {
-            getDetail();
-        } else {
-            getOrderItem();
-        }
-        
-        //getInventories();
-    }, [detail?.order_id]);
-    useEffect(() => {
-        if (detail?.status !== form.formData?.status) {
-            update();
-        }
-    }, [detail?.status, form.formData?.status]);
-    const columns = useMemo(() => {
-        return [
+        tableInventory.setColums([
             { label: "Name", key: "name" },
             { label: "Buy", key: "buy_quantity" },
             { label: "Compensation", key: "compensation_quantity" },
@@ -178,8 +202,23 @@ export default function StockOutDetail() {
                 }
             },
             { label: "Warehouse", key: "warehouse" },
-        ];
-    }, []);
+        ])
+        if (!searchParams.get('stockout')) {
+            return;
+        }
+        if(!detail?.order_id) {
+            getDetail();
+        } else {
+            getOrderItem();
+        }
+        shippingview();
+        view();
+    }, [detail?.order_id]);
+    useEffect(() => {
+        if (detail?.status !== form.formData?.status) {
+            update();
+        }
+    }, [detail?.status, form.formData?.status]);
     return (
         <div className="min-vh-100">
             <PageHead
@@ -213,13 +252,15 @@ export default function StockOutDetail() {
 
                                 <div className="mt-3">
                                     <div className="theme-title small">Note</div>
-                                    <div>{form.formData?.receiver_note ?? '-'}</div>
+                                    <div>{form.formData?.order_note ?? '-'}</div>
                                 </div>
                             </div>
                             {/* Customer Info */}
                             <CustomerInfo form={form} />
                             {/* Shipping Info */}
-                            <ShippingInformation form={form} />
+                            <ShippingInformation form={shippingForm} />
+                            <ExtraCard form={form} title="Stock extras"/>
+                            <ExtraCard form={shippingForm} title="Shipping extras"/>
                             {/* Iventory */}
                             <div className="rounded mt-4 mb-5">
                                 <div className="d-flex justify-content-between mb-3">
@@ -229,7 +270,7 @@ export default function StockOutDetail() {
 
                                 {/** Table */}
                                 <CommonDataTable
-                                    columns={columns}
+                                    columns={tableInventory.colums}
                                     data={tableInventory.data}
                                     links={tableInventory.links}
                                     loading={tableInventory.loading}
@@ -280,7 +321,8 @@ export default function StockOutDetail() {
                             {form.formData?.status !== 'received' ? <div className="row">
                                 <div className="col-6">
                                     {detail?.status === 'pending'
-                                        ? <PrimaryButton onClick={confirmSent} label="Shipped" />
+                                        ? <PrimaryButton onClick={confirmSent} 
+                                            label="Shipped" />
                                         : null}
                                     {detail?.status === 'shipped'
                                         ? <SuccessButton
@@ -294,19 +336,38 @@ export default function StockOutDetail() {
                                 <div className="col-6">
                                     <SecondaryButton
                                         disabled={detail?.status !== 'pending'}
-                                        onClick={() => setShowForm(true)} width={'100%'} label="Modifiner" />
+                                        onClick={() => setShowForm(true)} width={'100%'} 
+                                        label="Shipping information" />
                                 </div>
+                                {form.hookRender.length >= 1 ? <div className="col-12">
+                                    <SecondaryButton
+                                        disabled={detail?.status !== 'pending'}
+                                        onClick={() => setExtraShowForm(true)} width={'100%'} 
+                                        label="Extra information" />
+                                </div> : null }
                             </div> : null}
 
                         </div>
                     </div></div>}
             </div>
             {showForm ? <PopupLayout
+                loading={shippingForm.loading}
                 confirmText="Save change"
                 onClose={() => setShowForm(false)}
                 title="Update shipping" onConfirm={() => updateShipping()}>
                 <div>
-                    <FormUpdate form={form} />
+                    <FormUpdate form={shippingForm} />
+                </div>
+            </PopupLayout> : null}
+            {showExtraForm ? <PopupLayout
+                loading={form.loading}
+                confirmText="Save change"
+                onClose={() => setExtraShowForm(false)}
+                title="Update Extras" onConfirm={() => update()}>
+                <div>
+                    {form.hookRender.map((item,index) => {
+                        return <RenderFormFieldByList item={item} form={form}/>
+                    })}
                 </div>
             </PopupLayout> : null}
         </div>

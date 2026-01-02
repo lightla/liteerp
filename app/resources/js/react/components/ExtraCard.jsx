@@ -1,11 +1,12 @@
 import React from 'react'
 export function ExtraCard({
-    form = null
+    form = null,
+    title = 'Extras'
 }) {
     return form.hookRender.length >= 1 ? <div className="p-4 rounded border mt-3">
         <div className="d-flex justify-content-between mb-3">
             <h5 className="fw-semibold">
-                Extras
+                {title}
             </h5>
 
         </div>

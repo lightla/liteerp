@@ -10,6 +10,8 @@ import SearchInput from '../../UI/Input/SearchInput'
 import { usePopup } from '../../popups/PopupContext';
 import Currencies from '../../Currencies';
 import StatusBadge from '../../StatusBadge';
+import RenderFieldTableByList from '../../RenderFieldTableByList';
+import { RenderTableSearch } from '../../RenderTableSearch';
 export default function StockOuts() {
     const navigate = useNavigate();
     const search = useForm();
@@ -20,9 +22,7 @@ export default function StockOuts() {
         table.setLoading(true)
         StockOutService.list({
             page: page,
-            keywords: search.formData?.keywords ?? '',
-            status: search.formData?.status ?? '',
-            order_by: search.formData?.order_by ?? ''
+            ...search.formData
         })
             .then((resp) => {
                 table.setData(resp.message.data);
@@ -39,7 +39,26 @@ export default function StockOuts() {
             })
     }, [table, search.formData]);
 
-    const columns = [
+    const view = useCallback(() => {
+        StockOutService.view()
+            .then((resp) => {
+                table.addColums(resp.message.index,(item,data) => {
+                    return <RenderFieldTableByList item={item} data={data}/>
+                });
+                search.setHookRender(resp.message.search)
+            })
+            .catch((error) => {
+                if (error.response.message?.errors) {
+                    openPopup({
+                        type: 'error',
+                        message: error.response.message?.errors
+                    })
+                }
+            })
+    }, []);
+
+    useEffect(() => {
+        table.setColums([
         { label: "ID", key: "id", render: (id) => <Link to={'/stock?id=' + id}>{id}</Link> },
         {
             label: "Customer", key: "customer_name", render: (name) => {
@@ -83,10 +102,10 @@ export default function StockOuts() {
                 return <StatusBadge status={value} />
             }
         },
-    ];
-    useEffect(() => {
+    ])
         getListStockIn();
-    }, [search.formData?.status,search.formData?.order_by]);
+        view();
+    }, []);
     return <div className='mt-3'>
         <CommonDataTable
             loading={table.loading}
@@ -105,7 +124,7 @@ export default function StockOuts() {
                             ]}
                         />
                     </div>
-                    <div className='col-3 mx-2'>
+                    <div className='col-3 ml-2'>
                         <label>Order by</label>
                         <Select
                             name='order_by'
@@ -117,7 +136,12 @@ export default function StockOuts() {
                                 { value: 'DESC', label: 'Newest' }
                             ]} />
                     </div>
-                    <div className='col-6'>
+                    {search.hookRender.map((item,index) => {
+                        return <div className='col-3 ml-2'>
+                            <RenderTableSearch item={item} search={search}/>
+                        </div>
+                    })}
+                    <div className='col-6 ml-2'>
                         <label>Search</label>
                         <SearchInput
                             submit={getListStockIn}
@@ -129,7 +153,7 @@ export default function StockOuts() {
                     </div>
                 </div>
             </div>}
-            columns={columns}
+            columns={table.colums}
             data={table.data}
             links={table.links}
             iconEdit={<i className="bi bi-eye"></i>}

@@ -43,6 +43,23 @@ export function useForm() {
         }
         setFormErrors(null)
     }, [isDestroy])
+    const addHookRender = (data = []) => {
+        setHookRender((prev) => {
+            const existingKeys = new Set(prev.map((i) => i.key));
+
+            const next = [...prev];
+
+            data.forEach((item) => {
+                if (!existingKeys.has(item.key)) {
+                    next.push({
+                        ...item
+                    });
+                }
+            });
+
+            return next;
+        })
+    }
     return {
         formData,
         setFormData,
@@ -56,6 +73,7 @@ export function useForm() {
         setIsEdit,
         handleChangeByKey,
         setHookRender,
-        hookRender
+        hookRender,
+        addHookRender
     };
 }
