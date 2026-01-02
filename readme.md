@@ -88,6 +88,7 @@ List extension example
 - **Overview Dashboard**
 - **Employee Role** 
 - **Storage**
+- **Extension**
 
 ### ⏳ In Progress
 - **Reports**
