@@ -199,6 +199,9 @@ return [
             'erp.notification.update',
             'erp.notification.delete',
             'erp.notification.many',
+
+            // overview 
+            'erp.overview.index'
         ],
 
 
@@ -388,6 +391,9 @@ return [
             'erp.notification.update',
             'erp.notification.delete',
             'erp.notification.many',
+
+            // overview 
+            'erp.overview.index'
         ],
 
 
