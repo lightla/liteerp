@@ -20,14 +20,6 @@ class EloquentCustomInvoiceOutRepository implements CustomInvoiceOutRepositoryIn
         ->update($entity->toArray());
         return $entity;
     }
-    public function index(array $data): array
-    {
-        return CustomInvoiceOutModel::select("custom_invoice_outs.*",
-            "customers.name as customer_name")
-        ->join("customers","customers.id","=","custom_invoice_outs.customer_id")
-        ->where('custom_invoice_outs.business_id',$data['business_id'])
-        ->paginate(15)->toArray();
-    }
     public function findById(array $data): ?CustomInvoiceOut
     {
         $row = CustomInvoiceOutModel::where('id',$data['id'])

@@ -20,10 +20,6 @@ class CustomInvoiceOutServiceImpl implements CustomInvoiceOutService
         $entity->makeDocumentNo();
         return $this->repo->create($entity);
     }
-    public function index(array $data): array
-    {
-        return $this->repo->index($data);
-    }
     public function update(array $data): CustomInvoiceOut | BadException
     {
         $entity = $this->repo->findById($data);

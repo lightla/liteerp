@@ -29,8 +29,7 @@ export default function Invoice() {
             { key: 'InvoiceOut', label: 'Invoice Outs' },
             { key: 'CustomInvoiceOut', label: 'Custom Invoice Outs' },
             { key: 'CustomInvoiceIn', label: 'Custom Invoice Ins' }
-          ]} contents={[
-            <InvoiceIns />,
+          ]} contents={[<InvoiceIns />,
             <InvoiceOuts />,
             <CustomInvoiceOuts />,
             <CustomInvoiceIns/>

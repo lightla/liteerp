@@ -17,7 +17,7 @@ export default function TabsCommon({
         <div className="tab-content" id="myTabContent">
             {navs.map((item,index) => {
                 return <div key={index} 
-                className={"tab-pane fade " + (index === 0 ? ' show active' : '')} id={item.key} role="tabpanel" 
+                className={"mt-2 tab-pane fade " + (index === 0 ? ' show active' : '')} id={item.key} role="tabpanel" 
                 aria-labelledby={item.key + "-tab"}>
                     {contents[index]}
                 </div>
