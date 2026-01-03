@@ -12,6 +12,7 @@ import Currencies from '../../components/Currencies'
 import StatusBadge from '../StatusBadge'
 import RenderFieldTableByList from '../RenderFieldTableByList'
 import { RenderTableSearch } from '../RenderTableSearch';
+import PrimaryButton from '../UI/Buttons/PrimaryButton';
 export default function InvoiceIns() {
     const navigate = useNavigate();
     const { openPopup } = usePopup();
@@ -159,7 +160,7 @@ export default function InvoiceIns() {
                 </div>
                 {search.hookRender.map((item, index) => {
                     return <div className='col-3 ml-2' key={index}>
-                        <RenderTableSearch item={item} search={search}/>
+                        <RenderTableSearch item={item} search={search} />
                     </div>
                 })}
                 <div className="col-6 ml-2">
@@ -171,6 +172,9 @@ export default function InvoiceIns() {
                         name="keywords"
                         handleChange={search.handleChange}
                     />
+                </div>
+                <div className="col-2 ml-2">
+                    <PrimaryButton label='Search' onClick={() => listInvoice()} />
                 </div>
             </div>}
             columns={table.colums}
