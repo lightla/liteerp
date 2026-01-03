@@ -5,8 +5,8 @@ namespace Core\Overview\Application\DTOs;
 class IndexOverviewRequest
 {
     public function __construct(
-        private int $business_id,
-        private int $created_by
+        public int $business_id,
+        public int $created_by
     ) {}
 
     public static function fromArray(array $data): self

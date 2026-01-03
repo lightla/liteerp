@@ -2,10 +2,9 @@
 
 namespace Core\Overview\Infrastructure\Services;
 
+use Core\Overview\Domain\Entities\Overview;
 use Core\Overview\Domain\Services\OverviewService;
 use Core\Overview\Domain\Repositories\OverviewRepositoryInterface;
-use Core\Overview\Infrastructure\Helpers\Compare;
-use Illuminate\Support\Facades\Log;
 
 class OverviewServiceImpl implements OverviewService
 {
@@ -14,73 +13,12 @@ class OverviewServiceImpl implements OverviewService
     {
 
         return [
-            'month' => $this->repo->getCacheForMonth($data) ?? [
-                'order' => [
-                    'current' => 0,
-                    'prev' => 0,
-                    'compare' => 0
-                ],
-                'product' => [
-                    'current' => 0,
-                    'prev' => 0,
-                    'compare' => 0
-                ],
-                'customer' => [
-                    'current' => 0,
-                    'prev' => 0,
-                    'compare' => 0
-                ],
-                'purchase'  => [
-                    'current' => 0,
-                    'prev' => 0,
-                    'compare' => 0
-                ]
+            'top' => [
+                ...$this->repo->getCacheForMonth($data),
+                ...$this->repo->getCacheRevenueByTime($data),
+                ...$this->repo->getCacheExpenseByTime($data)
             ],
             'chart' => $this->repo->getCacheForYear($data),
-            'revenue' => $this->repo->getCacheRevenueByTime($data) ?? [
-                'dailly' => [
-                    'current' => 0,
-                    'prev' => 0,
-                    'compare' => 0
-                ],
-                'weekly' => [
-                    'current' => 0,
-                    'prev' => 0,
-                    'compare' => 0
-                ],
-                'monthly' => [
-                    'current' => 0,
-                    'prev' => 0,
-                    'compare' => 0
-                ],
-                'yearly' => [
-                    'current' => 0,
-                    'prev' => 0,
-                    'compare' => 0
-                ]
-            ],
-            'expense' => $this->repo->getCacheExpenseByTime($data) ?? [
-                'dailly' => [
-                    'current' => 0,
-                    'prev' => 0,
-                    'compare' => 0
-                ],
-                'weekly' => [
-                    'current' => 0,
-                    'prev' => 0,
-                    'compare' => 0
-                ],
-                'monthly' => [
-                    'current' => 0,
-                    'prev' => 0,
-                    'compare' => 0
-                ],
-                'yearly' => [
-                    'current' => 0,
-                    'prev' => 0,
-                    'compare' => 0
-                ]
-            ],
         ];
     }
 
@@ -118,251 +56,203 @@ class OverviewServiceImpl implements OverviewService
 
     public function createCacheForMonth(array $data): array
     {
-        $order = [];
-        $order['current'] = $this->repo->getOrder([
-            'month' => date('m', time()),
-            'business_id' => $data['business_id']
-        ]);
-        $order['prev'] = $this->repo->getOrder([
-            'month' => now()->startOfMonth()->subMonth()->month,
-            'business_id' => $data['business_id']
-        ]);
-        $order['compare'] = Compare::handle($order['prev'], $order['current']);
-        $product = [];
-        $product['current'] = $this->repo->getProduct([
-            'month' => date('m', time()),
-            'business_id' => $data['business_id']
-        ]);
-        $product['prev'] = $this->repo->getProduct([
-            'month' => now()->startOfMonth()->subMonth()->month,
-            'business_id' => $data['business_id']
-        ]);
-        $product['compare'] = Compare::handle($product['prev'], $product['current']);
-
-        $customer = [];
-        $customer['current'] = $this->repo->getCustomer([
-            'month' => date('m', time()),
-            'business_id' => $data['business_id']
-        ]);
-        $customer['prev'] = $this->repo->getCustomer([
-            'month' => now()->startOfMonth()->subMonth()->month,
-            'business_id' => $data['business_id']
-        ]);
-        $customer['compare'] = Compare::handle($customer['prev'], $customer['current']);
-
-        $purchase = [];
-        $purchase['current'] = $this->repo->getPurchase([
-            'month' => date('m', time()),
-            'business_id' => $data['business_id']
-        ]);
-        $purchase['prev'] = $this->repo->getPurchase([
-            'month' => now()->startOfMonth()->subMonth()->month,
-            'business_id' => $data['business_id']
-        ]);
-        $purchase['compare'] = Compare::handle($purchase['prev'], $purchase['current']);
-
-        $array = [
-            'order' => $order,
-            'product' => $product,
-            'customer' => $customer,
-            'purchase'  => $purchase
-        ];
+        $array = [];
+        $array[] = new Overview(
+            current: $this->repo->getOrder([
+                'month' => date('m', time()),
+                'business_id' => $data['business_id']
+            ]),
+            prev: $this->repo->getOrder([
+                'month' => now()->startOfMonth()->subMonth()->month,
+                'business_id' => $data['business_id']
+            ]),
+            type: 'Monthly orders',
+            compare_text: 'compared to last monthly',
+            icon: 'bi bi-bag-plus'
+        );
+        $array[] = new Overview(
+            current: $this->repo->getProduct([
+                'month' => date('m', time()),
+                'business_id' => $data['business_id']
+            ]),
+            prev: $this->repo->getProduct([
+                'month' => now()->startOfMonth()->subMonth()->month,
+                'business_id' => $data['business_id']
+            ]),
+            type: 'Monthly products',
+            compare_text: 'compared to last monthly',
+            icon: 'bi bi-file-earmark-binary'
+        );
+        $array[] = new Overview(
+            current: $this->repo->getCustomer([
+                'month' => date('m', time()),
+                'business_id' => $data['business_id']
+            ]),
+            prev: $this->repo->getCustomer([
+                'month' => now()->startOfMonth()->subMonth()->month,
+                'business_id' => $data['business_id']
+            ]),
+            type: 'Monthly customers',
+            compare_text: 'compared to last monthly',
+            icon: 'bi bi-people'
+        );
+        $array[] = new Overview(
+            current: $this->repo->getPurchase([
+                'month' => date('m', time()),
+                'business_id' => $data['business_id']
+            ]),
+            prev: $this->repo->getPurchase([
+                'month' => now()->startOfMonth()->subMonth()->month,
+                'business_id' => $data['business_id']
+            ]),
+            type: 'Monthly purchase',
+            compare_text: 'compared to last monthly'
+        );
         return $this->repo->createCacheForMonth($array, $data['business_id']);
     }
     public function createRevenueByTime(array $data): void
     {
-        $array = [
-            'dailly' => [
-                'current' => 0,
-                'prev' => 0,
-                'compare' => 0
-            ],
-            'weekly' => [
-                'current' => 0,
-                'prev' => 0,
-                'compare' => 0
-            ],
-            'monthly' => [
-                'current' => 0,
-                'prev' => 0,
-                'compare' => 0
-            ],
-            'yearly' => [
-                'current' => 0,
-                'prev' => 0,
-                'compare' => 0
-            ]
-        ];
+        $array = [];
         /**
          * Daily
          */
-        $today = $this->repo->getRevenueByTime([
+        $array[] = new Overview(
+            current: $this->repo->getRevenueByTime([
             'start' => now()->startOfDay(),
             'end'   => now()->endOfDay(),
             'business_id' => $data['business_id']
-        ]);
-        $yesterday = $this->repo->getRevenueByTime([
-            'start' => now()->subDay()->startOfDay(),
-            'end'   => now()->subDay()->endOfDay(),
-            'business_id' => $data['business_id']
-        ]);
-        $array['dailly'] = [
-            'current' => $today,
-            'prev' => $yesterday,
-            'compare' => Compare::handle($yesterday, $today)
-        ];
+        ]),
+            prev: $this->repo->getPurchase([
+                'month' => now()->startOfMonth()->subMonth()->month,
+                'business_id' => $data['business_id']
+            ]),
+            type: 'Dailly revenues',
+            compare_text: 'compared to last day'
+        );
         /**
          * Weekly
          */
-        $weekly = $this->repo->getRevenueByTime([
+        $array[] = new Overview(
+            current: $this->repo->getRevenueByTime([
             'start' => now()->startOfWeek(),
             'end'   => now()->endOfWeek(),
             'business_id' => $data['business_id']
-        ]);
-        $lastWeek = $this->repo->getRevenueByTime([
+        ]),
+            prev: $this->repo->getRevenueByTime([
             'start' => now()->subWeek()->startOfWeek(),
             'end'   => now()->subWeek()->endOfWeek(),
             'business_id' => $data['business_id']
-        ]);
-        $array['weekly'] = [
-            'current' => $weekly,
-            'prev' => $lastWeek,
-            'compare' => Compare::handle($lastWeek, $weekly)
-        ];
+        ]),
+            type: 'Weekly revenues',
+            compare_text: 'compared to last week'
+        );
         /**
          * Monthly
          */
-        $monthly = $this->repo->getRevenueByTime([
+        $array[] = new Overview(
+            current: $this->repo->getRevenueByTime([
             'start' => now()->startOfMonth(),
             'end'   => now()->endOfMonth(),
             'business_id' => $data['business_id']
-        ]);
-        $lastMonth = $this->repo->getRevenueByTime([
+        ]),
+            prev: $this->repo->getRevenueByTime([
             'start' => now()->subMonth()->startOfMonth(),
             'end'   => now()->subMonth()->endOfMonth(),
             'business_id' => $data['business_id']
-        ]);
-        $array['monthly'] = [
-            'current' => $monthly,
-            'prev' => $lastMonth,
-            'compare' => Compare::handle($lastMonth, $monthly)
-        ];
+        ]),
+            type: 'Monthly revenues',
+            compare_text: 'compared to last month'
+        );
         /**
          * Yearly
          */
-        $yearly = $this->repo->getRevenueByTime([
+        $array[] = new Overview(
+            current: $this->repo->getRevenueByTime([
             'start' => now()->startOfYear(),
             'end'   => now()->endOfYear(),
             'business_id' => $data['business_id']
-        ]);
-        $lastYear = $this->repo->getRevenueByTime([
+        ]),
+            prev: $this->repo->getRevenueByTime([
             'start' => now()->subYear()->startOfYear(),
             'end'   => now()->subYear()->endOfYear(),
             'business_id' => $data['business_id']
-        ]);
-        $array['yearly'] = [
-            'current' => $yearly,
-            'prev' => $lastYear,
-            'compare' => Compare::handle($lastYear, $yearly)
-        ];
+        ]),
+            type: 'Yearly revenues',
+            compare_text: 'compared to last year'
+        );
         $this->repo->createCacheRevenueByTime($array, $data['business_id']);
     }
     public function createExpenseByTime(array $data): void
     {
-        $array = [
-            'dailly' => [
-                'current' => 0,
-                'prev' => 0,
-                'compare' => 0
-            ],
-            'weekly' => [
-                'current' => 0,
-                'prev' => 0,
-                'compare' => 0
-            ],
-            'monthly' => [
-                'current' => 0,
-                'prev' => 0,
-                'compare' => 0
-            ],
-            'yearly' => [
-                'current' => 0,
-                'prev' => 0,
-                'compare' => 0
-            ]
-        ];
+        $array = [];
         /**
          * Daily
          */
-        $today = $this->repo->getExpenseByTime([
+        $array[] = new Overview(
+            current: $this->repo->getExpenseByTime([
             'start' => now()->startOfDay(),
             'end'   => now()->endOfDay(),
             'business_id' => $data['business_id']
-        ]);
-        $yesterday = $this->repo->getExpenseByTime([
+        ]),
+            prev: $this->repo->getExpenseByTime([
             'start' => now()->subDay()->startOfDay(),
             'end'   => now()->subDay()->endOfDay(),
             'business_id' => $data['business_id']
-        ]);
-        $array['dailly'] = [
-            'current' => $today,
-            'prev' => $yesterday,
-            'compare' => Compare::handle($yesterday, $today)
-        ];
+        ]),
+            type: 'Dailly expenses',
+            compare_text: 'compared to last day'
+        );
         /**
          * Weekly
          */
-        $weekly = $this->repo->getExpenseByTime([
+        $array[] = new Overview(
+            current: $this->repo->getExpenseByTime([
             'start' => now()->startOfWeek(),
             'end'   => now()->endOfWeek(),
             'business_id' => $data['business_id']
-        ]);
-        $lastWeek = $this->repo->getExpenseByTime([
+        ]),
+            prev: $this->repo->getExpenseByTime([
             'start' => now()->subWeek()->startOfWeek(),
             'end'   => now()->subWeek()->endOfWeek(),
             'business_id' => $data['business_id']
-        ]);
-        $array['weekly'] = [
-            'current' => $weekly,
-            'prev' => $lastWeek,
-            'compare' => Compare::handle($lastWeek, $weekly)
-        ];
+        ]),
+            type: 'Weekly expenses',
+            compare_text: 'compared to last week'
+        );
         /**
          * Monthly
          */
-        $monthly = $this->repo->getExpenseByTime([
+        $array[] = new Overview(
+            current: $this->repo->getExpenseByTime([
             'start' => now()->startOfMonth(),
             'end'   => now()->endOfMonth(),
             'business_id' => $data['business_id']
-        ]);
-        $lastMonth = $this->repo->getExpenseByTime([
+        ]),
+            prev: $this->repo->getExpenseByTime([
             'start' => now()->subMonth()->startOfMonth(),
             'end'   => now()->subMonth()->endOfMonth(),
             'business_id' => $data['business_id']
-        ]);
-        $array['monthly'] = [
-            'current' => $monthly,
-            'prev' => $lastMonth,
-            'compare' => Compare::handle($lastMonth, $monthly)
-        ];
+        ]),
+            type: 'Monthly expenses',
+            compare_text: 'compared to last month'
+        );
         /**
          * Yearly
          */
-        $yearly = $this->repo->getExpenseByTime([
+        $array[] = new Overview(
+            current: $this->repo->getExpenseByTime([
             'start' => now()->startOfYear(),
             'end'   => now()->endOfYear(),
             'business_id' => $data['business_id']
-        ]);
-        $lastYear = $this->repo->getExpenseByTime([
+        ]),
+            prev: $this->repo->getExpenseByTime([
             'start' => now()->subYear()->startOfYear(),
             'end'   => now()->subYear()->endOfYear(),
             'business_id' => $data['business_id']
-        ]);
-        $array['yearly'] = [
-            'current' => $yearly,
-            'prev' => $lastYear,
-            'compare' => Compare::handle($lastYear, $yearly)
-        ];
+        ]),
+            type: 'Yearly expenses',
+            compare_text: 'compared to last year'
+        );
         $this->repo->createCacheExpenseByTime($array, $data['business_id']);
     }
 }
