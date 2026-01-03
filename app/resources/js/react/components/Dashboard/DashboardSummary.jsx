@@ -10,19 +10,19 @@ export default function DashboardSummary({
         <div key={i} className="erp-summary-card flex-grow-1 p-3">
           <div className="d-flex justify-content-between align-items-start">
             <div>
-              <p className="erp-summary-title mb-1">{item.title}</p>
-              <h4 className="erp-summary-value mb-2">{item.value}</h4>
+              <p className="erp-summary-title mb-1">{item.type}</p>
+              <h4 className="erp-summary-value mb-2">{item.current}</h4>
             </div>
             <div
-              className="erp-summary-icon rounded-3 d-flex align-items-center justify-content-center"
-              style={{ backgroundColor: item.iconBg }}
+              className="erp-summary-icon rounded-3 d-flex align-items-center justify-content-center bg-primary text-white"
             >
-              {item.icon}
+              <i className={item.icon}/>
             </div>
           </div>
           <div className="mt-2">
-            <span className={ (item.change >= 1 ? 'text-success ' : 'text-danger ') +  "erp-summary-change"}>{item.change}%</span>{" "}
-            <small className="text-secondary">{item.note}</small>
+            <span className={ (item.compare >= 1 ? 'text-success ' : 'text-danger ') 
+              +  "erp-summary-change"}>{item.compare}%</span>{" "}
+            <small className="text-secondary">{item.compare_text}</small>
           </div>
         </div>
       ))}
