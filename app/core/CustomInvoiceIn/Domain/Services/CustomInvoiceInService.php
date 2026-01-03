@@ -10,5 +10,4 @@ interface CustomInvoiceInService
     public function create(array $data): CustomInvoiceIn | BadException;
     public function update(array $data): CustomInvoiceIn | BadException;
     public function delete(array $data): CustomInvoiceIn | BadException;
-    public function index(array $data): array;
 }

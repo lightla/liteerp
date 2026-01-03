@@ -49,8 +49,4 @@ class CustomInvoiceInServiceImpl implements CustomInvoiceInService
 
         return $this->repo->delete($entity);
     }
-    public function index(array $data): array
-    {
-        return $this->repo->index($data);
-    }
 }

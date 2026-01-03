@@ -12,5 +12,4 @@ interface CustomInvoiceInRepositoryInterface
     public function findById(array $data): ?CustomInvoiceIn;
     public function findByDocumentNo(array $data): ?CustomInvoiceIn;
     public function delete(CustomInvoiceIn $entity): CustomInvoiceIn;
-    public function index(array $data): array;
 }

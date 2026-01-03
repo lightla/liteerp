@@ -40,22 +40,6 @@ class EloquentCustomInvoiceInRepository implements CustomInvoiceInRepositoryInte
         }
         return CustomInvoiceIn::fromArray($row);
     }
-    public function index(array $data): array
-    {
-        $index = CustomInvoiceInModel::select("custom_invoice_ins.*",
-            "suppliers.unit_name as unit_name")
-        ->join("suppliers","suppliers.id","=","custom_invoice_ins.supplier_id")
-        ->where('custom_invoice_ins.business_id',$data['business_id']);
-        if(!empty($data['keywords'])) {
-            $index = $index->where('custom_invoice_ins.document_no','like',
-                '%'. $data['keywords'] .'%');
-        }
-        if(!empty($data['payment_status'])) {
-            $index = $index->where('custom_invoice_ins.payment_status',
-            $data['payment_status']);
-        }
-        return $index->orderBy("custom_invoice_ins.id",$data['order_by'])->paginate(15)->toArray();
-    }
     public function delete(CustomInvoiceIn $entity): CustomInvoiceIn
     {
         CustomInvoiceInModel::where('id',$entity->id)

@@ -7,7 +7,6 @@ import { InputForm } from '../UI/Input/InputForm'
 import { useForm } from '../../libraries/handleInput';
 import { Select } from '../UI/Input/Select';
 import { usePopup } from '../popups/PopupContext'
-import { useNavigate } from 'react-router-dom';
 import Currencies from '../Currencies';
 import SearchInput from '../UI/Input/SearchInput';
 import StatusBadge from '../StatusBadge';
@@ -16,66 +15,22 @@ import SearchSelect from '../UI/Input/SearchSelect'
 import SupplierService from '../../services/SupplierService';
 import CustomInvoiceInService from '../../services/CustomInvoiceInService';
 import ContentOnTable from '../ContentOnTable'
+import RenderFieldTableByList from '../RenderFieldTableByList';
+import RenderFormFieldByList from '../RenderFormFieldByList';
+import { RenderTableSearch } from '../RenderTableSearch';
+import PrimaryButton from '../UI/Buttons/PrimaryButton';
 export default function CustomInvoiceIns() {
-    const [suppliers,setSuppliers] = useState([]);
+    const [suppliers, setSuppliers] = useState([]);
     const search = useForm();
     const form = useForm();
     const table = useTable();
     const { openPopup } = usePopup();
     const [showForm, setShowForm] = useState(false);
-    const columns = [
-        {
-            label: "ID",
-            key: "id"
-        },
-        {
-            label: "Supplier",
-            key: "unit_name"
-        },
-        {
-            label: "Description",
-            key: "description",
-            render: (value) => {
-                return <ContentOnTable value={value}/>
-            }
-        },
-        {
-            label: "Document No",
-            key: "document_no"
-        },
-        {
-            label: "Amount",
-            key: "amount",
-            render: (value) => <span><Currencies amount={value} /></span>,
-        },
-        {
-            label: "Status",
-            key: "approved",
-            render: (value) => {
-                return <StatusBadge status={value ? 'approved' : 'unapproved'} />
-            }
-        },
-        {
-            label: "Invoice date",
-            key: "invoice_date",
-            render: (value) =>
-                value ? isoToDateTime(value) : "",
-        },
-        {
-            label: "Payment",
-            key: "payment_status",
-            render: (value) => {
-                return <StatusBadge status={value} />
-            }
-        }
-    ];
     const getInvoices = useCallback((page = 0) => {
         table.setLoading(true);
         CustomInvoiceInService.list({
             page: page,
-            keywords: search?.formData?.keywords ?? '',
-            payment_status: search?.formData?.payment_status ?? '',
-            order_by: search.formData?.order_by ?? ''
+            ...search.formData
         })
             .then((resp) => {
                 table.setData(resp.message.data)
@@ -115,7 +70,7 @@ export default function CustomInvoiceIns() {
                         message: error.response.data?.message
                     })
                 }
-                 form.setLoading(false)
+                form.setLoading(false)
             })
     }, [form.formData]);
     const add = useCallback(() => {
@@ -185,23 +140,83 @@ export default function CustomInvoiceIns() {
             }
         })
     }
-    const getSuppliers = useCallback((keywords = '',callback = null) => {
+    const getSuppliers = useCallback((keywords = '', callback = null) => {
         SupplierService.list({
             keywords: keywords
         })
-        .then((resp) => {
-            if(callback) {
-                callback();
-            }
-            setSuppliers(resp.message.data)
-        })
-        .catch((error) => {
+            .then((resp) => {
+                if (callback) {
+                    callback();
+                }
+                setSuppliers(resp.message.data)
+            })
+            .catch((error) => {
 
-        })
-    },[])
+            })
+    }, [])
+    const view = useCallback(() => {
+        CustomInvoiceInService.view()
+            .then((resp) => {
+                table.addColums(resp.message.index, (item, data) => {
+                    return <RenderFieldTableByList item={item} data={data} />
+                })
+                form.setHookRender(resp.message.form)
+                search.setHookRender(resp.message.search)
+            })
+            .catch((error) => {
+
+            })
+    }, [])
     useEffect(() => {
         getInvoices();
-    }, [search.formData?.payment_status, search.formData?.order_by])
+        table.setColums([
+            {
+                label: "ID",
+                key: "id"
+            },
+            {
+                label: "Supplier",
+                key: "unit_name"
+            },
+            {
+                label: "Description",
+                key: "description",
+                render: (value) => {
+                    return <ContentOnTable value={value} />
+                }
+            },
+            {
+                label: "Document No",
+                key: "document_no"
+            },
+            {
+                label: "Amount",
+                key: "amount",
+                render: (value) => <span><Currencies amount={value} /></span>,
+            },
+            {
+                label: "Status",
+                key: "approved",
+                render: (value) => {
+                    return <StatusBadge status={value ? 'approved' : 'unapproved'} />
+                }
+            },
+            {
+                label: "Invoice date",
+                key: "invoice_date",
+                render: (value) =>
+                    value ? isoToDateTime(value) : "",
+            },
+            {
+                label: "Payment",
+                key: "payment_status",
+                render: (value) => {
+                    return <StatusBadge status={value} />
+                }
+            }
+        ])
+        view();
+    }, [])
     return <div>
         <CommonDataTable
             add={() => {
@@ -222,7 +237,7 @@ export default function CustomInvoiceIns() {
                         ]}
                     />
                 </div>
-                <div className='col-3 mx-2'>
+                <div className='col-3 ml-2'>
                     <label>Order by</label>
                     <Select
                         name='order_by'
@@ -234,7 +249,12 @@ export default function CustomInvoiceIns() {
                             { value: 'DESC', label: 'Newest' }
                         ]} />
                 </div>
-                <div className="col-6">
+                {search.hookRender.map((item, index) => {
+                    return <div className='col-3 ml-2'>
+                        <RenderTableSearch item={item} search={search} />
+                    </div>
+                })}
+                <div className="col-6 ml-2">
                     <label>Search</label>
                     <SearchInput
                         placeholder="Search by document"
@@ -244,9 +264,12 @@ export default function CustomInvoiceIns() {
                         handleChange={search.handleChange}
                     />
                 </div>
+                <div className="col-2 ml-2">
+                    <PrimaryButton label='Search' onClick={() => getInvoices()} />
+                </div>
             </div>}
             loading={table.loading}
-            columns={columns}
+            columns={table.colums}
             data={table.data}
             links={table.links}
             onEdit={onEdit}
@@ -259,7 +282,7 @@ export default function CustomInvoiceIns() {
                 setShowForm(false)
                 resetForm();
             }}
-            onConfirm={form.isEdit ? update :  add}
+            onConfirm={form.isEdit ? update : add}
             confirmText={form.isEdit ? 'Save change' : 'Add new'}
             title='Custom invoice out'>
             <div>
@@ -275,7 +298,7 @@ export default function CustomInvoiceIns() {
                     </div>
                     <div className='form-group col-6'>
                         <label>Suppliers</label>
-                        <SearchSelect 
+                        <SearchSelect
                             search={getSuppliers}
                             value={form.formData?.supplier_id}
                             errorMessage={form.formErrors?.supplier_id}
@@ -344,6 +367,11 @@ export default function CustomInvoiceIns() {
                     />
                     <span>This mean status invoice, if uncheck then system to understand is not working</span>
                 </div>
+                {form.hookRender.map((item, index) => {
+                    return <div className='form-group mt-3' key={index}>
+                        <RenderFormFieldByList item={item} form={form} />
+                    </div>
+                })}
             </div>
         </PopupLayout> : null}
 
