@@ -19,9 +19,12 @@ const NotificationSlice = createSlice({
                 return;
             }
             state.data -= 1;
-        }
+        },
+        cleanNotificationCount(state) {
+            state.data = null;
+        },
     },
 });
 
-export const { setNotificationCount, resetNotificationCount,decrementNotificationCount } = NotificationSlice.actions;
+export const { setNotificationCount, resetNotificationCount,decrementNotificationCount,cleanNotificationCount } = NotificationSlice.actions;
 export default NotificationSlice.reducer;

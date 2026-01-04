@@ -30,8 +30,10 @@ export default function Topbar() {
    * Pull notifications
   */
   useEffect(() => {
-    getNotification();
-  }, []);
+    if(!notify) {
+      getNotification();
+    }
+  }, [notify]);
   return (
     <div className="erp-topbar d-flex align-items-center justify-content-between px-4">
       {/* Left Section */}

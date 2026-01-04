@@ -11,8 +11,11 @@ import LoadingBox from '../components/LoadingBox'
 import { useForm } from '../libraries/handleInput'
 import { useDispatch } from "react-redux";
 import { setBusinessInfo } from "../redux/businessInfoSlice";
+import { clearBusinessNav } from "../redux/businessRoleSlice";
+import NotificationService from "../services/NotificationService";
+import { cleanNotificationCount } from "../redux/NotificationSlice";
 export default function Business() {
-    const [loadViewDetail,setLoadingViewDetail] = useState(false)
+    const [loadViewDetail, setLoadingViewDetail] = useState(false)
     const dispatch = useDispatch();
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
@@ -27,15 +30,15 @@ export default function Business() {
                 localStorage.setItem('business-access', data.message.token);
                 localStorage.setItem('business', JSON.stringify(data.message.business));
                 dispatch(setBusinessInfo(data.message.business))
-                navigate('/')
+                navigate('/profile')
                 setLoadingViewDetail(false)
             })
             .catch((error) => {
-                if(error.response?.data?.message) {
+                if (error.response?.data?.message) {
                     openPopup({
                         message: error.response?.data?.message,
                         type: 'error'
-                    })    
+                    })
                 }
                 setLoadingViewDetail(false)
             })
@@ -67,7 +70,6 @@ export default function Business() {
                 }
             })
         }).catch((error) => {
-            console.log(error.response.data?.errors);
             if (error.response.data?.errors) {
                 form.setFormErrors(error.response.data?.errors)
             }
@@ -83,7 +85,9 @@ export default function Business() {
     }, [form.formData, setOpenAdd, openPopup, getList]);
     useEffect(() => {
         getList();
-    }, [getList]);
+        dispatch(clearBusinessNav());
+        dispatch(cleanNotificationCount())
+    }, []);
     return (
         <BusinessLayout>
             <div>
@@ -114,7 +118,7 @@ export default function Business() {
                                     <BusinessListItem
                                         business={item}
                                         onViewDetail={() => {
-                                            if(loadViewDetail) {
+                                            if (loadViewDetail) {
                                                 return;
                                             }
                                             getDetail(item.id);

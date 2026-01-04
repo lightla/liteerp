@@ -5,6 +5,7 @@ import notificationReducer from './NotificationSlice'
 import purchasedetailReducer from './purchase/detailSlice'
 import orderdetailReducer from './order/detailSlice'
 import summaryDetailSliceReducer from './order/summarySlice'
+import businessRoleSliceReducer from './businessRoleSlice'
 export const store = configureStore({
   reducer: {
     theme: themeReducer,
@@ -12,6 +13,7 @@ export const store = configureStore({
     notify: notificationReducer,
     purchasedetail: purchasedetailReducer,
     orderdetail: orderdetailReducer,
-    summarydetai: summaryDetailSliceReducer
+    summarydetai: summaryDetailSliceReducer,
+    businessRole: businessRoleSliceReducer
   },
 });

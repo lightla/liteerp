@@ -3,16 +3,16 @@ import DashboardLayout from '../layouts/DashboardLayout'
 import DashboardSummary from '../components/Dashboard/DashboardSummary'
 import BusinessChart from '../components/Dashboard/BusinessChart'
 import OverviewService from '../services/OverviewService';
-import {usePopup} from '../components/popups/PopupContext'
+import { usePopup } from '../components/popups/PopupContext'
 export default function Dashboard() {
-    const {openPopup} = usePopup();
+    const { openPopup } = usePopup();
     const [summaryData, setSummaryData] = useState([]);
     const [businessChart, setBusinessChart] = useState([]);
+
     useEffect(() => {
         OverviewService.list()
             .then((resp) => {
                 setSummaryData(resp.message.top);
-
                 setBusinessChart(resp.message.chart)
             })
             .catch((error) => {
@@ -21,6 +21,7 @@ export default function Dashboard() {
                     message: error.response?.data?.message ?? 'Error'
                 })
             })
+       
     }, []);
     return <DashboardLayout>
         <div className='dashboard-box'>

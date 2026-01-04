@@ -611,4 +611,119 @@ return [
             'erp.notification.many',
         ],
     ],
+    'nav' => [
+
+        [
+            'to'        => '/',
+            'link'      => null,
+            'icon'      => 'bi bi-bar-chart',
+            'label'     => 'Overview',
+            'ability'   => 'erp.overview.index',
+        ],
+
+        [
+            'to'        => '/purchases',
+            'link'      => null,
+            'icon'      => 'bi bi-currency-dollar',
+            'label'     => 'Purchases',
+            'ability'   => 'erp.purchase.index',
+        ],
+
+        [
+            'to'        => '/orders',
+            'link'      => null,
+            'icon'      => 'bi bi-cart',
+            'label'     => 'Orders',
+            'ability'   => 'erp.order.index',
+        ],
+
+        [
+            'to'        => '/products',
+            'link'      => null,
+            'icon'      => 'bi bi-box',
+            'label'     => 'Products',
+            'ability'   => 'erp.product.index',
+        ],
+
+        [
+            'to'        => '/suppliers',
+            'link'      => null,
+            'icon'      => 'bi bi-people',
+            'label'     => 'Suppliers',
+            'ability'   => 'erp.supplier.index',
+        ],
+
+        [
+            'to'        => '/customers',
+            'link'      => null,
+            'icon'      => 'bi bi-people',
+            'label'     => 'Customers',
+            'ability'   => 'erp.customer.index',
+        ],
+
+        [
+            'to'        => '/warehouses',
+            'link'      => null,
+            'icon'      => 'bi bi-building',
+            'label'     => 'Warehouses',
+            'ability'   => 'erp.warehouse.index',
+        ],
+
+        [
+            'to'        => '/stocks',
+            'link'      => null,
+            'icon'      => 'bi bi-file-earmark-text',
+            'label'     => 'Stocks',
+            'ability'   => 'erp.stockin.index', 
+        ],
+
+        [
+            'to'        => '/inventories',
+            'link'      => null,
+            'icon'      => 'bi bi-clipboard-data',
+            'label'     => 'Inventories',
+            'ability'   => 'erp.inventory.index',
+        ],
+
+        [
+            'to'        => '/invoices',
+            'link'      => null,
+            'icon'      => 'bi bi-receipt',
+            'label'     => 'Invoices',
+            'ability'   => 'erp.invoicein.index', 
+        ],
+
+        [
+            'to'        => '/shippings',
+            'link'      => null,
+            'icon'      => 'bi bi-truck',
+            'label'     => 'Shipping Providers',
+            'ability'   => 'erp.shipping.index',
+        ],
+
+        [
+            'to'        => '/settings',
+            'link'      => null,
+            'icon'      => 'bi bi-gear',
+            'label'     => 'Settings',
+            'ability'   => 'erp.business.update',
+        ],
+
+        [
+            'to'        => '/users',
+            'link'      => null,
+            'icon'      => 'bi bi-people-fill',
+            'label'     => 'Employees',
+            'ability'   => 'erp.user.index',
+        ],
+
+        [
+            'to'        => '/activity-logs',
+            'link'      => null,
+            'icon'      => 'bi bi-diagram-3',
+            'label'     => 'Logs',
+            'ability'   => 'erp.notification.index',
+        ],
+    ],
+
 ];

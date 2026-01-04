@@ -2,31 +2,32 @@
 
 namespace Core\BusinessRole\Application\UseCases;
 
-use App\Exceptions\ForbiddenBiddenException;
 use App\Supports\Hooks\HookAction;
 use App\Supports\Hooks\HookContext;
 use App\Supports\Hooks\HookDispatcher;
 use App\Supports\Hooks\HookPhase;
 use App\Supports\Hooks\HookTiming;
-use Core\BusinessRole\Application\DTOs\CheckRoleBusinessRoleRequest;
+use Core\BusinessRole\Application\DTOs\CreateBusinessRoleRequest;
+use Core\BusinessRole\Application\DTOs\ShowBusinessRoleRequest;
 use Core\BusinessRole\Domain\Services\BusinessRoleService;
-use Illuminate\Support\Facades\Log;
 
-class CheckPermissionBusinessRole
+class ShowBusinessRole
 {
-    public function __construct(private BusinessRoleService $service,private HookDispatcher $hooks) {}
+    public function __construct(private BusinessRoleService $service,
+        private HookDispatcher $hooks) {}
 
-    public function handle(CheckRoleBusinessRoleRequest $dto) : array
+    public function handle(array $data)
     {
         $data = $this->hooks->dispatch(
             new HookContext(
                 action: HookAction::SHOW,
                 phase: HookPhase::RESPONSE,
                 timing: HookTiming::BEFORE,
-                payload: $dto->toArray(),
+                payload: $data,
                 module: 'BusinessRole'
             )
         );
+        $dto = ShowBusinessRoleRequest::fromArray($data);
         $role = $this->service->findOne([
             'business_id' => $dto->business_id,
             'user_id' => $dto->user_id
@@ -38,16 +39,13 @@ class CheckPermissionBusinessRole
                 phase: HookPhase::RESPONSE,
                 timing: HookTiming::AFTER,
                 payload: [
-                    'business_role' => $role->toArray(),
                     'roles' => $roles,
-                    ...$data
+                    'business_role' => $role->toArray(),
+                    ...$data 
                 ],
                 module: 'BusinessRole'
             )
         );
-        if(!in_array($dto->action,$data['roles'])) {
-            throw new ForbiddenBiddenException(__("You have not permission " . $dto->action));
-        }
         return $data;
     }
 }
