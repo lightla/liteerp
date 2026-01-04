@@ -4,14 +4,21 @@ export default function RenderNav({
     list = []
 }) {
     return list.map((item,index) => {
-        return <li className="nav-item mb-2" key={index}>
-          <NavLink to={item.to} className="erp-link">
-            <div className='row'>
-              <div className='col-3'>
-                <i className={item.icon}/>
+        return <li className="nav-item mb-2" key={index} style={{
+          height: 40
+        }}>
+          <NavLink to={item.to} className="erp-link" style={{
+            display: 'inline-block',
+            width: '100%'
+          }}>
+            <div className='d-flex align-items-center'>
+              <div className='col-2'>
+                  <div className={item.icon}/>
               </div>
-              <div className='col-6 ml-2'>
-                {item.label}
+              <div className='col-10'>
+                <div className='ml-2'>
+                  {item.label}
+                </div>
               </div>
             </div>
           </NavLink>
