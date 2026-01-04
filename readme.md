@@ -279,7 +279,7 @@ Modules communicate via **Domain Events**, enabling:
 - [x] Realtime event streaming (WebSocket)  
 - [ ] Reports
 - [ ] Multiple Language
-- [ ] Extensions
+- [x] Extensions
 
 ---
 
