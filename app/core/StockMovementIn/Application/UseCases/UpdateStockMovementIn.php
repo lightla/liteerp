@@ -2,21 +2,10 @@
 
 namespace Core\StockMovementIn\Application\UseCases;
 
-use App\Exceptions\BadException;
-use App\Jobs\CreateNotificationJob;
-use Core\ActivityLog\Application\DTOs\CreateActivityLogRequest;
-use Core\ActivityLog\Application\UseCases\CreateActivityLog;
-use Core\Inventory\Application\DTOs\CreateInventoryRequest;
-use Core\Inventory\Application\UseCases\CreateInventory;
-use Core\Inventory\Application\UseCases\FindOneInventoryByProductAndWarehouse;
-use Core\Inventory\Application\UseCases\UpdateInventory;
-use Core\Notifications\Application\DTOs\InsertManyNotificationRequest;
-use Core\PurchaseItem\Application\UseCases\FindPurchaseItemById;
 use Core\StockMovementIn\Application\DTOs\CreateStockMovementInRequest;
 use Core\StockMovementIn\Domain\Services\StockMovementInService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Event;
-use Illuminate\Support\Facades\URL;
 
 class UpdateStockMovementIn
 {

@@ -8,6 +8,8 @@ import api from "../common/api";
     params: data
   }),
   view: () => api.get("/business-access/view/suppliers"),
-  delete: (data) => api.delete("/business-access/suppliers/" + data.id),
+  delete: (data) => api.delete("/business-access/suppliers/"  + data.id,{
+    params: data
+  }),
 };
 export default SupplierService;

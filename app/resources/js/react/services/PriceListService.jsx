@@ -8,6 +8,8 @@ import api from "../common/api";
   }),
   view: () => api.get("/business-access/view/price-lists"),
   update: (data) => api.put("/business-access/price-lists/" + data.id,data),
-  delete: (data) => api.delete("/business-access/price-lists/" + data.id),
+  delete: (data) => api.delete("/business-access/price-lists/"  + data.id,{
+    params: data
+  }),
 };
 export default PriceListService;

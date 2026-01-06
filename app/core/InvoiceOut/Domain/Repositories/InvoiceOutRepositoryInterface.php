@@ -11,5 +11,4 @@ interface InvoiceOutRepositoryInterface
     public function findByOrderId(array $data) : ?InvoiceOut;
     public function findWithFullData(array $data) : ?array;
     public function update(InvoiceOut $entity) : InvoiceOut;
-    public function index(array $data): array;
 }

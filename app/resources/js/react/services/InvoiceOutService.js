@@ -5,7 +5,7 @@ const InvoiceOutService = {
   list: (data) => api.get("/business-access/invoice-outs",{
     params: data
   }),
-  view: (data) => api.get("/business-access/view/invoice-outs"),
+  view: () => api.get("/business-access/view/invoice-outs"),
   update: (data) => api.put("/business-access/invoice-outs/" + data.id,data)
 };
 export default InvoiceOutService;

@@ -4,12 +4,11 @@ import api from "../common/api";
   add: (data) => api.post("/business-access/customer-groups",data),
   update: (data) => api.put("/business-access/customer-groups/" + data.id,data),
   show: (id) => api.get("/business-access/customer-groups/" + id),
-  list: ({
-    page = 0,
-    keywords = '',
-    type = ''
-  }) => api.get("/business-access/customer-groups" 
-      + `?keywords=${keywords}&page=${page}&type=${type}`),
-  delete: (data) => api.delete("/business-access/customer-groups/" + data.id),
+  list: (data) => api.get("/business-access/customer-groups",{
+    params: data
+  }),
+  delete: (data) => api.delete("/business-access/customer-groups/" + data.id,{
+    params: data
+  }),
 };
 export default CustomerGroupService;

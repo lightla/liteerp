@@ -7,6 +7,9 @@ const CustomInvoiceInService = {
   }),
   view: () => api.get("/business-access/view/custom-invoice-ins"),
   update: (data) => api.put("/business-access/custom-invoice-ins/" + data.id,data),
-  delete: (data) => api.delete("/business-access/custom-invoice-ins/" + data.id)
+  delete: (data) => api.delete("/business-access/custom-invoice-ins/" 
+      + data.id,{
+    params: data
+  })
 };
 export default CustomInvoiceInService;

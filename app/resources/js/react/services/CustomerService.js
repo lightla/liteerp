@@ -7,7 +7,9 @@ import api from "../common/api";
   list: (data) => api.get(`/business-access/customers`,{
     params: data
   }),
-  delete: (data) => api.delete("/business-access/customers/" + data.id),
+  delete: (data) => api.delete("/business-access/customers/" + data.id,{
+    params: data
+  }),
   view: () => api.get("/business-access/view/customers"),
 };
 export default CustomerService;
