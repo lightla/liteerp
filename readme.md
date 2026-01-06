@@ -307,6 +307,8 @@ You also need config SMTP mail, timezone, pusher at `./app/.env` before start.
 - Next run `php artisan generate:key`
 - Next run `php artisan migrate`
 - Next run `php artisan storage:link`
+- Next run `chmod -R 777 ./storage`
+- Next run `chmod -R 777 ./extensions`
 - Next run `php artisan jwt:generate-keys` to generate private key and public key for Json Web Token
 - Next run `php artisan app:create-admin {email} {password} {name}` to create admin account
 - Next run `php artisan queue:work --queue=low,default,high`
