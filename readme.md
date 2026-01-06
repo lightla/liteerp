@@ -155,7 +155,7 @@ List extension example
 
 ## 📦 Document 
 
-<a href="./development.md">Development document</a>
+<a href="https://github.com/liteerp-oss/docs">Development document</a>
 
 ---
 
