@@ -16,33 +16,57 @@
 
 ---
 
+# 🏢 LiteERP – A Pure Core ERP, Built for Extension, Not Complexity
 
-# 🏢 LiteERP – A Pure Core with Unlimited Extensions
+LiteERP is an open-source ERP built with **ReactJS**, **Laravel**, and **MySQL 8**,  
+designed as a **pure, minimal core** with an **unlimited extension model**.
 
-LiteERP is built with **ReactJS**, **Laravel**, and **MySQL 8**, following modern software architecture principles such as  
-**Clean Architecture**, **Domain-Driven Design (DDD)**, and **Domain Events**.
+Unlike traditional ERP systems such as **Odoo** or **SAP**, which bundle everything into a single, ever-growing core,  
+LiteERP follows a fundamentally different philosophy:
 
-The system is designed to be lightweight, scalable, and maintainable, with extremely low framework coupling.
+> **Keep the core small, stable, and predictable —  
+> push complexity outward into extensions.**
+
+LiteERP is built on **Clean Architecture**, **Domain-Driven Design (DDD)**, and **Domain Events**,  
+with extremely low framework coupling and long-term maintainability as first-class goals.
+
+---
+
+## ⚖️ LiteERP vs Odoo vs SAP
+
+| Aspect | LiteERP | Odoo | SAP |
+|------|--------|------|-----|
+| Core size | **Small & pure** | Large, feature-heavy | Very large |
+| Customization | Extensions & hooks | Core overrides & modules | Consultants & customization layers |
+| Infrastructure | **Low-resource friendly** | Medium–High | High–Very High |
+| Upgrade safety | **High** | Medium | Low–Medium |
+| Target users | SMEs & developers | SMEs–Enterprises | Large enterprises |
+
+Odoo and SAP aim to **cover every possible business scenario inside the core**.  
+This makes them powerful, but also heavy, expensive, and difficult to evolve safely.
+
+LiteERP deliberately chooses a different path.
 
 ---
 
 ## 🧠 A Pure and Minimal Core
 
-LiteERP is built around a **small, clean, and pure core**.
+LiteERP is built around a **small, clean, and stable core**.
 
 The core intentionally focuses only on:
 - Essential operational workflows
 - Clear and predictable business rules
-- Stability and long-term maintainability
+- Strong domain boundaries
+- Long-term architectural stability
 
-Instead of trying to handle every possible business scenario,  
-LiteERP keeps the core minimal and **treats complexity as an external concern**.
+Instead of absorbing complexity,  
+LiteERP treats **complexity as an external concern** handled by extensions.
 
-This approach makes the core:
-- Easy to understand
-- Safe to modify
-- Fast to deploy
-- Suitable even for low-resource environments
+This makes the core:
+- Easy to understand  
+- Safe to evolve  
+- Fast to deploy  
+- Suitable even for low-resource environments  
 
 ---
 
@@ -54,48 +78,49 @@ Extensions are:
 - Fully decoupled from the core
 - Loaded dynamically only when needed
 - Able to hook into domain events, validation, workflows, and APIs
-- Safe to develop, replace, or remove without touching the core
+- Safe to develop, replace, or remove without touching core logic
 
 Through extensions, LiteERP can grow into:
 - Industry-specific ERP systems
 - Highly customized internal platforms
-- Complex enterprise-grade workflows
+- Complex enterprise workflows — **without bloating the core**
 
-**The extension system is the true engine of scalability and flexibility in LiteERP.**
+**The extension system is the true engine of scalability in LiteERP.**
 
 ---
 
-## 🚀 A New Path for PHP, Laravel Developers, and SMEs
+## 🚀 Built for Laravel Developers and SMEs
 
 LiteERP opens a new path for:
-- **PHP and Laravel developers** who want to build real ERP systems using familiar tools
-- **Small and Medium-sized Enterprises (SMEs)** that need flexible systems without the cost and complexity of traditional ERP platforms
+- **Laravel developers** who want to build real ERP systems with clean architecture
+- **SMEs** that need flexibility without enterprise-level complexity and cost
 
 Developers can:
-- Understand the core in a short time
-- Build powerful extensions with Laravel
-- Incrementally deliver complex ERP solutions without risking system stability
+- Understand the core quickly
+- Build extensions using familiar Laravel patterns
+- Deliver complex ERP features incrementally and safely
 
 Businesses can:
-- Start small with a clean core
-- Add only the features they need
-- Scale functionality as their operations grow
+- Start with a clean operational core
+- Enable only what they need
+- Scale functionality as operations grow
 
 ---
 
-## ⚖️ Lightweight by Design
+## 📉 Lightweight by Design
 
-Compared to all-in-one ERP platforms like Odoo, LiteERP intentionally stays lightweight.
+LiteERP intentionally stays lightweight.
 
-This results in:
+Compared to all-in-one ERP platforms like Odoo or SAP, this results in:
 - Lower infrastructure costs
-- Faster developer onboarding
+- Faster onboarding
 - Easier customization
 - Better long-term control over complexity
 
-LiteERP invoices are **operational invoices**, not tax invoices.  
-They are designed to manage sales, payments, and customers —  
-not to replace accounting software or government e-invoicing systems.
+> LiteERP invoices are **operational invoices**, not tax invoices.  
+> The system focuses on **operations**, not replacing accounting software  
+> or government e-invoicing platforms.
+
 
 ---
 
