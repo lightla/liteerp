@@ -30,6 +30,7 @@ import Profile from "./react/pages/Profile";
 import ForgetPassword from "./react/pages/forget-password";
 import ResetPassword from "./react/pages/reset-password";
 import Logout from "./react/pages/Logout";
+import Extensions from "./react/pages/Extensions";
 const App = () => {
   return (
     <Provider store={store}>
@@ -60,6 +61,7 @@ const App = () => {
             <Route path="/forget-password" element={<ForgetPassword />} />
             <Route path="/reset-password" element={<ResetPassword />} />
             <Route path="/logout" element={<Logout />} />
+            <Route path="/extensions" element={<Extensions />} />
           </Routes>
         </BrowserRouter>
       </PopupProvider>

@@ -83,3 +83,9 @@ body,.label, h1, h2, h3, h4, h5, h6 {
 .ml-2 {
     margin-left: .5rem!important;
 }
+/**
+ Extension 
+**/
+.extension-item {
+    height: 420px;
+}

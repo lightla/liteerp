@@ -26,10 +26,10 @@ export default function DashboardLayout({
         if (!business) {
             navigate("/business");
         }
-        if(!nav) {
+        if (!nav) {
             businessRole();
         }
-    }, [business,nav]);
+    }, [business, nav]);
     return <div className={"container-fuild dashboard-megabox dark-theme "} data-theme={theme}>
         <div className="row">
             <div className="col-lg-2 col-md-3 col-sm-4 px-0">
@@ -42,5 +42,37 @@ export default function DashboardLayout({
                 </div>
             </div>
         </div>
+        <footer class="border-top bg-white">
+  <div class="container-fluid py-2">
+    <div class="row align-items-center text-muted small">
+      <div class="col-md-4 d-flex align-items-center gap-2 justify-content-center justify-content-md-start">
+        <i class="bi bi-box"></i>
+        <span>LiteERP © 2026</span>
+      </div>
+      <div class="col-md-8 d-flex align-items-center gap-3 justify-content-center justify-content-md-end">
+        <a href="https://github.com/liteerp-oss/liteerp" target="_blank"
+           class="text-muted text-decoration-none d-flex align-items-center gap-1 hover-opacity">
+          <i class="bi bi-github"></i>
+          Github
+        </a>
+
+        <a href="https://github.com/liteerp-oss/docs"
+           class="text-muted text-decoration-none d-flex align-items-center gap-1">
+          <i class="bi bi-book"></i>
+          Docs
+        </a>
+
+        <a href="https://github.com/liteerp-oss/liteerp/issues"
+           class="text-muted text-decoration-none d-flex align-items-center gap-1">
+          <i class="bi bi-life-preserver"></i>
+          Support
+        </a>
+      </div>
+
+    </div>
+  </div>
+</footer>
+
+
     </div>
 }

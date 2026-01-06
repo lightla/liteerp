@@ -148,9 +148,14 @@ PHP);
         // extension.json
         $fs->put("{$base}/extension.json", json_encode([
             'name' => Str::kebab($name),
-            'version' => '0.1.0',
+            'version' => '0.0.1',
             'description' => "{$name} extension for LiteERP",
-            'status' => false
+            'status' => false,
+            "verified"  => true,
+            "author" => "Author name",
+            "icon" => null,
+            "setting_link" => null
+            
         ], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
 
         // README

@@ -1,0 +1,141 @@
+import React, { useCallback, useEffect, useState } from "react";
+import ExtensionService from "../../services/ExtensionService";
+import { useForm } from '../../libraries/handleInput'
+import { usePopup } from '../popups/PopupContext'
+export default function ExtensionCard({
+  item = {
+    iconClass: "bi bi-box",
+    name: "Unknown Extension",
+    version: "0.0.0",
+    verified: false,
+    description: "No description provided.",
+    author: "Unknown",
+    lastUpdate: "—",
+    directory: "",
+    status: false,
+    setting_link: "#"
+  }
+}) {
+  const { openPopup } = usePopup();
+  const form = useForm();
+  const update = useCallback(() => {
+    if (form.formData?.directory) {
+      form.setLoading(true)
+      ExtensionService.update({
+        ...form.formData,
+        status: form.formData.status ? false : true
+      })
+        .then((resp) => {
+          form.setFormData({
+            ...form.formData,
+            status: form.formData.status ? false : true
+          })
+          form.setLoading(false)
+        })
+        .catch((error) => {
+          form.setLoading(false)
+        })
+    }
+  }, [form]);
+  const destroy = useCallback(() => {
+    if (form.formData?.directory) {
+      form.setLoading(true)
+      ExtensionService.delete({
+        ...form.formData
+      })
+        .then((resp) => {
+          form.setLoading(false)
+          form.setFormData(null)
+        })
+        .catch((error) => {
+          form.setLoading(false)
+        })
+    }
+  }, [form]);
+  const confirmDelete = useCallback(() => {
+    openPopup({
+      type: 'warning',
+      message: 'Are you sure to delete?',
+      onConfirm: () => {
+        destroy();
+      }
+    })
+  }, [form])
+  useEffect(() => {
+    form.setFormData(item)
+  }, [])
+  return form.formData ? <div className="card h-100 shadow-sm">
+      <div className="card-body d-flex flex-column">
+
+        {/* Header */}
+        <div className="d-flex align-items-start mb-3">
+          <div className="me-3 fs-3 text-primary">
+            <i className={form.formData?.iconClass ?? 'bi bi-google-play'}></i>
+          </div>
+
+          <div className="flex-grow-1">
+            <h5 className="card-title mb-1 text-primary text-truncate">
+              {form.formData?.name}
+            </h5>
+            <div className="small text-muted">
+              v{form.formData?.version} •{" "}
+              {form.formData?.verified ? (
+                <span className="text-success">Verified</span>
+              ) : (
+                <span className="text-danger">Unverified</span>
+              )}
+            </div>
+          </div>
+        </div>
+
+        {/* Description */}
+        <p className="card-text small text-muted mb-3">
+          {form.formData?.description.length > 120
+            ? form.formData?.description.substring(0, 120) + "..."
+            : form.formData?.description}
+        </p>
+
+        {/* Meta */}
+        <ul className="list-unstyled small text-muted mb-4">
+          <li>
+            <strong>Author:</strong> {form.formData?.author}
+          </li>
+          <li>
+            <strong>Directory:</strong> {form.formData?.directory}
+          </li>
+        </ul>
+
+        {/* Actions */}
+        <div className="mt-auto d-flex gap-2">
+          <button
+            disabled={form.loading}
+            onClick={update}
+            className={`btn btn-sm ${form.formData?.status ? "btn-danger" : "btn-success"
+              }`}
+          >
+            <i className={`bi ${form.formData?.status ? "bi-x-circle" : "bi-check-circle"} me-1`} />
+            {form.formData?.status ? "Disable" : "Enable"}
+          </button>
+          {form.formData?.setting_link ? <a
+            href={form.formData?.setting_link}
+            target="_blank"
+            className="btn btn-sm btn-outline-secondary"
+            rel="noreferrer"
+          >
+            <i className="bi bi-gear me-1" />
+            Settings
+          </a> : null }   
+
+          <button
+            onClick={confirmDelete}
+            className="btn btn-sm btn-outline-danger ms-auto"
+            title="Delete"
+          >
+            <i className="bi bi-trash" />
+          </button>
+        </div>
+      </div>
+    </div> : null
+    
+  ;
+}

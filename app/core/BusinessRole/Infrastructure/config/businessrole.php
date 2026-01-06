@@ -201,7 +201,13 @@ return [
             'erp.notification.many',
 
             // overview 
-            'erp.overview.index'
+            'erp.overview.index',
+
+            // sidebar 
+            'erp.extension.index',
+            'erp.extension.create',
+            'erp.extension.update',
+            'erp.extension.delete',
         ],
 
 
@@ -393,7 +399,12 @@ return [
             'erp.notification.many',
 
             // overview 
-            'erp.overview.index'
+            'erp.overview.index',
+            // sidebar 
+            'erp.extension.index',
+            'erp.extension.create',
+            'erp.extension.update',
+            'erp.extension.delete',
         ],
 
 
@@ -723,6 +734,14 @@ return [
             'icon'      => 'bi bi-diagram-3',
             'label'     => 'Logs',
             'ability'   => 'erp.notification.index',
+        ],
+
+        [
+            'to'        => '/extensions',
+            'link'      => null,
+            'icon'      => 'bi bi-diagram-3',
+            'label'     => 'Extension',
+            'ability'   => 'erp.extension.index',
         ],
     ],
 
