@@ -1,5 +1,5 @@
 <?php 
-namespace Core\Stockin\Application\Queries;
+namespace Core\StockIn\Application\Queries;
 
 use App\Contracts\Queries\QueryInterface;
 use App\Models\StockInModel;
