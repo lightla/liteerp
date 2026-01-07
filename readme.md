@@ -124,6 +124,19 @@ Compared to all-in-one ERP platforms like Odoo or SAP, this results in:
 
 ---
 
+
+## 🌐 Multi-language Support
+
+LiteERP is built with **full multi-language support**, making it easy to use for teams across different regions.
+
+### Supported languages
+- 🇺🇸 **English**
+- 🇯🇵 **Japanese (日本語)**
+- 🇻🇳 **Vietnamese (Tiếng Việt)**
+
+
+---
+
 ## ✨ Philosophy
 
 > **Keep the core pure.**  
