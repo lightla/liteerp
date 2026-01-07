@@ -1,6 +1,7 @@
 <?php
 
 use App\Exceptions\BadException;
+use App\Http\Middleware\AppLanguage;
 use App\Http\Middleware\BusinessAdmin;
 use App\Http\Middleware\BusinessToken;
 use App\Http\Middleware\IsAdmin;
@@ -27,9 +28,11 @@ return Application::configure(basePath: dirname(__DIR__))
             'BusinessAdmin' => BusinessAdmin::class,
             'auth:sanctum' => EnsureFrontendRequestsAreStateful::class,
             'auth' => Authenticate::class,
+            'app.language' => AppLanguage::class
         ]);
         $middleware->group('business', [
             'business.token',
+            'app.language'
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {

@@ -6,6 +6,7 @@ const authApi = axios.create({
   timeout: 10000,
   headers: {
     "Content-Type": "application/json",
+    "App-Language": localStorage.getItem("lang") || "en"
   },
 });
 

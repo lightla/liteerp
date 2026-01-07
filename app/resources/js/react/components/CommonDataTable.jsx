@@ -19,7 +19,7 @@ export default function CommonDataTable({
   return (
     <div className={`card rounded-3 p-4 shadow-sm theme-sidebar-bg theme-title`}>
       <div className="d-flex justify-content-between">
-        <div className="col-6">
+        <div className="col-9">
           {filter}
         </div>
         {add ? <span style={{

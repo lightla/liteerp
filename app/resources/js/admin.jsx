@@ -31,50 +31,51 @@ import ForgetPassword from "./react/pages/forget-password";
 import ResetPassword from "./react/pages/reset-password";
 import Logout from "./react/pages/Logout";
 import Extensions from "./react/pages/Extensions";
+import { I18nProvider } from "./i18n/I18nContext";
 const App = () => {
   return (
-    <Provider store={store}>
-      <PopupProvider>
-        <BrowserRouter basename="/dashboard">
-          <Routes>
-            <Route path="/" element={<Dashboard />} />
-            <Route path="/login" element={<Login />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/verify-account" element={<VerifyAccount />} />
-            <Route path="/products" element={<Product />} />
-            <Route path="/orders" element={<Order />} />
-            <Route path="/customers" element={<Customer />} />
-            <Route path="/warehouses" element={<Warehouse />} />
-            <Route path="/invoices" element={<Invoice />} />
-            <Route path="/settings" element={<Setting />} />
-            <Route path="/users" element={<User />} />
-            <Route path="/business" element={<Business />} />
-            <Route path="/membership" element={<Membership />} />
-            <Route path="/notification" element={<Notification />} />
-            <Route path="/stocks" element={<Stock />} />
-            <Route path="/inventories" element={<Inventory />} />
-            <Route path="/purchases" element={<Purchases />} />
-            <Route path="/suppliers" element={<Suppliers />} />
-            <Route path="/shippings" element={<Shipping />} />
-            <Route path="/activity-logs" element={<ActivityLogs />} />
-            <Route path="/profile" element={<Profile />} />
-            <Route path="/forget-password" element={<ForgetPassword />} />
-            <Route path="/reset-password" element={<ResetPassword />} />
-            <Route path="/logout" element={<Logout />} />
-            <Route path="/extensions" element={<Extensions />} />
-          </Routes>
-        </BrowserRouter>
-      </PopupProvider>
-
-    </Provider>
+      <Provider store={store}>
+        <PopupProvider>
+          <BrowserRouter basename="/dashboard">
+            <Routes>
+              <Route path="/" element={<Dashboard />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="/register" element={<Register />} />
+              <Route path="/verify-account" element={<VerifyAccount />} />
+              <Route path="/products" element={<Product />} />
+              <Route path="/orders" element={<Order />} />
+              <Route path="/customers" element={<Customer />} />
+              <Route path="/warehouses" element={<Warehouse />} />
+              <Route path="/invoices" element={<Invoice />} />
+              <Route path="/settings" element={<Setting />} />
+              <Route path="/users" element={<User />} />
+              <Route path="/business" element={<Business />} />
+              <Route path="/membership" element={<Membership />} />
+              <Route path="/notification" element={<Notification />} />
+              <Route path="/stocks" element={<Stock />} />
+              <Route path="/inventories" element={<Inventory />} />
+              <Route path="/purchases" element={<Purchases />} />
+              <Route path="/suppliers" element={<Suppliers />} />
+              <Route path="/shippings" element={<Shipping />} />
+              <Route path="/activity-logs" element={<ActivityLogs />} />
+              <Route path="/profile" element={<Profile />} />
+              <Route path="/forget-password" element={<ForgetPassword />} />
+              <Route path="/reset-password" element={<ResetPassword />} />
+              <Route path="/logout" element={<Logout />} />
+              <Route path="/extensions" element={<Extensions />} />
+            </Routes>
+          </BrowserRouter>
+        </PopupProvider>
+      </Provider>  
   );
 };
 
-// Mount vào Blade
 if (document.getElementById("app")) {
   ReactDOM.createRoot(document.getElementById("app")).render(
     <React.StrictMode>
-      <App />
+      <I18nProvider>
+        <App />
+      </I18nProvider>
     </React.StrictMode>
   );
 }

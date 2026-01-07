@@ -15,9 +15,11 @@ import Currencies from '../../Currencies';
 import PurchaseService from '../../../services/PurchaseService';
 import { useDispatch } from 'react-redux';
 import { setPurchaseDetail } from '../../../redux/purchase/detailSlice';
+import { useI18n } from '../../../../i18n/useI18n';
 export default function ListProducts({
     purchase = null
 }) {
+    const {t} = useI18n();
     const dispatch = useDispatch();
     const [checkList, setCheckList] = useState([]);
     const [isCheckAll, setIsCheckAll] = useState(false);
@@ -312,6 +314,80 @@ export default function ListProducts({
     };
     useEffect(() => {
         getPurchaseItems();
+        table.setColums([
+            {
+                label: t('Select'),
+                key: 'id',
+                render: (id) => (
+                    <input
+                        disabled={purchase.status !== 'draft'}
+                        type="checkbox"
+                        checked={checkList.includes(id)}
+                        onChange={(e) =>
+                            e.target.checked
+                                ? setCheckList((p) => [...p, id])
+                                : setCheckList((p) => p.filter((x) => x !== id))
+                        }
+                    />
+                ),
+            },
+            {
+                label: t('Image'),
+                key: 'image',
+                render: (src) =>
+                    src ? (
+                        <img
+                            src={src}
+                            alt="product"
+                            style={{
+                                width: 50,
+                                height: 50,
+                                borderRadius: 8,
+                                objectFit: 'cover',
+                            }}
+                        />
+                    ) : (
+                        <img
+                            src="/assets/icons/default_image.png"
+                            width={50}
+                            height={50}
+                            alt=""
+                        />
+                    ),
+            },
+            { label: t('Name'), key: 'name' },
+            { label: t('SKU'), key: 'sku' },
+            { label: t('Category'), key: 'category_name' },
+            { label: t('Buy'), key: 'buy_quantity' },
+            { label: t('Gift'), key: 'gift_quantity' },
+            { label: t('Compensation'), key: 'compensation_quantity' },
+            { label: t('Conversion'), key: 'conversion_quantity' },
+            {
+                label: t('Unit cost'),
+                key: 'unit_cost',
+                render: (value) => <Currencies amount={value} />,
+            },
+            {
+                label: t('Subtotal'),
+                key: 'subtotal',
+                render: (value) => <Currencies amount={value} />,
+            },
+            {
+                label: t('Tax'),
+                key: 'tax',
+                render: (value) => <span>{value}%</span>,
+            },
+            {
+                label: t('Total tax'),
+                key: 'total_tax',
+                render: (value) => <Currencies amount={value} />,
+            },
+            {
+                label: t('Total price'),
+                key: 'total',
+                render: (value) => <Currencies amount={value} />,
+            },
+        ])
     }, []);
     return (
         <div className="m-4">
@@ -345,125 +421,139 @@ export default function ListProducts({
                 loading={table.loading}
                 add={purchase?.status !== 'draft' ? null : () => setShowForm(true)}
                 links={table.links}
-                columns={columns}
+                columns={table.colums}
                 data={table.data}
                 onEdit={purchase?.status !== 'draft' ? null : handleEdit}
                 onDelete={purchase?.status !== 'draft' ? null : handleDelete}
             />
-            {showForm ? <PopupLayout
-                loading={form.loading}
-                confirmText='Save change'
-                onClose={() => {
-                    setShowForm(false);
-                    form.setIsEdit(false);
-                }}
-                onConfirm={form.isEdit ? update : create} title='Add product'>
-                <h4>Information</h4>
-                <div className="mb-3 form-group">
-                    <label className='theme-title'>Product</label>
-                    <SearchSelect
-                        placeholder='Search by name or sku'
-                        name="product_id"
-                        value={form.formData?.product_id}
-                        changeValue={form.handleChangeByKey}
-                        errorMessage={form.formErrors?.product_id}
-                        search={getProducts}
-                        options={products.map((item) => {
-                            return {
-                                value: item.id,
-                                label: item.name
-                            }
-                        })}
-                        defaultKeywords={form.formData?.name ?? ''}
-                    />
-                </div>
+            {showForm ? (
+    <PopupLayout
+        loading={form.loading}
+        confirmText={t('Save change')}
+        onClose={() => {
+            setShowForm(false);
+            form.setIsEdit(false);
+        }}
+        onConfirm={form.isEdit ? update : create}
+        title={t('Add product')}
+    >
+        <h4>{t('Information')}</h4>
 
-                <div className='row'>
-                    <div className="mb-3 form-group col-6">
-                        <label className='theme-title'>Discount</label>
-                        <InputForm
-                            name="discount"
-                            type='number'
-                            value={form.formData?.discount}
-                            handleChange={form.handleChange}
-                            errorMessage={form.formErrors?.discount}
-                        />
-                    </div>
+        <div className="mb-3 form-group">
+            <label className="theme-title">{t('Product')}</label>
+            <SearchSelect
+                placeholder={t('Search by name or sku')}
+                name="product_id"
+                value={form.formData?.product_id}
+                changeValue={form.handleChangeByKey}
+                errorMessage={form.formErrors?.product_id}
+                search={getProducts}
+                options={products.map((item) => ({
+                    value: item.id,
+                    label: item.name,
+                }))}
+                defaultKeywords={form.formData?.name ?? ''}
+            />
+        </div>
 
-                    <div className="mb-3 form-group col-6">
-                        <label className='theme-title'>Tax</label>
-                        <InputForm
-                            name="tax"
-                            type='number'
-                            value={form.formData?.tax}
-                            handleChange={form.handleChange}
-                            errorMessage={form.formErrors?.tax}
-                        />
-                    </div>
-                </div>
-                <div className="mb-3 form-group">
-                    <label className='theme-title'>Product link</label>
-                    <InputForm
-                        name="product_link"
-                        type='text'
-                        value={form.formData?.product_link}
-                        handleChange={form.handleChange}
-                        errorMessage={form.formErrors?.product_link}
-                    />
-                </div>
-                <div className='row'>
-                    <div className="mb-3 form-group col-6">
-                        <label className='theme-title'>Buy quantity</label>
-                        <InputForm
-                            name="buy_quantity"
-                            type='text'
-                            value={form.formData?.buy_quantity}
-                            handleChange={form.handleChange}
-                            errorMessage={form.formErrors?.buy_quantity}
-                        />
-                    </div>
-                    <div className="mb-3 form-group col-6">
-                        <label className='theme-title'>Gift quantity</label>
-                        <InputForm
-                            name="gift_quantity"
-                            type='number'
-                            value={form.formData?.gift_quantity}
-                            handleChange={form.handleChange}
-                            errorMessage={form.formErrors?.gift_quantity}
-                        />
-                    </div>
-                    <div className="mb-3 form-group col-6">
-                        <label className='theme-title'>Compensation quantity</label>
-                        <InputForm
-                            name="compensation_quantity"
-                            type='number'
-                            value={form.formData?.compensation_quantity}
-                            handleChange={form.handleChange}
-                            errorMessage={form.formErrors?.compensation_quantity}
-                        />
-                    </div>
-                    <div className="mb-3 form-group col-6">
-                        <label className='theme-title'>Conversion quantity</label>
-                        <InputForm
-                            name="conversion_quantity"
-                            type='number'
-                            value={form.formData?.conversion_quantity}
-                            handleChange={form.handleChange}
-                            errorMessage={form.formErrors?.conversion_quantity}
-                        />
-                    </div>
-                </div>
-                <div className="mb-3 form-group">
-                    <label className='theme-title'>Unit cost</label>
-                    <InputForm
-                        name="unit_cost"
-                        type='number'
-                        value={form.formData?.unit_cost}
-                        handleChange={form.handleChange}
-                        errorMessage={form.formErrors?.unit_cost}
-                    />
-                </div>
-            </PopupLayout> : null}
+        <div className="row">
+            <div className="mb-3 form-group col-6">
+                <label className="theme-title">{t('Discount')}</label>
+                <InputForm
+                    name="discount"
+                    type="number"
+                    value={form.formData?.discount}
+                    handleChange={form.handleChange}
+                    errorMessage={form.formErrors?.discount}
+                />
+            </div>
+
+            <div className="mb-3 form-group col-6">
+                <label className="theme-title">{t('Tax')}</label>
+                <InputForm
+                    name="tax"
+                    type="number"
+                    value={form.formData?.tax}
+                    handleChange={form.handleChange}
+                    errorMessage={form.formErrors?.tax}
+                />
+            </div>
+        </div>
+
+        <div className="mb-3 form-group">
+            <label className="theme-title">{t('Product link')}</label>
+            <InputForm
+                name="product_link"
+                type="text"
+                value={form.formData?.product_link}
+                handleChange={form.handleChange}
+                errorMessage={form.formErrors?.product_link}
+            />
+        </div>
+
+        <div className="row">
+            <div className="mb-3 form-group col-6">
+                <label className="theme-title">{t('Buy quantity')}</label>
+                <InputForm
+                    name="buy_quantity"
+                    type="text"
+                    value={form.formData?.buy_quantity}
+                    handleChange={form.handleChange}
+                    errorMessage={form.formErrors?.buy_quantity}
+                />
+            </div>
+
+            <div className="mb-3 form-group col-6">
+                <label className="theme-title">{t('Gift quantity')}</label>
+                <InputForm
+                    name="gift_quantity"
+                    type="number"
+                    value={form.formData?.gift_quantity}
+                    handleChange={form.handleChange}
+                    errorMessage={form.formErrors?.gift_quantity}
+                />
+            </div>
+
+            <div className="mb-3 form-group col-6">
+                <label className="theme-title">
+                    {t('Compensation quantity')}
+                </label>
+                <InputForm
+                    name="compensation_quantity"
+                    type="number"
+                    value={form.formData?.compensation_quantity}
+                    handleChange={form.handleChange}
+                    errorMessage={form.formErrors?.compensation_quantity}
+                />
+            </div>
+
+            <div className="mb-3 form-group col-6">
+                <label className="theme-title">
+                    {t('Conversion quantity')}
+                </label>
+                <InputForm
+                    name="conversion_quantity"
+                    type="number"
+                    value={form.formData?.conversion_quantity}
+                    handleChange={form.handleChange}
+                    errorMessage={form.formErrors?.conversion_quantity}
+                />
+            </div>
+        </div>
+
+        <div className="mb-3 form-group">
+            <label className="theme-title">{t('Unit cost')}</label>
+            <InputForm
+                name="unit_cost"
+                type="number"
+                value={form.formData?.unit_cost}
+                handleChange={form.handleChange}
+                errorMessage={form.formErrors?.unit_cost}
+            />
+        </div>
+    </PopupLayout>
+) : null}
+
             {showTaxForm ? <PopupLayout
                 onConfirm={setTax}
                 title='Set tax products'

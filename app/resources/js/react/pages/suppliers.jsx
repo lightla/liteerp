@@ -1,376 +1,422 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import DashboardLayout from '../layouts/DashboardLayout';
-import CommonDataTable from '../components/CommonDataTable';
-import { PopupLayout } from '../layouts/PopupLayout';
-import { InputForm } from '../components/UI/Input/InputForm';
+import React, { useCallback, useEffect, useState } from 'react'
+import DashboardLayout from '../layouts/DashboardLayout'
+import CommonDataTable from '../components/CommonDataTable'
+import { PopupLayout } from '../layouts/PopupLayout'
+import { InputForm } from '../components/UI/Input/InputForm'
 import SupplierService from '../services/SupplierService'
 import SearchInput from '../components/UI/Input/SearchInput'
-import { useForm } from '../libraries/handleInput';
+import { useForm } from '../libraries/handleInput'
 import useTable from '../libraries/handleTable'
 import { Select } from '../components/UI/Input/Select'
 import TextArea from '../components/UI/Input/Textarea'
 import { usePopup } from '../components/popups/PopupContext'
-import PageHead from '../components/PageHead';
-import { substring } from '../libraries/common';
-import StatusBadge from '../components/StatusBadge';
+import PageHead from '../components/PageHead'
+import { substring } from '../libraries/common'
+import StatusBadge from '../components/StatusBadge'
 import RenderFormFieldByList from '../components/RenderFormFieldByList'
 import PrimaryButton from '../components/UI/Buttons/PrimaryButton'
-import RenderFormTableByList from '../components/RenderFieldTableByList';
+import RenderFormTableByList from '../components/RenderFieldTableByList'
 import { RenderTableSearch } from '../components/RenderTableSearch'
+import { useI18n } from '../../i18n/useI18n'
+
 export default function Suppliers() {
-    const { openPopup } = usePopup();
-    const [addShow, setAddShow] = useState(false);
-    const search = useForm();
-    const form = useForm();
-    const table = useTable();
+    const { t } = useI18n()
+    const { openPopup } = usePopup()
+
+    const [addShow, setAddShow] = useState(false)
+
+    const search = useForm()
+    const form = useForm()
+    const table = useTable()
 
     const handleEdit = (row) => {
-        console.log("Edit clicked:", row);
-        form.setFormData(row);
-        form.setIsEdit(true);
-        setAddShow(true);
-    };
+        form.setFormData(row)
+        form.setIsEdit(true)
+        setAddShow(true)
+    }
 
-    const getSupliers = useCallback((page = 0) => {
-        table.setLoading(true);
-        SupplierService.list({
-            ...search.formData,
-            page: page
-        })
-            .then((resp) => {
-                table.setData(resp.message.data);
-                table.setLinks(resp.message.links);
-                table.setLoading(false);
+    const getSupliers = useCallback(
+        (page = 0) => {
+            table.setLoading(true)
+            SupplierService.list({
+                ...search.formData,
+                page,
             })
-            .catch((error) => {
-                if (error.response.data?.message) {
-                    openPopup({
-                        type: 'error',
-                        message: error.response.data?.message
-                    })
-                }
-            })
-    }, [search.formData]);
+                .then((resp) => {
+                    table.setData(resp.message.data)
+                    table.setLinks(resp.message.links)
+                    table.setLoading(false)
+                })
+                .catch((error) => {
+                    if (error.response?.data?.message) {
+                        openPopup({
+                            type: 'error',
+                            message: error.response.data.message,
+                        })
+                    }
+                })
+        },
+        [search.formData]
+    )
+
     const destroy = useCallback((row) => {
         SupplierService.delete(row)
-            .then((resp) => {
-
+            .then(() => {
                 openPopup({
                     type: 'success',
-                    message: 'You has been updated'
+                    message: t('Supplier has been deleted'),
                 })
-                getSupliers();
+                getSupliers()
             })
             .catch((error) => {
-
-                if (error.response.data?.message) {
+                if (error.response?.data?.message) {
                     openPopup({
                         type: 'error',
-                        message: error.response.data?.message
+                        message: error.response.data.message,
                     })
                 }
             })
-    }, [form.formData]);
+    }, [])
+
     const handleDelete = (row) => {
         openPopup({
             type: 'warning',
-            message: 'Are your sure to delete?',
-            onConfirm: () => {
-                destroy(row)
-            }
+            message: t('Are you sure to delete?'),
+            onConfirm: () => destroy(row),
         })
-    };
+    }
+
     const submit = useCallback(() => {
         form.setLoading(true)
         form.setFormErrors(null)
+
         SupplierService.add(form.formData)
-            .then((resp) => {
-                setAddShow(false);
-                getSupliers();
+            .then(() => {
+                setAddShow(false)
+                getSupliers()
                 form.setLoading(false)
                 openPopup({
                     type: 'success',
-                    message: 'You has been added'
+                    message: t('Supplier has been added'),
                 })
             })
             .catch((error) => {
-                if (error.response.data?.errors) {
-                    form.setFormErrors(error.response.data?.errors)
+                if (error.response?.data?.errors) {
+                    form.setFormErrors(error.response.data.errors)
                 }
-                if (error.response.data?.message) {
+                if (error.response?.data?.message) {
                     openPopup({
                         type: 'error',
-                        message: error.response.data?.message
+                        message: error.response.data.message,
                     })
                 }
                 form.setLoading(false)
             })
-    }, [form.formData]);
+    }, [form.formData])
 
     const update = useCallback(() => {
         form.setFormErrors(null)
         form.setLoading(true)
+
         SupplierService.update(form.formData)
-            .then((resp) => {
-                setAddShow(false);
-                getSupliers();
-                form.setLoading(false);
+            .then(() => {
+                setAddShow(false)
+                getSupliers()
+                form.setLoading(false)
                 openPopup({
                     type: 'success',
-                    message: 'You has been updated'
+                    message: t('Supplier has been updated'),
                 })
             })
             .catch((error) => {
-                if (error.response.data?.errors) {
-                    form.setFormErrors(error.response.data?.errors)
+                if (error.response?.data?.errors) {
+                    form.setFormErrors(error.response.data.errors)
                 }
-                if (error.response.data?.message) {
+                if (error.response?.data?.message) {
                     openPopup({
                         type: 'error',
-                        message: error.response.data?.message
+                        message: error.response.data.message,
                     })
                 }
                 form.setLoading(false)
             })
-    }, [form.formData]);
+    }, [form.formData])
 
     const getView = useCallback(() => {
         SupplierService.view()
             .then((resp) => {
                 form.setHookRender(resp.message?.form)
                 search.setHookRender(resp.message?.search)
-                table.addColums(resp.message.index, (item, data) => {
-                    return <RenderFormTableByList item={item} data={data} />
-                })
+                table.addColums(resp.message.index, (item, data) => (
+                    <RenderFormTableByList item={item} data={data} />
+                ))
             })
             .catch((error) => {
-                if (error.response.data?.message) {
+                if (error.response?.data?.message) {
                     openPopup({
                         type: 'error',
-                        message: error.response.data?.message
+                        message: error.response.data.message,
                     })
                 }
             })
-    }, []);
+    }, [])
 
     useEffect(() => {
-        getSupliers();
-        getView();
+        getSupliers()
+        getView()
         table.setColums([
-            { label: "ID", key: "id" },
+            { label: t('ID'), key: 'id' },
             {
-                label: "Unit Name", key: "unit_name", render: (name) => {
-                    return <span>
-                        {substring(name, 0, 30)}
-                    </span>
-                }
+                label: t('Unit Name'),
+                key: 'unit_name',
+                render: (name) => <span>{substring(name, 0, 30)}</span>,
             },
-            { label: "Email", key: "email" },
-            { label: "Phone Number", key: "phone" },
+            { label: t('Email'), key: 'email' },
+            { label: t('Phone Number'), key: 'phone' },
             {
-                label: "Address", key: "address", render: (address) => {
-                    return <span>
-                        {substring(address, 0, 30)}
-                    </span>
-                }
+                label: t('Address'),
+                key: 'address',
+                render: (address) => (
+                    <span>{substring(address, 0, 30)}</span>
+                ),
             },
-            { label: "Tax Code", key: "tax_code" },
-            { label: "Bank Name", key: "bank_name" },
-            { label: "Bank Account", key: "bank_account" },
+            { label: t('Tax Code'), key: 'tax_code' },
+            { label: t('Bank Name'), key: 'bank_name' },
+            { label: t('Bank Account'), key: 'bank_account' },
             {
-                label: "Website", key: "website", render: (website) => {
-                    return <span>
-                        {substring(website, 0, 30)}
-                    </span>
-                }
+                label: t('Website'),
+                key: 'website',
+                render: (website) => (
+                    <span>{substring(website, 0, 30)}</span>
+                ),
             },
             {
-                label: "Status",
-                key: "active",
+                label: t('Status'),
+                key: 'active',
                 render: (value) => (
-                    <StatusBadge status={value ? 'active' : 'inactive'} />
+                    <StatusBadge
+                        status={value ? 'active' : 'inactive'}
+                    />
                 ),
             },
         ])
-    }, []);
+    }, [])
+
     return (
         <DashboardLayout>
-            <div>
-                <PageHead
-                    containerClass='mx-4'
-                    title='Suppliers'
-                    subtitle='List of suppliers for materials, accessories, and goods.'
-                />
-            </div>
-            <div className="m-4">
+            <PageHead
+                containerClass="mx-4"
+                title={t('Suppliers')}
+                subtitle={t(
+                    'List of suppliers for materials, accessories, and goods.'
+                )}
+            />
 
-                <div>
-                    <CommonDataTable
-                        columns={table.colums}
-                        filter={<div className='d-flex'>
-                            <div className='col-3'>
-                                <label>Status</label>
-                                <Select name='active'
+            <div className="m-4">
+                <CommonDataTable
+                    columns={table.colums}
+                    loading={table.loading}
+                    data={table.data}
+                    links={table.links}
+                    filter={
+                        <div className="row">
+                            <div className="col-2">
+                                <label>{t('Status')}</label>
+                                <Select
+                                    name="active"
                                     handleChange={search.handleChange}
                                     value={search.formData?.active ?? ''}
                                     options={[
-                                        { value: 1, label: 'Active' },
-                                        { value: 0, label: 'Inactive' }
-                                    ]} />
+                                        { value: 1, label: t('Active') },
+                                        { value: 0, label: t('Inactive') },
+                                    ]}
+                                />
                             </div>
-                            <div className='col-3 ml-2'>
 
-                                <label>Order by</label>
+                            <div className="col-2 ml-2">
+                                <label>{t('Order by')}</label>
                                 <Select
-                                    name='order_by'
+                                    name="order_by"
                                     value={search.formData?.order_by}
                                     handleChange={search.handleChange}
-                                    errorMessage={search.formErrors?.order_by}
                                     options={[
-                                        { value: 'ASC', label: 'Oldest' },
-                                        { value: 'DESC', label: 'Newest' }
-                                    ]} />
+                                        { value: 'ASC', label: t('Oldest') },
+                                        { value: 'DESC', label: t('Newest') },
+                                    ]}
+                                />
                             </div>
-                            {search.hookRender.map((item, index) => {
-                                return <div className='col-3 ml-2' key={index}>
-                                    <RenderTableSearch item={item} search={search} />
+
+                            {search.hookRender.map((item, index) => (
+                                <div className="col-2 ml-2" key={index}>
+                                    <RenderTableSearch
+                                        item={item}
+                                        search={search}
+                                    />
                                 </div>
-                            })}
-                            <div className='col-6 ml-2'>
-                                <label>Keywords</label>
+                            ))}
+
+                            <div className="col-2 ml-2">
+                                <label>{t('Keywords')}</label>
                                 <SearchInput
-                                    name='keywords'
+                                    name="keywords"
                                     submit={getSupliers}
                                     value={search.formData?.keywords}
                                     handleChange={search.handleChange}
-                                    placeholder='search by name' />
+                                    placeholder={t('Search by name')}
+                                />
                             </div>
-                            <div className='col-2 mx-2'>
-                                <PrimaryButton onClick={getSupliers} label='Search' />
-                            </div>
-                        </div>}
-                        add={() => {
-                            setAddShow(true);
-                            form.setIsEdit(false);
-                        }}
-                        loading={table.loading}
-                        data={table.data}
-                        links={table.links}
-                        onEdit={handleEdit}
-                        onDelete={handleDelete}
-                    />
-                </div>
-                <div>
-                    {addShow ? <PopupLayout
-                        loading={form.loading}
-                        onClose={() => {
-                            setAddShow(false);
-                            form.setIsEdit(false);
-                        }} title="Add new" onConfirm={form.isEdit ? update : submit}>
-                        <div>
-                            <div className='form-group'>
-                                <label>Name</label>
-                                <InputForm
-                                    handleChange={form.handleChange}
-                                    value={form.formData?.unit_name}
-                                    errorMessage={form.formErrors?.unit_name}
-                                    name='unit_name' placeholder='Unit name' />
-                            </div>
-                            <div className='row mt-1'>
-                                <div className='form-group col-6'>
-                                    <label>Email</label>
-                                    <InputForm
-                                        handleChange={form.handleChange}
-                                        value={form.formData?.email}
-                                        errorMessage={form.formErrors?.email}
-                                        name='email' placeholder='Unit name' />
-                                </div>
-                                <div className='form-group col-6'>
-                                    <label>Phone</label>
-                                    <InputForm
-                                        handleChange={form.handleChange}
-                                        value={form.formData?.phone}
-                                        errorMessage={form.formErrors?.phone}
-                                        name='phone' placeholder='Unit name' />
-                                </div>
-                            </div>
-                            <div className='form-group mt-1'>
-                                <label>Address</label>
-                                <TextArea
-                                    handleChange={form.handleChange}
-                                    value={form.formData?.address}
-                                    errorMessage={form.formErrors?.address}
-                                    name='address' placeholder='Address' />
-                            </div>
-                            <div className='form-group mt-1'>
-                                <label>Tax code</label>
-                                <InputForm
-                                    handleChange={form.handleChange}
-                                    value={form.formData?.tax_code}
-                                    errorMessage={form.formErrors?.tax_code}
-                                    name='tax_code' placeholder='Unit tax code' />
-                            </div>
-                            <div className='row mt-1'>
-                                <div className='form-group col-6'>
-                                    <label>Bank name</label>
-                                    <InputForm
-                                        handleChange={form.handleChange}
-                                        value={form.formData?.bank_name}
-                                        errorMessage={form.formErrors?.bank_name}
-                                        name='bank_name' placeholder='Bank name' />
-                                </div>
-                                <div className='form-group col-6'>
-                                    <label>Bank account</label>
-                                    <InputForm
-                                        handleChange={form.handleChange}
-                                        value={form.formData?.bank_account}
-                                        errorMessage={form.formErrors?.bank_account}
-                                        name='bank_account' placeholder='Bank account number' />
-                                </div>
-                            </div>
-                            <div className='form-group mt-1'>
-                                <label>Website</label>
-                                <InputForm
-                                    handleChange={form.handleChange}
-                                    value={form.formData?.website}
-                                    errorMessage={form.formErrors?.website}
-                                    name='website' placeholder='Website company' />
-                            </div>
-                            <div className='form-group mt-1'>
-                                <label>Note</label>
-                                <TextArea
-                                    handleChange={form.handleChange}
-                                    value={form.formData?.note ?? ''}
-                                    errorMessage={form.formErrors?.note}
-                                    name='note' placeholder='Note information' />
-                            </div>
-                            <div className='form-group mt-1'>
-                                <label>Active</label>
-                                <div className=''>
-                                    <InputForm
-                                        width={20}
-                                        type='checkbox'
-                                        handleChange={form.handleChange}
-                                        value={form.formData?.active}
-                                        errorMessage={form.formErrors?.active}
-                                        name='active' />
-                                </div>
-                                <span>
-                                    If it is not active then you can not select on the purchases
-                                </span>
-                            </div>
-                            {form.hookRender.map((item, index) => {
-                                return <div key={index}>
-                                    <RenderFormFieldByList
-                                        form={form}
-                                        item={item} />
-                                </div>
-                            })}
-                        </div>
-                    </PopupLayout> : null}
 
-                </div>
+                            <div className="col-2 mx-2">
+                                <PrimaryButton
+                                    onClick={getSupliers}
+                                    label={t('Search')}
+                                />
+                            </div>
+                        </div>
+                    }
+                    add={() => {
+                        setAddShow(true)
+                        form.setIsEdit(false)
+                    }}
+                    onEdit={handleEdit}
+                    onDelete={handleDelete}
+                />
+
+                {addShow && (
+                    <PopupLayout
+                        loading={form.loading}
+                        title={
+                            form.isEdit
+                                ? t('Update supplier')
+                                : t('Add new supplier')
+                        }
+                        onConfirm={form.isEdit ? update : submit}
+                        onClose={() => {
+                            setAddShow(false)
+                            form.setIsEdit(false)
+                        }}
+                    >
+                        <div className="form-group">
+                            <label>{t('Name')}</label>
+                            <InputForm
+                                name="unit_name"
+                                value={form.formData?.unit_name}
+                                handleChange={form.handleChange}
+                                errorMessage={form.formErrors?.unit_name}
+                                placeholder={t('Unit name')}
+                            />
+                        </div>
+
+                        <div className="row mt-1">
+                            <div className="form-group col-6">
+                                <label>{t('Email')}</label>
+                                <InputForm
+                                    name="email"
+                                    value={form.formData?.email}
+                                    handleChange={form.handleChange}
+                                    errorMessage={form.formErrors?.email}
+                                />
+                            </div>
+
+                            <div className="form-group col-6">
+                                <label>{t('Phone')}</label>
+                                <InputForm
+                                    name="phone"
+                                    value={form.formData?.phone}
+                                    handleChange={form.handleChange}
+                                    errorMessage={form.formErrors?.phone}
+                                />
+                            </div>
+                        </div>
+
+                        <div className="form-group mt-1">
+                            <label>{t('Address')}</label>
+                            <TextArea
+                                name="address"
+                                value={form.formData?.address}
+                                handleChange={form.handleChange}
+                                errorMessage={form.formErrors?.address}
+                            />
+                        </div>
+
+                        <div className="form-group mt-1">
+                            <label>{t('Tax code')}</label>
+                            <InputForm
+                                name="tax_code"
+                                value={form.formData?.tax_code}
+                                handleChange={form.handleChange}
+                                errorMessage={form.formErrors?.tax_code}
+                            />
+                        </div>
+
+                        <div className="row mt-1">
+                            <div className="form-group col-6">
+                                <label>{t('Bank name')}</label>
+                                <InputForm
+                                    name="bank_name"
+                                    value={form.formData?.bank_name}
+                                    handleChange={form.handleChange}
+                                    errorMessage={form.formErrors?.bank_name}
+                                />
+                            </div>
+
+                            <div className="form-group col-6">
+                                <label>{t('Bank account')}</label>
+                                <InputForm
+                                    name="bank_account"
+                                    value={form.formData?.bank_account}
+                                    handleChange={form.handleChange}
+                                    errorMessage={form.formErrors?.bank_account}
+                                />
+                            </div>
+                        </div>
+
+                        <div className="form-group mt-1">
+                            <label>{t('Website')}</label>
+                            <InputForm
+                                name="website"
+                                value={form.formData?.website}
+                                handleChange={form.handleChange}
+                                errorMessage={form.formErrors?.website}
+                            />
+                        </div>
+
+                        <div className="form-group mt-1">
+                            <label>{t('Note')}</label>
+                            <TextArea
+                                name="note"
+                                value={form.formData?.note ?? ''}
+                                handleChange={form.handleChange}
+                                errorMessage={form.formErrors?.note}
+                            />
+                        </div>
+
+                        <div className="form-group mt-1">
+                            <label>{t('Active')}</label>
+                            <InputForm
+                                type="checkbox"
+                                name="active"
+                                value={form.formData?.active}
+                                handleChange={form.handleChange}
+                            />
+                            <span className="d-block mt-1">
+                                {t(
+                                    'If inactive, this supplier cannot be selected in purchases'
+                                )}
+                            </span>
+                        </div>
+
+                        {form.hookRender.map((item, index) => (
+                            <div key={index}>
+                                <RenderFormFieldByList
+                                    form={form}
+                                    item={item}
+                                />
+                            </div>
+                        ))}
+                    </PopupLayout>
+                )}
             </div>
         </DashboardLayout>
-    );
+    )
 }

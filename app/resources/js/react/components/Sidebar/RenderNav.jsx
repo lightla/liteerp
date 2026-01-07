@@ -1,8 +1,10 @@
 import React from 'react'
 import { NavLink } from 'react-router-dom'
+import { useI18n } from '../../../i18n/useI18n'
 export default function RenderNav({
     list = []
 }) {
+  const {t} = useI18n();
     return list.map((item,index) => {
         return <li className="nav-item mb-2" key={index} style={{
           height: 40
@@ -17,7 +19,7 @@ export default function RenderNav({
               </div>
               <div className='col-10'>
                 <div className='ml-2'>
-                  {item.label}
+                  {t(item.label)}
                 </div>
               </div>
             </div>

@@ -23,7 +23,7 @@ class UpdatePurchaseRequest extends FormRequest
             'status'         => 'required|in:draft,requested,approved,cancelled',
             ...$hooks->dispatch(
                 new HookContext(
-                    action: HookAction::INDEX,
+                    action: HookAction::UPDATE,
                     phase: HookPhase::VALIDATE,
                     timing: HookTiming::ON,
                     payload: [],

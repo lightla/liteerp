@@ -7,6 +7,7 @@ import NotificationService from "../services/NotificationService";
 import { setNotificationCount } from "../redux/NotificationSlice";
 import { useEcho } from "@laravel/echo-react";
 import reactEcho from "../../bootstrap";
+import LanguageSwitcher from "./LanguageSwitcher";
 export default function Topbar() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -48,9 +49,10 @@ export default function Topbar() {
 
       {/* Right Section */}
       <div className="d-flex align-items-center">
+        <LanguageSwitcher/>
         <div onClick={() => {
           navigate('/notification')
-        }} className="position-relative me-4 topbar-notification">
+        }} className="position-relative me-4 topbar-notification ml-2">
           <Bell size={20} color="#fff" />
           <span className="erp-badge bg-danger">{notify}</span>
         </div>

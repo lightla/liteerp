@@ -229,8 +229,8 @@ export default function CustomInvoiceOuts() {
             add={() => {
                 setShowForm(true)
             }}
-            filter={<div className="d-flex">
-                <div className="col-3">
+            filter={<div className="row">
+                <div className="col-2">
                     <label>Payment status</label>
                     <Select
                         name="payment_status"
@@ -244,7 +244,7 @@ export default function CustomInvoiceOuts() {
                         ]}
                     />
                 </div>
-                <div className='col-3 ml-2'>
+                <div className='col-2'>
                     <label>Order by</label>
                     <Select
                         name='order_by'
@@ -257,11 +257,11 @@ export default function CustomInvoiceOuts() {
                         ]} />
                 </div>
                 {search.hookRender.map((item,index) => {
-                    return <div className='col-3 ml-2' key={index}>
+                    return <div className='col-2' key={index}>
                         <RenderTableSearch item={item} search={search}/>
                     </div>
                 })}
-                <div className="col-6 mx-2">
+                <div className="col-2">
                     <label>Search</label>
                     <SearchInput
                         placeholder="Search by document"

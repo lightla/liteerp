@@ -1,291 +1,299 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
-import ProductService from '../../services/ProductService';
-import CommonDataTable from '../CommonDataTable';
+import ProductService from '../../services/ProductService'
+import CommonDataTable from '../CommonDataTable'
 import { Select } from '../UI/Input/Select'
-import { InputForm } from '../UI/Input/InputForm';
-import { useForm } from '../../libraries/handleInput';
-import useTable from '../../libraries/handleTable';
-import SearchInput from '../UI/Input/SearchInput';
-import { PopupLayout } from '../../layouts/PopupLayout';
-import { usePopup } from '../popups/PopupContext';
+import { InputForm } from '../UI/Input/InputForm'
+import { useForm } from '../../libraries/handleInput'
+import useTable from '../../libraries/handleTable'
+import SearchInput from '../UI/Input/SearchInput'
+import { PopupLayout } from '../../layouts/PopupLayout'
+import { usePopup } from '../popups/PopupContext'
 import SearchSelect from '../UI/Input/SearchSelect'
-import TextArea from '../UI/Input/Textarea';
-import { useSelector } from 'react-redux';
-import UploadImage from '../UI/Input/UploadImage';
-import LoadImage from '../LoadImage';
+import TextArea from '../UI/Input/Textarea'
+import { useSelector } from 'react-redux'
+import UploadImage from '../UI/Input/UploadImage'
+import LoadImage from '../LoadImage'
+import { useI18n } from '../../../i18n/useI18n'
+
 export default function ListProducts() {
-    const business = useSelector((state) => state.business.data);
-    const { openPopup } = usePopup();
-    const [showForm, setShowForm] = useState(false);
-    const form = useForm();
-    const search = useForm();
-    const table = useTable();
-    const [category, setCategory] = useState([]);
+    const { t } = useI18n()
+    const business = useSelector((state) => state.business.data)
+    const { openPopup } = usePopup()
+
+    const [showForm, setShowForm] = useState(false)
+    const [category, setCategory] = useState([])
+
+    const form = useForm()
+    const search = useForm()
+    const table = useTable()
+
     const columns = [
-        { label: "ID", key: "id" },
+        { label: t('ID'), key: 'id' },
         {
-            label: "Thumbnail", key: 'image', render: (url) => {
-                return <LoadImage width={35} height={35} url={url} />
-            }
+            label: t('Thumbnail'),
+            key: 'image',
+            render: (url) => <LoadImage width={35} height={35} url={url} />,
         },
-        { label: "Name", key: "name" },
-        { label: "Sku", key: "sku" },
-        { label: "Unit", key: "unit" },
-        { label: "Category", key: "category" }
-    ];
-    const getProducts = useCallback((page = 0) => {
-        table.setLoading(true)
-        ProductService.list({
-            page: page,
-            keywords: search.formData?.keywords ?? '',
-            order_by: search.formData?.order_by ?? ''
-        })
-            .then((resp) => {
-                table.setData(resp.message.data);
-                table.setLinks(resp.message.links);
-                table.setLoading(false)
+        { label: t('Name'), key: 'name' },
+        { label: t('SKU'), key: 'sku' },
+        { label: t('Unit'), key: 'unit' },
+        { label: t('Category'), key: 'category' },
+    ]
+
+    const getProducts = useCallback(
+        (page = 0) => {
+            table.setLoading(true)
+            ProductService.list({
+                page,
+                keywords: search.formData?.keywords ?? '',
+                order_by: search.formData?.order_by ?? '',
             })
-            .catch((error) => {
-                if (error.response.data?.message) {
-                    openPopup({
-                        type: 'error',
-                        message: error.response.data?.message
-                    })
-                }
-            })
-    }, [search]);
+                .then((resp) => {
+                    table.setData(resp.message.data)
+                    table.setLinks(resp.message.links)
+                    table.setLoading(false)
+                })
+                .catch((error) => {
+                    if (error.response?.data?.message) {
+                        openPopup({
+                            type: 'error',
+                            message: error.response.data.message,
+                        })
+                    }
+                })
+        },
+        [search]
+    )
+
     const getCategories = useCallback((keywords = '', callback = null) => {
         ProductService.listCategory({
             page: 0,
-            keywords: keywords,
+            keywords,
+        }).then((resp) => {
+            setCategory(resp.message.data)
+            callback && callback()
         })
-            .then((resp) => {
-                setCategory(resp.message.data);
-                if (callback) {
-                    callback();
-                }
-            })
-            .catch((error) => {
+    }, [])
 
-            })
-    }, []);
     const update = useCallback(() => {
         form.setLoading(true)
-        form.setFormErrors(null);
-        ProductService.update({
-            ...form.formData
-        })
-            .then((resp) => {
+        form.setFormErrors(null)
+
+        ProductService.update(form.formData)
+            .then(() => {
                 openPopup({
                     type: 'success',
-                    message: 'You has been updated'
+                    message: t('Product has been updated'),
                 })
-                getProducts();
-                setShowForm(false);
+                getProducts()
+                setShowForm(false)
                 form.setLoading(false)
             })
             .catch((error) => {
-                if (error.response.data?.errors) {
-                    form.setFormErrors(error.response.data?.errors);
+                if (error.response?.data?.errors) {
+                    form.setFormErrors(error.response.data.errors)
                 }
-                if (error.response.data?.message) {
+                if (error.response?.data?.message) {
                     openPopup({
                         type: 'error',
-                        message: error.response.data?.message
+                        message: error.response.data.message,
                     })
                 }
                 form.setLoading(false)
             })
-    }, [form.formData]);
+    }, [form.formData])
+
     const create = useCallback(() => {
         form.setLoading(true)
-        form.setFormErrors(null);
+        form.setFormErrors(null)
+
         ProductService.add(form.formData)
-            .then((resp) => {
+            .then(() => {
                 openPopup({
                     type: 'success',
-                    message: 'You has been updated'
+                    message: t('Product has been created'),
                 })
-                getProducts();
-                setShowForm(false);
+                getProducts()
+                setShowForm(false)
                 form.setLoading(false)
             })
             .catch((error) => {
-                if (error.response.data?.errors) {
-                    form.setFormErrors(error.response.data?.errors);
+                if (error.response?.data?.errors) {
+                    form.setFormErrors(error.response.data.errors)
                 }
-                if (error.response.data?.message) {
+                if (error.response?.data?.message) {
                     openPopup({
                         type: 'error',
-                        message: error.response.data?.message
+                        message: error.response.data.message,
                     })
                 }
                 form.setLoading(false)
             })
-    }, [form.formData]);
+    }, [form.formData])
+
     const handEdit = (row) => {
-        setShowForm(true);
-        form.setIsEdit(true);
-        form.setFormData(row);
-        getCategories(row.category.name);
+        setShowForm(true)
+        form.setIsEdit(true)
+        form.setFormData(row)
+        getCategories(row.category?.name)
     }
+
     const destroy = useCallback((row) => {
-        ProductService.delete(row)
-            .then((resp) => {
-                openPopup({
-                    type: 'success',
-                    message: 'You has been deleted'
-                })
-                getProducts();
+        ProductService.delete(row).then(() => {
+            openPopup({
+                type: 'success',
+                message: t('Product has been deleted'),
             })
-            .catch((error) => {
-                if (error.response.data?.message) {
-                    openPopup({
-                        type: 'error',
-                        message: error.response.data?.message
-                    })
-                }
-            })
-    }, []);
+            getProducts()
+        })
+    }, [])
+
     const handleDelete = (row) => {
         openPopup({
             type: 'warning',
-            message: 'Are you sure delete?',
-            onConfirm: () => {
-                destroy(row)
-            }
+            message: t('Are you sure to delete?'),
+            onConfirm: () => destroy(row),
         })
     }
+
     useEffect(() => {
-        getProducts();
-    }, [search.formData?.order_by]);
-    const hasPermission = useMemo(() => {
-        return business.role === 'manager'
-            || business.role === 'admin' ? true : false
-    }, [business]);
-    return <div className='mt-3'>
-        <CommonDataTable
-            add={!hasPermission ? null : () => {
-                setShowForm(true);
-                form.setIsEdit(false);
-            }}
-            filter={<div>
-                <div className='d-flex'>
-                    <div className='col-3 mx-2'>
-                        <label>Order by</label>
-                        <Select
-                            name='order_by'
-                            value={search.formData?.order_by}
-                            handleChange={search.handleChange}
-                            errorMessage={search.formErrors?.order_by}
-                            options={[
-                                { value: 'ASC', label: 'Oldest' },
-                                { value: 'DESC', label: 'Newest' }
-                            ]} />
+        getProducts()
+    }, [search.formData?.order_by])
+
+    const hasPermission = useMemo(
+        () => business.role === 'manager' || business.role === 'admin',
+        [business]
+    )
+
+    return (
+        <div className="mt-3">
+            <CommonDataTable
+                add={
+                    !hasPermission
+                        ? null
+                        : () => {
+                              setShowForm(true)
+                              form.setIsEdit(false)
+                          }
+                }
+                filter={
+                    <div className="d-flex">
+                        <div className="col-3 mx-2">
+                            <label>{t('Order by')}</label>
+                            <Select
+                                name="order_by"
+                                value={search.formData?.order_by}
+                                handleChange={search.handleChange}
+                                options={[
+                                    { value: 'ASC', label: t('Oldest') },
+                                    { value: 'DESC', label: t('Newest') },
+                                ]}
+                            />
+                        </div>
+
+                        <div className="col-4">
+                            <label>{t('Search')}</label>
+                            <SearchInput
+                                submit={getProducts}
+                                name="keywords"
+                                handleChange={search.handleChange}
+                                value={search.formData?.keywords}
+                            />
+                        </div>
                     </div>
-                    <div className='col-4'>
-                        <label>Search</label>
-                        <SearchInput
-                            submit={getProducts}
-                            name='keywords'
-                            handleChange={search.handleChange}
-                            errorMessage={search.formErrors?.keywords}
-                            value={search.formData?.keywords}
-                        />
-                    </div>
-                </div>
-            </div>}
-            loading={table.loading}
-            movePage={getProducts}
-            columns={columns}
-            data={table?.data}
-            links={table?.links}
-            onEdit={!hasPermission ? null : handEdit}
-            onDelete={!hasPermission ? null : handleDelete}
-        />
-        <div>
-            {showForm ? <PopupLayout
-                loading={form.loading}
-                onConfirm={form.isEdit ? update : create}
-                onClose={() => setShowForm(false)}
-                title={form.isEdit ? 'Update product' : 'Add product'}>
-                <div>
-                    <div className='form-group'>
-                        <label>Name</label>
+                }
+                loading={table.loading}
+                movePage={getProducts}
+                columns={columns}
+                data={table.data}
+                links={table.links}
+                onEdit={!hasPermission ? null : handEdit}
+                onDelete={!hasPermission ? null : handleDelete}
+            />
+
+            {showForm && (
+                <PopupLayout
+                    loading={form.loading}
+                    onConfirm={form.isEdit ? update : create}
+                    onClose={() => setShowForm(false)}
+                    title={
+                        form.isEdit
+                            ? t('Update product')
+                            : t('Add product')
+                    }
+                >
+                    <div className="form-group">
+                        <label>{t('Name')}</label>
                         <InputForm
-                            type='text'
-                            name='name'
+                            name="name"
                             handleChange={form.handleChange}
                             value={form.formData?.name}
                             errorMessage={form.formErrors?.name}
                         />
                     </div>
-                    <div className='form-group'>
-                        <label>Sku</label>
+
+                    <div className="form-group">
+                        <label>{t('SKU')}</label>
                         <InputForm
-                            type='text'
-                            name='sku'
+                            name="sku"
                             handleChange={form.handleChange}
                             value={form.formData?.sku}
                             errorMessage={form.formErrors?.sku}
                         />
                     </div>
-                    <div className='form-group'>
-                        <label>Unit</label>
+
+                    <div className="form-group">
+                        <label>{t('Unit')}</label>
                         <Select
-                            name='unit'
+                            name="unit"
                             handleChange={form.handleChange}
                             value={form.formData?.unit}
-                            errorMessage={form.formErrors?.unit}
                             options={[
-                                { value: "pcs", label: "pcs" },
-                                { value: "set", label: 'set' },
-                                { value: "box", label: 'box' },
-                                { value: "carton", label: 'carton' },
-                                { value: "bag", label: 'bag' },
-                                { value: "pack", label: 'pack' },
-                                { value: "roll", label: 'roll' }
+                                { value: 'pcs', label: 'pcs' },
+                                { value: 'set', label: 'set' },
+                                { value: 'box', label: 'box' },
+                                { value: 'carton', label: 'carton' },
+                                { value: 'bag', label: 'bag' },
+                                { value: 'pack', label: 'pack' },
+                                { value: 'roll', label: 'roll' },
                             ]}
                         />
                     </div>
-                    <div className='form-group mt-3'>
-                        <label>Category</label>
+
+                    <div className="form-group mt-3">
+                        <label>{t('Category')}</label>
                         <SearchSelect
-                            name='category_id'
+                            name="category_id"
                             changeValue={form.handleChangeByKey}
                             value={form.formData?.category_id}
-                            errorMessage={form.formErrors?.category_id}
                             search={getCategories}
-                            options={category.map((item) => {
-                                return {
-                                    value: item.id,
-                                    label: item.name
-                                }
-                            })}
-                            defaultKeywords={form.formData?.category}
+                            options={category.map((item) => ({
+                                value: item.id,
+                                label: item.name,
+                            }))}
                         />
                     </div>
-                    <div className='form-group mt-3'>
-                        <label>Thumbnail</label>
+
+                    <div className="form-group mt-3">
+                        <label>{t('Thumbnail')}</label>
                         <UploadImage
-                            name='image'
+                            name="image"
                             handleChangeByKey={form.handleChangeByKey}
                             value={form.formData?.image}
-                            errorMessage={form.formErrors?.image}
                         />
                     </div>
-                    <div className='form-group mt-3'>
-                        <label>Description</label>
+
+                    <div className="form-group mt-3">
+                        <label>{t('Description')}</label>
                         <TextArea
-                            name='description'
+                            name="description"
                             handleChange={form.handleChange}
                             value={form.formData?.description}
-                            errorMessage={form.formErrors?.description}
-                            placeholder='Description'
+                            placeholder={t('Description')}
                         />
                     </div>
-                </div>
-            </PopupLayout> : null}
+                </PopupLayout>
+            )}
         </div>
-    </div>
+    )
 }

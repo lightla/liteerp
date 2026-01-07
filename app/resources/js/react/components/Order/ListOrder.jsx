@@ -1,174 +1,217 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect } from 'react';
 import CommonDataTable from '../CommonDataTable';
-import { Link, useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Select } from "../UI/Input/Select";
 import OrderService from '../../services/OrderService';
 import { usePopup } from '../popups/PopupContext';
 import { useForm } from '../../libraries/handleInput';
-import useTable from '../../libraries/handleTable'
+import useTable from '../../libraries/handleTable';
 import SearchInput from '../UI/Input/SearchInput';
 import PageHead from '../PageHead';
 import StatusBadge from '../StatusBadge';
-import ContentOnTable from '../ContentOnTable'
-import PaymentMethod from '../PaymentMethod'
-import RenderFieldTableByList from '../RenderFieldTableByList'
-import {RenderTableSearch} from '../RenderTableSearch'
+import ContentOnTable from '../ContentOnTable';
+import PaymentMethod from '../PaymentMethod';
+import RenderFieldTableByList from '../RenderFieldTableByList';
+import { RenderTableSearch } from '../RenderTableSearch';
 import PrimaryButton from '../UI/Buttons/PrimaryButton';
+import { useI18n } from '../../../i18n/useI18n';
+
 export default function ListOrder() {
+    const { t } = useI18n();
     const navigate = useNavigate();
     const { openPopup } = usePopup();
     const table = useTable();
     const search = useForm();
 
     const handleEdit = (row) => {
-        navigate('/orders?form=edit&id=' + row.id)
+        navigate('/orders?form=edit&id=' + row.id);
     };
-    const getOrders = useCallback((page = 0) => {
-        table.setLoading(true);
-        OrderService.list({
-            page: page,
-            ...search.formData
-        })
-            .then((resp) => {
-                table.setData(resp.message.data);
-                table.setLinks(resp.message.links);
-                table.setLoading(false);
+
+    const getOrders = useCallback(
+        (page = 0) => {
+            table.setLoading(true);
+            OrderService.list({
+                page,
+                ...search.formData,
             })
-            .catch((error) => {
-                if (error.response.data?.message) {
-                    openPopup({
-                        type: 'error',
-                        message: error.response.data?.message
-                    })
-                }
-            })
-    }, [search.formData]);
+                .then((resp) => {
+                    table.setData(resp.message.data);
+                    table.setLinks(resp.message.links);
+                    table.setLoading(false);
+                })
+                .catch((error) => {
+                    if (error.response?.data?.message) {
+                        openPopup({
+                            type: 'error',
+                            message: error.response.data.message,
+                        });
+                    }
+                });
+        },
+        [search.formData]
+    );
+
     const view = useCallback(() => {
         OrderService.view()
             .then((resp) => {
-                table.addColums(resp.message.index,(item,data) => {
-                    return <RenderFieldTableByList item={item} data={data}/>
-                })
-                search.setHookRender(resp.message.search)
+                table.addColums(resp.message.index, (item, data) => {
+                    return (
+                        <RenderFieldTableByList item={item} data={data} />
+                    );
+                });
+                search.setHookRender(resp.message.search);
             })
-            .catch((error) => {
-
-            })
+            .catch(() => {});
     }, []);
+
     useEffect(() => {
         getOrders();
         table.setColums([
-            { label: "ID", key: "id" },
+            { label: t('ID'), key: 'id' },
             {
-                label: "Customer name", key: "customer_name", render: (value) => {
-                    return <ContentOnTable value={value} />
-                }
+                label: t('Customer name'),
+                key: 'customer_name',
+                render: (value) => <ContentOnTable value={value} />,
             },
             {
-                label: "Address shipping", key: "customer_address", render: (value) => {
-                    return <ContentOnTable value={value} />
-                }
+                label: t('Address shipping'),
+                key: 'customer_address',
+                render: (value) => <ContentOnTable value={value} />,
             },
             {
-                label: "Order type", key: "type", render: (value) => {
-                    return <span className='badge bg-primary text-uppercase'>{value}</span>
-                }
+                label: t('Order type'),
+                key: 'type',
+                render: (value) => (
+                    <span className="badge bg-primary text-uppercase">
+                        {value}
+                    </span>
+                ),
             },
-            { label: "Order no", key: "order_no" },
+            { label: t('Order no'), key: 'order_no' },
             {
-                label: "Products",
-                key: "total_product",
-                render: (value) => {
-                    return <span>{value}</span>
-                }
-            },
-            {
-                label: "Status",
-                key: "status",
-                render: (value) => {
-                    return <StatusBadge status={value} />
-                },
+                label: t('Products'),
+                key: 'total_product',
+                render: (value) => <span>{value}</span>,
             },
             {
-                label: "Payment",
-                key: "payment_method",
-                render: (value) => {
-                    return <PaymentMethod value={value} />
-                },
+                label: t('Status'),
+                key: 'status',
+                render: (value) => <StatusBadge status={value} />,
             },
             {
-                label: "Created by",
-                key: "created_name",
-                render: (value) => {
-                    return <span className='badge bg-primary text-uppercase'>
-                        {value}</span>
-                }
+                label: t('Payment'),
+                key: 'payment_method',
+                render: (value) => <PaymentMethod value={value} />,
             },
             {
-                label: "Approved by",
-                key: "approved_name",
-                render: (value) => {
-                    return <span className='badge bg-primary text-uppercase'>
-                        {value}</span>
-                }
-            }
-        ])
+                label: t('Created by'),
+                key: 'created_name',
+                render: (value) => (
+                    <span className="badge bg-primary text-uppercase">
+                        {value}
+                    </span>
+                ),
+            },
+            {
+                label: t('Approved by'),
+                key: 'approved_name',
+                render: (value) => (
+                    <span className="badge bg-primary text-uppercase">
+                        {value}
+                    </span>
+                ),
+            },
+        ]);
         view();
     }, []);
-    return <div>
+
+    return (
         <div>
             <PageHead
-                containerClass='mx-4'
-                title='Orders'
-                subtitle='Manage orders'
+                containerClass="mx-4"
+                title={t('Orders')}
+                subtitle={t('Manage orders')}
             />
+
             <div className="m-4">
                 <CommonDataTable
-                    filter={<div className='d-flex'>
-                        <div className='col-3'>
-                            <label>Status</label>
-                            <Select
-                                name='status'
-                                handleChange={search.handleChange}
-                                value={search.formData?.status}
-                                options={[
-                                    { value: 'pending', label: 'Pending' },
-                                    { value: 'approved', label: 'Approved' },
-                                    { value: 'cancelled', label: 'Cancelled' }
-                                ]}
-                            />
-                        </div>
-                        <div className='col-3 ml-2'>
-                            <label>Order by</label>
-                            <Select
-                                name='order_by'
-                                value={search.formData?.order_by}
-                                handleChange={search.handleChange}
-                                errorMessage={search.formErrors?.order_by}
-                                options={[
-                                    { value: 'ASC', label: 'Oldest' },
-                                    { value: 'DESC', label: 'Newest' }
-                                ]} />
-                        </div>
-                        {search.hookRender.map((item,index) => {
-                            return <div className='col-3 ml-2' key={index}>
-                                <RenderTableSearch item={item} search={search}/>
+                    filter={
+                        <div className="d-flex flex-wrap gap-2">
+                            <div className="col-2">
+                                <label>{t('Status')}</label>
+                                <Select
+                                    name="status"
+                                    handleChange={search.handleChange}
+                                    value={search.formData?.status}
+                                    options={[
+                                        {
+                                            value: 'pending',
+                                            label: t('Pending'),
+                                        },
+                                        {
+                                            value: 'approved',
+                                            label: t('Approved'),
+                                        },
+                                        {
+                                            value: 'cancelled',
+                                            label: t('Cancelled'),
+                                        },
+                                    ]}
+                                />
                             </div>
-                        })}
-                        <div className='col-6 ml-2'>
-                            <label>Search</label>
-                            <SearchInput
-                                submit={getOrders}
-                                name='keywords'
-                                handleChange={search.handleChange}
-                                value={search.formData?.keywords}
-                                placeholder='Search by customer name'
-                            />
+
+                            <div className="col-2">
+                                <label>{t('Order by')}</label>
+                                <Select
+                                    name="order_by"
+                                    value={search.formData?.order_by}
+                                    handleChange={search.handleChange}
+                                    errorMessage={
+                                        search.formErrors?.order_by
+                                    }
+                                    options={[
+                                        {
+                                            value: 'ASC',
+                                            label: t('Oldest'),
+                                        },
+                                        {
+                                            value: 'DESC',
+                                            label: t('Newest'),
+                                        },
+                                    ]}
+                                />
+                            </div>
+
+                            {search.hookRender.map((item, index) => (
+                                <div className="col-2" key={index}>
+                                    <RenderTableSearch
+                                        item={item}
+                                        search={search}
+                                    />
+                                </div>
+                            ))}
+
+                            <div className="col-3">
+                                <label>{t('Search')}</label>
+                                <SearchInput
+                                    submit={getOrders}
+                                    name="keywords"
+                                    handleChange={search.handleChange}
+                                    value={search.formData?.keywords}
+                                    placeholder={t(
+                                        'Search by customer name'
+                                    )}
+                                />
+                            </div>
+
+                            <div className="col-2">
+                                <PrimaryButton
+                                    label={t('Search')}
+                                    onClick={() => getOrders()}
+                                />
+                            </div>
                         </div>
-                        <div className='col-2 ml-2'>
-                            <PrimaryButton label='Search' onClick={() => getOrders()}/>
-                        </div>
-                    </div>}
+                    }
                     add={() => navigate('/orders?form=add')}
                     columns={table.colums}
                     data={table?.data}
@@ -177,10 +220,7 @@ export default function ListOrder() {
                     loading={table.loading}
                     movePage={getOrders}
                 />
-                <div>
-
-                </div>
             </div>
         </div>
-    </div>
+    );
 }

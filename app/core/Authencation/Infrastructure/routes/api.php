@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Core\Authencation\Http\Controllers\AuthencationController;
 
-Route::prefix('/api')->group(function () {
+Route::prefix('/api')->middleware(['app.language'])->group(function () {
     Route::prefix('authencation')->group(function(){
         Route::post('/', [AuthencationController::class,'login']);
         Route::post('/register', [AuthencationController::class,'register']);

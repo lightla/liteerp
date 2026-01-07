@@ -4,8 +4,9 @@ import ListCustomer from '../components/Customer/ListCustomer'
 import TabsCustom from '../components/TabsCustom'
 import ListGroup from '../components/Customer/ListGroup'
 import PageHead from '../components/PageHead'
+import { useI18n } from '../../i18n/useI18n'
 export default function Customer() {
-   
+   const {t} = useI18n();
     return <DashboardLayout>
         <div>
             <PageHead
@@ -16,8 +17,8 @@ export default function Customer() {
             <div className="m-4">
                 <TabsCustom
                 navs={[
-                    {key: 'customer',label: 'Customer'},
-                    {key: 'group', label: 'Group'}
+                    {key: 'customer',label: t('Customer')},
+                    {key: 'group', label: t('Group')}
                 ]}
                 contents={[
                     <div className='mt-1'>

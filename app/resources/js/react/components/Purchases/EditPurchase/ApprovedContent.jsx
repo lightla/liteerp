@@ -1,7 +1,19 @@
-import React from 'react'
-export default function ApprovedContent(){
-    return <div>
-        <h2 className='h5 text-success'>Purchase approved</h2>
-        <p>You will can not change data after approved, if it needed you shuold create a new</p>
-    </div>
+import React from 'react';
+import { useI18n } from '../../../../i18n/useI18n';
+
+export default function ApprovedContent() {
+    const { t } = useI18n();
+
+    return (
+        <div>
+            <h2 className="h5 text-success">
+                {t('Purchase approved')}
+            </h2>
+            <p>
+                {t(
+                    'You will not be able to change data after approval'
+                )}
+            </p>
+        </div>
+    );
 }

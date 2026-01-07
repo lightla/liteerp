@@ -3,7 +3,7 @@
 use Core\Business\Http\Controllers\BusinessController;
 use Illuminate\Support\Facades\Route;
 
-Route::prefix('/api')->middleware(['isLogged'])->group(function () {
+Route::prefix('/api')->middleware(['isLogged','app.language'])->group(function () {
     Route::get('/business', [BusinessController::class, 'index']);
     Route::get('/business/{id}', [BusinessController::class, 'show']);
     Route::middleware(['IsAdmin'])->group(function () {

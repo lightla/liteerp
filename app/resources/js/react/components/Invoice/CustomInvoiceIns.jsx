@@ -222,8 +222,8 @@ export default function CustomInvoiceIns() {
             add={() => {
                 setShowForm(true)
             }}
-            filter={<div className="d-flex">
-                <div className="col-3">
+            filter={<div className="row">
+                <div className="col-2">
                     <label>Payment status</label>
                     <Select
                         name="payment_status"
@@ -237,7 +237,7 @@ export default function CustomInvoiceIns() {
                         ]}
                     />
                 </div>
-                <div className='col-3 ml-2'>
+                <div className='col-2'>
                     <label>Order by</label>
                     <Select
                         name='order_by'
@@ -250,11 +250,11 @@ export default function CustomInvoiceIns() {
                         ]} />
                 </div>
                 {search.hookRender.map((item, index) => {
-                    return <div className='col-3 ml-2'>
+                    return <div className='col-2'>
                         <RenderTableSearch item={item} search={search} />
                     </div>
                 })}
-                <div className="col-6 ml-2">
+                <div className="col-2">
                     <label>Search</label>
                     <SearchInput
                         placeholder="Search by document"
@@ -264,7 +264,7 @@ export default function CustomInvoiceIns() {
                         handleChange={search.handleChange}
                     />
                 </div>
-                <div className="col-2 ml-2">
+                <div className="col-2">
                     <PrimaryButton label='Search' onClick={() => getInvoices()} />
                 </div>
             </div>}

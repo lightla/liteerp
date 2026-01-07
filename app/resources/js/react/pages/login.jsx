@@ -6,7 +6,9 @@ import { Link, useNavigate } from "react-router-dom";
 import { usePopup } from '../components/popups/PopupContext'
 import { useForm } from '../libraries/handleInput'
 import { InputForm } from '../components/UI/Input/InputForm'
+import { useI18n } from "../../i18n/useI18n";
 export default function Login() {
+  const { t } = useI18n();
   const navigate = useNavigate();
   const { openPopup } = usePopup();
   const form = useForm();
@@ -34,8 +36,8 @@ export default function Login() {
       <div>
         
         <div className="auth-page-card">
-          <h2 className="auth-page-title theme-title h3">Welcome Back</h2>
-          <p className="auth-page-subtitle theme-title ">Sign in to your account to continue</p>
+          <h2 className="auth-page-title theme-title h3">{t("Welcome Back")}</h2>
+          <p className="auth-page-subtitle theme-title ">{t("Sign in to your account to continue")}</p>
 
           <div>
             <div className="mb-3">
@@ -45,7 +47,7 @@ export default function Login() {
                 errorMessage={form.formErrors?.email}
                 type="email"
                 value={form.formData?.email}
-                placeholder="Your email" />
+                placeholder={t("Your email")} />
             </div>
             <div className="mb-3 position-relative">
               <InputForm
@@ -54,19 +56,23 @@ export default function Login() {
                 errorMessage={form.formErrors?.password}
                 value={form.formData?.password}
                 type="password"
-                placeholder="Your password" />
+                placeholder={t("Your password")} />
             </div>
 
             <div className="d-flex justify-content-between align-items-center mb-3">
               <Link to={'/forget-password'} className="text-decoration-none text-primary" style={{
 
-              }}>Forgot password?</Link>
+              }}>{t("Forget password")}?</Link>
             </div>
 
-            <GradientButton loading={form.loading} width={'100%'} callback={submit} text="Sign In" />
+            <GradientButton 
+            loading={form.loading} 
+            width={'100%'} 
+            callback={submit} 
+            text={t("Sign In")} />
 
             <div className="auth-page-footer-text">
-              Don’t have an account? <Link to="/register">Sign up</Link>
+              {t("Don’t have an account")}? <Link to="/register">{t("Signup")}</Link>
             </div>
           </div>
         </div>

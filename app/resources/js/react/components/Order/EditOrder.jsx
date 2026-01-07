@@ -22,7 +22,9 @@ import Cancelled from './EditOrder/Cancelled';
 import BootstrapAlert from '../BootstrapAlert'
 import { useDispatch, useSelector } from 'react-redux';
 import { setSummary } from '../../redux/order/summarySlice';
+import { useI18n } from '../../../i18n/useI18n';
 export default function EditOrder() {
+    const {t} = useI18n();
     const dispatch = useDispatch();
     const [showCancelReason, setShowCancelReason] = useState(false);
     const [currentStep, setCurrentStep] = useState(0);
@@ -31,7 +33,6 @@ export default function EditOrder() {
     const shippingForm = useForm();
     const [detail, setDetail] = useState(null);
     const [shippingDetail, setShippingDetail] = useState(null);
-    //const [summaryData, setSummaryData] = useState([]);
     const { openPopup } = usePopup();
     const summaryData = useSelector((state) => state.summarydetai.data);
     const updateInformation = useCallback((callback = null) => {
@@ -244,7 +245,10 @@ export default function EditOrder() {
             title='Order' subtitle='Update order' />
         {detail?.status === 'cancelled' ? <div className='row mx-4 mt-3'>
             <div className='col-12'>
-                <BootstrapAlert title='Cancelled' type='danger' message={detail?.reason ?? 'No reason'} />
+                <BootstrapAlert 
+                title='Cancelled' 
+                type='danger' 
+                message={detail?.reason ?? 'No reason'} />
             </div>
         </div> : null}
         {detail ? <div>
