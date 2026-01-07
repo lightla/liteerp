@@ -19,13 +19,7 @@ class StockOutListener
             function (string $eventName, array $data)
             use ($CreateStockOut, $CancelledStockOutByOrderCancelled) {
                 if ($eventName === 'erp.invoiceout.approved') {
-                    $CreateStockOut->handle(CreateStockOutRequest::fromArray([
-                        'invoice_out_id' => $data['invoice_out_id'],
-                        'business_id' => $data['business_id'],
-                        'user_id'  => $data['user_id'],
-                        'id'          => $data['id'],
-                        'order_id' => $data['order_id']
-                    ]));
+                    $CreateStockOut->handle($data);
                 } else if ($eventName === 'erp.invoiceout.unapproved') {
                     $CancelledStockOutByOrderCancelled->handle(
                         CancelledStockOutByOrderCancelledRequest::fromArray([

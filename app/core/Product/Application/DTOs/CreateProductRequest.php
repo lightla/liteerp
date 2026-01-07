@@ -15,13 +15,6 @@ class CreateProductRequest
         public ?string $image = null,
         public int $created_by,
         public ?int $id = null,
-        // attr
-        public ?string $color = null,
-        public ?int $length = null,
-        public ?int $width = null,
-        public ?int $height = null,
-        public ?string $expiration_date = null,
-        public ?int $weight = null
         
     ) {}
     public static function fromArray(array $data): self
@@ -35,12 +28,6 @@ class CreateProductRequest
             description: $data['description'] ?? null,
             image: $data['image'] ?? null,
             id: $data['id'] ?? null,
-            // attr
-            color: $data['color'] ?? null,
-            length: isset($data['length']) ? (int) $data['length'] : null,
-            width: isset($data['width']) ? (int) $data['width'] : null,
-            height: isset($data['height']) ? (int) $data['height'] : null,
-            expiration_date: $data['expiration_date'] ?? null,
             created_by: $data['user_id'],
         );
     }
@@ -55,13 +42,6 @@ class CreateProductRequest
             'description'            => $this->description,
             'image'                  => $this->image,
             'created_by'             => $this->created_by,
-            // attr
-            'color'                  => $this->color,
-            'length'                 => $this->length,
-            'width'                  => $this->width,
-            'height'                 => $this->height,
-            'expiration_date'        => $this->expiration_date,
-            'weight'                 => $this->weight,
             'id'    => $this->id
         ];
     }

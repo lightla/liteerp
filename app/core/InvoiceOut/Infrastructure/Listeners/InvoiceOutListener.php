@@ -31,17 +31,7 @@ class InvoiceOutListener
             'erp.orderitem.*',
             function (string $eventName, array $data) use ($createInvoiceOut) {
                 if ($eventName === 'erp.orderitem.summary') {
-                    $createInvoiceOut->handle(
-                        CreateInvoiceOutRequest::fromArray([
-                            'business_id'  => $data['business_id'],
-                            'order_id'     => $data['order_id'],
-                            'subtotal'     => $data['subtotal'],
-                            'tax'          => $data['tax'],
-                            'discount'     => $data['discount'],
-                            'total'        => $data['total'],
-                            'user_id'   => $data['user_id']
-                        ])
-                    );
+                    $createInvoiceOut->handle($data);
                 } 
             }
         );

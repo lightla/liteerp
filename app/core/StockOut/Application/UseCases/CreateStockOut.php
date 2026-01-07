@@ -17,7 +17,7 @@ class CreateStockOut
     public function __construct(private StockOutService $service,
         private HookDispatcher $hooks) {}
 
-    public function handle(array $data) : StockOut
+    public function handle(array $data) : array
     {
         DB::beginTransaction();
         $data = $this->hooks->dispatch(

@@ -104,7 +104,7 @@ export default function User() {
                 <PageHead
                     title={t('Employees')}
                     subtitle={t(
-                        'Employees must register their own accounts. This feature only assigns roles to users within the business.'
+                        'employee_desc'
                     )}
                 />
 

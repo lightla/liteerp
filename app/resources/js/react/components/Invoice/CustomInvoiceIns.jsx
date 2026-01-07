@@ -19,13 +19,17 @@ import RenderFieldTableByList from '../RenderFieldTableByList';
 import RenderFormFieldByList from '../RenderFormFieldByList';
 import { RenderTableSearch } from '../RenderTableSearch';
 import PrimaryButton from '../UI/Buttons/PrimaryButton';
+import { useI18n } from '../../../i18n/useI18n';
+
 export default function CustomInvoiceIns() {
+    const { t } = useI18n();
     const [suppliers, setSuppliers] = useState([]);
     const search = useForm();
     const form = useForm();
     const table = useTable();
     const { openPopup } = usePopup();
     const [showForm, setShowForm] = useState(false);
+
     const getInvoices = useCallback((page = 0) => {
         table.setLoading(true);
         CustomInvoiceInService.list({
@@ -46,6 +50,7 @@ export default function CustomInvoiceIns() {
                 }
             })
     }, [table, search.formData]);
+
     const update = useCallback(() => {
         form.setLoading(true)
         form.setFormErrors(null);
@@ -54,7 +59,7 @@ export default function CustomInvoiceIns() {
                 getInvoices();
                 openPopup({
                     type: 'success',
-                    message: 'You has been updated'
+                    message: t('You has been updated')
                 })
                 setShowForm(false)
                 form.setLoading(false)
@@ -73,6 +78,7 @@ export default function CustomInvoiceIns() {
                 form.setLoading(false)
             })
     }, [form.formData]);
+
     const add = useCallback(() => {
         form.setLoading(true)
         form.setFormErrors(null);
@@ -81,7 +87,7 @@ export default function CustomInvoiceIns() {
                 getInvoices();
                 openPopup({
                     type: 'success',
-                    message: 'You has been added'
+                    message: t('You has been added')
                 })
                 setShowForm(false)
                 form.setLoading(false)
@@ -100,22 +106,25 @@ export default function CustomInvoiceIns() {
                 form.setLoading(false)
             })
     }, [form.formData]);
+
     const onEdit = (row) => {
         form.setFormData(row)
         form.setIsEdit(true);
         setShowForm(true)
     }
+
     const resetForm = () => {
         form.setFormData(null)
         form.setIsEdit(null);
     }
+
     const destroy = useCallback((row) => {
         CustomInvoiceInService.delete(row)
             .then((resp) => {
                 getInvoices();
                 openPopup({
                     type: 'success',
-                    message: 'You has been deleted'
+                    message: t('You has been deleted')
                 })
                 resetForm();
             })
@@ -131,15 +140,17 @@ export default function CustomInvoiceIns() {
                 }
             })
     }, []);
+
     const onDelete = (row) => {
         openPopup({
             type: 'warning',
-            message: 'Do you wanna to delete?',
+            message: t('Do you wanna to delete?'),
             onConfirm: () => {
                 destroy(row)
             }
         })
     }
+
     const getSuppliers = useCallback((keywords = '', callback = null) => {
         SupplierService.list({
             keywords: keywords
@@ -150,10 +161,9 @@ export default function CustomInvoiceIns() {
                 }
                 setSuppliers(resp.message.data)
             })
-            .catch((error) => {
-
-            })
+            .catch((error) => { })
     }, [])
+
     const view = useCallback(() => {
         CustomInvoiceInService.view()
             .then((resp) => {
@@ -163,52 +173,51 @@ export default function CustomInvoiceIns() {
                 form.setHookRender(resp.message.form)
                 search.setHookRender(resp.message.search)
             })
-            .catch((error) => {
-
-            })
+            .catch((error) => { })
     }, [])
+
     useEffect(() => {
         getInvoices();
         table.setColums([
             {
-                label: "ID",
+                label: t("ID"),
                 key: "id"
             },
             {
-                label: "Supplier",
+                label: t("Supplier"),
                 key: "unit_name"
             },
             {
-                label: "Description",
+                label: t("Description"),
                 key: "description",
                 render: (value) => {
                     return <ContentOnTable value={value} />
                 }
             },
             {
-                label: "Document No",
+                label: t("Invoice no"),
                 key: "document_no"
             },
             {
-                label: "Amount",
+                label: t("Amount"),
                 key: "amount",
                 render: (value) => <span><Currencies amount={value} /></span>,
             },
             {
-                label: "Status",
+                label: t("Status"),
                 key: "approved",
                 render: (value) => {
                     return <StatusBadge status={value ? 'approved' : 'unapproved'} />
                 }
             },
             {
-                label: "Invoice date",
+                label: t("Invoice date"),
                 key: "invoice_date",
                 render: (value) =>
                     value ? isoToDateTime(value) : "",
             },
             {
-                label: "Payment",
+                label: t("Payment"),
                 key: "payment_status",
                 render: (value) => {
                     return <StatusBadge status={value} />
@@ -217,6 +226,7 @@ export default function CustomInvoiceIns() {
         ])
         view();
     }, [])
+
     return <div>
         <CommonDataTable
             add={() => {
@@ -224,40 +234,40 @@ export default function CustomInvoiceIns() {
             }}
             filter={<div className="row">
                 <div className="col-2">
-                    <label>Payment status</label>
+                    <label>{t("Payment status")}</label>
                     <Select
                         name="payment_status"
                         value={search.formData?.payment_status}
                         handleChange={search.handleChange}
                         options={[
-                            { value: '', label: 'All' },
-                            { value: 'partial_payment', label: 'Partial' },
-                            { value: 'paid', label: 'Paid' },
-                            { value: 'pending', label: 'Pending' }
+                            { value: '', label: t('All') },
+                            { value: 'partial_payment', label: t('Partial') },
+                            { value: 'paid', label: t('Paid') },
+                            { value: 'pending', label: t('Pending') }
                         ]}
                     />
                 </div>
                 <div className='col-2'>
-                    <label>Order by</label>
+                    <label>{t("Order by")}</label>
                     <Select
                         name='order_by'
                         value={search.formData?.order_by}
                         handleChange={search.handleChange}
                         errorMessage={search.formErrors?.order_by}
                         options={[
-                            { value: 'ASC', label: 'Oldest' },
-                            { value: 'DESC', label: 'Newest' }
+                            { value: 'ASC', label: t('Oldest') },
+                            { value: 'DESC', label: t('Newest') }
                         ]} />
                 </div>
                 {search.hookRender.map((item, index) => {
-                    return <div className='col-2'>
+                    return <div className='col-2' key={index}>
                         <RenderTableSearch item={item} search={search} />
                     </div>
                 })}
                 <div className="col-2">
-                    <label>Search</label>
+                    <label>{t("Search")}</label>
                     <SearchInput
-                        placeholder="Search by document"
+                        placeholder={t("Search by invoice no")}
                         submit={getInvoices}
                         value={search.formData?.keywords}
                         name="keywords"
@@ -265,7 +275,7 @@ export default function CustomInvoiceIns() {
                     />
                 </div>
                 <div className="col-2">
-                    <PrimaryButton label='Search' onClick={() => getInvoices()} />
+                    <PrimaryButton label={t('Search')} onClick={() => getInvoices()} />
                 </div>
             </div>}
             loading={table.loading}
@@ -283,12 +293,12 @@ export default function CustomInvoiceIns() {
                 resetForm();
             }}
             onConfirm={form.isEdit ? update : add}
-            confirmText={form.isEdit ? 'Save change' : 'Add new'}
-            title='Custom invoice out'>
+            confirmText={form.isEdit ? t('Save change') : t('Add new')}
+            title={t('Custom invoice in')}>
             <div>
                 <div className='row'>
                     <div className='form-group col-6'>
-                        <label>Document no</label>
+                        <label>{t("Invoice no")}</label>
                         <InputForm type='text'
                             value={form.formData?.document_no}
                             errorMessage={form.formErrors?.document_no}
@@ -297,7 +307,7 @@ export default function CustomInvoiceIns() {
                         />
                     </div>
                     <div className='form-group col-6'>
-                        <label>Suppliers</label>
+                        <label>{t("Supplier")}</label>
                         <SearchSelect
                             search={getSuppliers}
                             value={form.formData?.supplier_id}
@@ -315,7 +325,7 @@ export default function CustomInvoiceIns() {
                     </div>
                 </div>
                 <div className='form-group mt-3'>
-                    <label>Invoice date</label>
+                    <label>{t("Invoice date")}</label>
                     <InputForm type='date'
                         value={isoToDateTime(form.formData?.invoice_date)}
                         errorMessage={form.formErrors?.invoice_date}
@@ -324,7 +334,7 @@ export default function CustomInvoiceIns() {
                     />
                 </div>
                 <div className='form-group mt-3'>
-                    <label>Amount</label>
+                    <label>{t("Amount")}</label>
                     <InputForm type='number'
                         value={form.formData?.amount}
                         errorMessage={form.formErrors?.amount}
@@ -333,7 +343,7 @@ export default function CustomInvoiceIns() {
                     />
                 </div>
                 <div className='form-group mt-3'>
-                    <label>Description</label>
+                    <label>{t("Description")}</label>
                     <TextArea
                         value={form.formData?.description}
                         errorMessage={form.formErrors?.description}
@@ -342,21 +352,21 @@ export default function CustomInvoiceIns() {
                     />
                 </div>
                 <div className='form-group mt-3'>
-                    <label>Payment status</label>
+                    <label>{t("Payment status")}</label>
                     <Select
                         value={form.formData?.payment_status}
                         errorMessage={form.formErrors?.payment_status}
                         name='payment_status'
                         handleChange={form.handleChange}
                         options={[
-                            { value: 'paid', label: 'Paid' },
-                            { value: 'partial_payment', label: 'Partial payment' },
-                            { value: 'pending', label: 'Pending' }
+                            { value: 'paid', label: t('Paid') },
+                            { value: 'partial_payment', label: t('Partial payment') },
+                            { value: 'pending', label: t('Pending') }
                         ]}
                     />
                 </div>
                 <div className='form-group mt-3'>
-                    <label>Status</label>
+                    <label>{t("Status")}</label>
                     <InputForm
                         width={20}
                         value={form.formData?.approved}
@@ -365,7 +375,7 @@ export default function CustomInvoiceIns() {
                         type='checkbox'
                         handleChange={form.handleChange}
                     />
-                    <span>This mean status invoice, if uncheck then system to understand is not working</span>
+                    <span>{t("This mean status invoice, if uncheck then system to understand is not working")}</span>
                 </div>
                 {form.hookRender.map((item, index) => {
                     return <div className='form-group mt-3' key={index}>
@@ -374,6 +384,5 @@ export default function CustomInvoiceIns() {
                 })}
             </div>
         </PopupLayout> : null}
-
     </div>
 }

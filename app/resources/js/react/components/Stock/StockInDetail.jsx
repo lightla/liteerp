@@ -20,7 +20,9 @@ import PageHead from "../PageHead";
 import LoadingBox from '../LoadingBox'
 import RenderFormFieldByList from '../RenderFormFieldByList'
 import { ExtraCard } from "../ExtraCard";
+import { useI18n } from "../../../i18n/useI18n";
 export default function StockInDetail() {
+    const { t } = useI18n();
     const [loading, setLoading] = useState(false);
     const [showForm, setShowForm] = useState(false);
     const [showFormInventory, setShowFormInventory] = useState(false);
@@ -69,7 +71,7 @@ export default function StockInDetail() {
             .then((resp) => {
                 openPopup({
                     type: 'success',
-                    message: 'You has been confirmed'
+                    message: t('You has been confirmed')
                 })
                 getDetail();
                 setShowForm(false)
@@ -92,7 +94,7 @@ export default function StockInDetail() {
     const confirmRecieve = useCallback(() => {
         openPopup({
             type: 'warning',
-            message: 'Are you sure to wanna confirm approved',
+            message: t('Are you sure to wanna confirm approved'),
             onConfirm: () => {
                 form.handleChangeByKey('status', 'received');
             }
@@ -135,7 +137,7 @@ export default function StockInDetail() {
             .then((resp) => {
                 openPopup({
                     type: 'success',
-                    message: 'You has been added'
+                    message: t('You has been added')
                 })
                 setShowFormInventory(false)
                 formAddInventory.setLoading(false);
@@ -186,7 +188,7 @@ export default function StockInDetail() {
             getProducts();
             getInventories();
         }
-        
+
         view();
     }, [form.formData?.purchase_id]);
     return (
@@ -196,153 +198,178 @@ export default function StockInDetail() {
                 subtitle="Manage and track details of the process of importing goods into the warehouse"
             />
             <div className="container mt-3">
-            {loading ? <LoadingBox /> : 
-                <div>
-                    <div className="row g-3 mb-4">
-                        <InfoBox label="Import voucher code" value={'PO' + form.formData?.purchase_id} />
-                        <InfoBox label="Order code" value="PO-2024-001" />
-                        <InfoBox label="Actual import date" value={isoToDateTime(form.formData?.import_date)} />
-                        <InfoBox label="Expected date" value={form.formData?.due_date ?? '-'} />
-                    </div>
-
-                    <div className="row g-4">
-
-                        <div className="col-lg-8">
-                            <div className="p-4 rounded border">
-                                <div className="d-flex justify-content-between mb-3">
-                                    <h5 className="fw-semibold">Stock information</h5>
-                                </div>
-
-                                <TwoCol label="Supplier" left={form.formData?.unit_name}
-                                    rightLabel={'Purchase approved'}
-                                    right={form.formData?.purchase_approved_name} />
-
-                                <TwoCol label="Staff" left={form.formData?.purchase_approved_name ?? '-'}
-                                    rightLabel="Status"
-                                    right={form.formData?.status === 'received'
-                                        ? <span className="badge bg-success text-uppercase">{form.formData?.status}</span>
-                                        : <span className="badge bg-warning text-dark text-uppercase">{form.formData?.status}</span>} />
-
-                                <div className="mt-3">
-                                    <div className="theme-title small">Note</div>
-                                    <div>{form.formData?.purchase_note ?? '-'}</div>
-                                </div>
-                            </div>
-                            <ExtraCard form={form}/>
-                            {/* Product List */}
-                            <div className="rounded mt-4 mb-5">
-                                <div className="d-flex justify-content-between mb-3">
-                                    <h5 className="fw-semibold">Purchase items</h5>
-                                    <div className="theme-title small">{table.total} products</div>
-                                </div>
-
-                                {/** Table */}
-                                <CommonDataTable
-                                    columns={[
-                                        {
-                                            label: "ID", key: "id"
-                                        },
-                                        { label: "Supplier", key: "unit_name" },
-                                        { label: "Name", key: "name" },
-                                        { label: "Category", key: "category_name" },
-                                        { label: "Quantity", key: "quantity" },
-                                        { label: "Sku", key: "sku" },
-                                        { label: "Unit", key: "unit" }
-                                    ]}
-                                    data={table.data}
-                                    links={table.links}
-                                    loading={table.loading}
-                                    onEdit={form.formData?.status === 'pending'
-                                        ? addInventory
-                                        : null}
-                                    iconEdit={<i className="bi bi-plus-circle-dotted"></i>}
-                                />
-                            </div>
-                            {/* Inventory */}
-                            <div className="rounded mt-4 mb-5">
-                                <div className="d-flex justify-content-between mb-3">
-                                    <h5 className="fw-semibold">Inventory</h5>
-                                    <div className="theme-title small">{table.total} products</div>
-                                </div>
-
-                                {/** Table */}
-                                <CommonDataTable
-                                    movePage={getInventories}
-                                    columns={[
-                                        {
-                                            label: "ID", key: "id"
-                                        },
-                                        { label: "Supplier", key: "unit_name" },
-                                        { label: "Name", key: "name" },
-                                        { label: "Category", key: "category" },
-                                        { label: "Quantity", key: "qty_change" },
-                                        { label: "Sku", key: "sku" },
-                                        { label: "Unit", key: "unit" },
-                                        { label: "Warehouses", key: "warehouse" }
-                                    ]}
-                                    data={inventoryTable.data}
-                                    links={inventoryTable.links}
-                                    loading={inventoryTable.loading}
-                                />
-                            </div>
-                        </div>
-
-                        {/* Summary Box */}
-                        <div className="col-lg-4">
-                            <div className="p-4 rounded mb-4 border">
-                                <h5 className="fw-semibold mb-3">Warehouse</h5>
-                                <SummaryRow label="Quantity" value={table.total} />
-                                <SummaryRow label="Staff:" value={form.formData?.approved_name ?? '-'} />
-                                <SummaryRow label="Import date:" value="15/01/2024" />
-                            </div>
-
-                            {/* Inspection box */}
-                            {form.formData?.status === 'pending' ? <div className="row">
-                                <div className="col-6">
-                                    <PrimaryButton loading={form.loading} onClick={confirmRecieve} label="Received" />
-                                </div>
-                                <div className="col-6">
-                                    <SecondaryButton loading={form.loading} onClick={() => setShowForm(true)} width={'100%'} label="Modifier" />
-                                </div>
-                            </div> : null}
-                        </div>
-                    </div>
-                </div>
-            }</div>
-            {showForm ? <PopupLayout
-                loading={form.loading}
-                confirmText="Save change"
-                onClose={() => setShowForm(false)}
-                title="Update Stock In" onConfirm={() => update()}>
-                <div>
+                {loading ? <LoadingBox /> :
                     <div>
-                        <label>Import date</label>
-                        <InputForm
-                            errorMessage={form.formErrors?.import_date}
-                            value={form.formData?.import_date}
-                            name="import_date"
-                            handleChange={form.handleChange}
-                            type="date"
-                        />
-                    </div>
-                    {form.hookRender.map((item,data) => {
-                        return <div className="mt-3">
-                            <RenderFormFieldByList item={item} form={form}/>
+                        <div className="row g-3 mb-4">
+                            <InfoBox label="Import voucher code" value={'PO' + form.formData?.purchase_id} />
+                            <InfoBox label="Order code" value="PO-2024-001" />
+                            <InfoBox label="Actual import date" value={isoToDateTime(form.formData?.import_date)} />
+                            <InfoBox label="Expected date" value={form.formData?.due_date ?? '-'} />
                         </div>
-                    })}
-                </div>
-            </PopupLayout> : null}
-            {showFormInventory ? <PopupLayout
-                loading={formAddInventory.loading}
-                confirmText="Save"
-                onClose={() => setShowFormInventory(false)}
-                title={formAddInventory.isEdit
-                    ? "Update Inventory"
-                    : "Add Inventory"} onConfirm={createInventory}>
-                <div>
-                    <InventoryForm form={formAddInventory} />
-                </div>
-            </PopupLayout> : null}
+
+                        <div className="row g-4">
+
+                            <div className="col-lg-8">
+                                <div className="p-4 rounded border">
+                                    <div className="d-flex justify-content-between mb-3">
+                                        <h5 className="fw-semibold">{t("Stock information")}</h5>
+                                    </div>
+
+                                    <TwoCol
+                                        label={t("Supplier")}
+                                        left={form.formData?.unit_name}
+                                        rightLabel={t('Purchase approved')}
+                                        right={form.formData?.purchase_approved_name}
+                                    />
+
+                                    <TwoCol
+                                        label={t("Staff")}
+                                        left={form.formData?.purchase_approved_name ?? '-'}
+                                        rightLabel={t("Status")}
+                                        right={form.formData?.status === 'received'
+                                            ? <span className="badge bg-success text-uppercase">{form.formData?.status}</span>
+                                            : <span className="badge bg-warning 
+                                            text-dark text-uppercase">{form.formData?.status}</span>
+                                        }
+                                    />
+
+                                    <div className="mt-3">
+                                        <div className="theme-title small">{t("Note")}</div>
+                                        <div>{form.formData?.purchase_note ?? '-'}</div>
+                                    </div>
+                                </div>
+
+                                <ExtraCard form={form} />
+
+                                {/* Product List */}
+                                <div className="rounded mt-4 mb-5">
+                                    <div className="d-flex justify-content-between mb-3">
+                                        <h5 className="fw-semibold">{t("Purchase items")}</h5>
+                                        <div className="theme-title small">{table.total} {t("products")}</div>
+                                    </div>
+
+                                    <CommonDataTable
+                                        columns={[
+                                            { label: t("ID"), key: "id" },
+                                            { label: t("Supplier"), key: "unit_name" },
+                                            { label: t("Name"), key: "name" },
+                                            { label: t("Category"), key: "category_name" },
+                                            { label: t("Quantity"), key: "quantity" },
+                                            { label: t("Sku"), key: "sku" },
+                                            { label: t("Unit"), key: "unit" }
+                                        ]}
+                                        data={table.data}
+                                        links={table.links}
+                                        loading={table.loading}
+                                        onEdit={form.formData?.status === 'pending' ? addInventory : null}
+                                        iconEdit={<i className="bi bi-plus-circle-dotted"></i>}
+                                    />
+                                </div>
+
+                                {/* Inventory */}
+                                <div className="rounded mt-4 mb-5">
+                                    <div className="d-flex justify-content-between mb-3">
+                                        <h5 className="fw-semibold">{t("Inventory")}</h5>
+                                        <div className="theme-title small">{table.total} {t("products")}</div>
+                                    </div>
+
+                                    <CommonDataTable
+                                        movePage={getInventories}
+                                        columns={[
+                                            { label: t("ID"), key: "id" },
+                                            { label: t("Supplier"), key: "unit_name" },
+                                            { label: t("Name"), key: "name" },
+                                            { label: t("Category"), key: "category" },
+                                            { label: t("Quantity"), key: "qty_change" },
+                                            { label: t("Sku"), key: "sku" },
+                                            { label: t("Unit"), key: "unit" },
+                                            { label: t("Warehouses"), key: "warehouse" }
+                                        ]}
+                                        data={inventoryTable.data}
+                                        links={inventoryTable.links}
+                                        loading={inventoryTable.loading}
+                                    />
+                                </div>
+                            </div>
+
+                            {/* Summary Box */}
+                            <div className="col-lg-4">
+                                <div className="p-4 rounded mb-4 border">
+                                    <h5 className="fw-semibold mb-3">{t("Warehouse")}</h5>
+                                    <SummaryRow label={t("Quantity")} value={table.total} />
+                                    <SummaryRow label={t("Staff") + ":"} value={form.formData?.approved_name ?? '-'} />
+                                    <SummaryRow label={t("Import date") + ":"} value={form.formData?.import_date || "15/01/2024"} />
+                                </div>
+
+                                {/* Inspection box */}
+                                {form.formData?.status === 'pending' ? (
+                                    <div className="row g-2">
+                                        <div className="col-6">
+                                            <PrimaryButton
+                                                loading={form.loading}
+                                                onClick={confirmRecieve}
+                                                label={t("Received")}
+                                            />
+                                        </div>
+                                        <div className="col-6">
+                                            <SecondaryButton
+                                                loading={form.loading}
+                                                onClick={() => setShowForm(true)}
+                                                width={'100%'}
+                                                label={t("Modifier")}
+                                            />
+                                        </div>
+                                    </div>
+                                ) : null}
+                            </div>
+                        </div>
+                    </div>
+                }</div>
+            {showForm ? (
+    <PopupLayout
+        loading={form.loading}
+        confirmText={t("Save change")}
+        onClose={() => setShowForm(false)}
+        title={t("Update Stock In")}
+        onConfirm={() => update()}
+    >
+        <div>
+            <div>
+                <label>{t("Import date")}</label>
+                <InputForm
+                    errorMessage={form.formErrors?.import_date}
+                    value={form.formData?.import_date}
+                    name="import_date"
+                    handleChange={form.handleChange}
+                    type="date"
+                />
+            </div>
+            {form.hookRender.map((item, index) => {
+                return (
+                    <div className="mt-3" key={index}>
+                        <RenderFormFieldByList item={item} form={form} />
+                    </div>
+                );
+            })}
+        </div>
+    </PopupLayout>
+) : null}
+
+{showFormInventory ? (
+    <PopupLayout
+        loading={formAddInventory.loading}
+        confirmText={t("Save")}
+        onClose={() => setShowFormInventory(false)}
+        title={formAddInventory.isEdit
+            ? t("Update Inventory")
+            : t("Add Inventory")} 
+        onConfirm={createInventory}
+    >
+        <div>
+            <InventoryForm form={formAddInventory} />
+        </div>
+    </PopupLayout>
+) : null}
 
         </div>
     );

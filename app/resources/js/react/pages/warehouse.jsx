@@ -156,7 +156,7 @@ export default function Warehouse() {
                 containerClass="mx-4"
                 title={t('Warehouse')}
                 subtitle={t(
-                    'You can use product categories as areas in the warehouse for easier management.'
+                    'warehouse_desc'
                 )}
             />
 

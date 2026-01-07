@@ -16,13 +16,6 @@ class CreateProductRequest extends FormRequest
 
             'description'        => 'required|string|max:255',
             'image'              => 'nullable|string|max:255',
-            // attributes
-            'length' => 'nullable|string|max:150',
-            'width' => 'nullable|string|max:150',
-            'height' => 'nullable|string|max:150',
-            'color' => 'nullable|string|max:10',
-            'expiration_date' => 'nullable|date_format:Y-m-d',
-            'weight' => 'nullable|integer|min:0',
         ];
     }
 

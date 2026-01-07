@@ -155,7 +155,7 @@ export default function ListPurchases() {
                 containerClass="mx-4"
                 title={t('Purchases')}
                 subtitle={t(
-                    'Track your offers, approval and payment status.'
+                    'Track your offers, approval and payment status'
                 )}
             />
 

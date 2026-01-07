@@ -13,7 +13,10 @@ import StatusBadge from '../StatusBadge'
 import RenderFieldTableByList from '../RenderFieldTableByList'
 import { RenderTableSearch } from '../RenderTableSearch';
 import PrimaryButton from '../UI/Buttons/PrimaryButton';
+import { useI18n } from '../../../i18n/useI18n';
+
 export default function InvoiceIns() {
+    const { t } = useI18n();
     const navigate = useNavigate();
     const { openPopup } = usePopup();
     const table = useTable();
@@ -22,6 +25,7 @@ export default function InvoiceIns() {
     const handleEdit = useCallback((row) => {
         navigate('/invoices?form=invoicein&id=' + row.id)
     }, []);
+
     const listInvoice = useCallback((page = 0) => {
         table.setLoading(true);
         InvoiceInService.list({
@@ -66,61 +70,61 @@ export default function InvoiceIns() {
         view();
         table.setColums([
             {
-                label: "Supplier",
+                label: t("Supplier"),
                 key: "unit_name",
                 render: (value) => value ?? <span className="text-muted fst-italic">{value}</span>,
             },
             {
-                label: "Purchase ID",
+                label: t("Purchase ID"),
                 key: "purchase_id",
                 render: (value) => {
                     return <span className="">PU{value}</span>
                 },
             },
             {
-                label: "Document no",
+                label: t("Invoice no"), // Đổi từ Document no để khớp với các key trước đó của bạn
                 key: "document_no",
                 render: (value) => value ?? <span className="text-muted fst-italic">{value}</span>,
             },
             {
-                label: "Subtotal",
+                label: t("Subtotal"),
                 key: "subtotal",
                 render: (value) => <span>
                     <Currencies amount={value} />
                 </span>,
             },
             {
-                label: "Tax",
+                label: t("Tax"),
                 key: "tax",
                 render: (value) => <span><Currencies amount={value} /></span>,
             },
             {
-                label: "Total paid",
+                label: t("Total price"), // Đổi từ Total paid để khớp key t("Total price")
                 key: "total",
                 render: (value) => <strong><Currencies amount={value} /></strong>,
             },
             {
-                label: "Status",
+                label: t("Status"),
                 key: "approved",
                 render: (value) => {
                     return <StatusBadge status={value ? 'approved' : 'unapproved'} />
                 },
             },
             {
-                label: "Invoice date",
+                label: t("Import date"), // Đổi từ Invoice date để khớp key t("Import date")
                 key: "invoice_date",
                 render: (value) =>
                     value ?? "",
             },
             {
-                label: "Payment",
+                label: t("Payment"),
                 key: "payment_status",
                 render: (value) => {
                     return <StatusBadge status={value} />
                 }
             },
             {
-                label: "Purchase status",
+                label: t("Purchase status"),
                 key: "purchase_status",
                 render: (value) => {
                     return <StatusBadge status={value} />
@@ -128,34 +132,35 @@ export default function InvoiceIns() {
             },
         ])
     }, []);
+
     return <div>
         <CommonDataTable
             loading={table.loading}
             filter={<div className="row">
                 <div className="col-2">
-                    <label>Payment status</label>
+                    <label>{t("Status")}</label>
                     <Select
                         name="payment_status"
                         value={search.formData?.payment_status}
                         handleChange={search.handleChange}
                         options={[
-                            { value: '', label: 'All' },
-                            { value: 'partial_payment', label: 'Partial' },
-                            { value: 'paid', label: 'Paid' },
-                            { value: 'pending', label: 'Pending' }
+                            { value: '', label: t('All') },
+                            { value: 'partial_payment', label: t('Partial') },
+                            { value: 'paid', label: t('Paid') },
+                            { value: 'pending', label: t('Pending') }
                         ]}
                     />
                 </div>
                 <div className='col-2'>
-                    <label>Order by</label>
+                    <label>{t("Order by")}</label>
                     <Select
                         name='order_by'
                         value={search.formData?.order_by}
                         handleChange={search.handleChange}
                         errorMessage={search.formErrors?.order_by}
                         options={[
-                            { value: 'ASC', label: 'Oldest' },
-                            { value: 'DESC', label: 'Newest' }
+                            { value: 'ASC', label: t('Oldest') },
+                            { value: 'DESC', label: t('Newest') }
                         ]} />
                 </div>
                 {search.hookRender.map((item, index) => {
@@ -164,9 +169,9 @@ export default function InvoiceIns() {
                     </div>
                 })}
                 <div className="col-2">
-                    <label>Search</label>
+                    <label>{t("Search")}</label>
                     <SearchInput
-                        placeholder="Search by document"
+                        placeholder={t("Search by invoice no")}
                         submit={listInvoice}
                         value={search.formData?.keywords}
                         name="keywords"
@@ -174,7 +179,7 @@ export default function InvoiceIns() {
                     />
                 </div>
                 <div className="col-2">
-                    <PrimaryButton label='Search' onClick={() => listInvoice()} />
+                    <PrimaryButton label={t('Search')} onClick={() => listInvoice()} />
                 </div>
             </div>}
             columns={table.colums}

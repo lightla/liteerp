@@ -13,11 +13,15 @@ import StatusBadge from '../StatusBadge';
 import RenderFieldTableByList from '../RenderFieldTableByList'
 import { RenderTableSearch } from '../RenderTableSearch';
 import PrimaryButton from '../UI/Buttons/PrimaryButton';
+import { useI18n } from '../../../i18n/useI18n';
+
 export default function InvoiceOuts() {
+    const { t } = useI18n();
     const navigate = useNavigate();
     const search = useForm();
     const table = useTable();
     const { openPopup } = usePopup();
+
     const getInvoices = useCallback((page = 0) => {
         table.setLoading(true);
         InvoiceOutService.list({
@@ -40,11 +44,12 @@ export default function InvoiceOuts() {
                 }
             })
     }, [table, search.formData]);
+
     const view = useCallback(() => {
         InvoiceOutService.view()
             .then((resp) => {
-                table.addColums(resp.message.index,(item,data) => {
-                    return <RenderFieldTableByList item={item} data={data}/>
+                table.addColums(resp.message.index, (item, data) => {
+                    return <RenderFieldTableByList item={item} data={data} />
                 })
                 search.setHookRender(resp.message.search)
             })
@@ -57,112 +62,115 @@ export default function InvoiceOuts() {
                 }
             })
     }, []);
+
     const onEdit = (row) => {
         navigate('/invoices?form=invoiceout&id=' + row.id)
     }
+
     useEffect(() => {
         table.setColums([
-        {
-            label: "Customer",
-            key: "customer_name",
-            render: (value) => value ?? <span className="text-muted fst-italic">{value}</span>,
-        },
-        {
-            label: "Order ID",
-            key: "order_id",
-            render: (value) => {
-                return <span className="">OD{value}</span>
+            {
+                label: t("Customer"),
+                key: "customer_name",
+                render: (value) => value ?? <span className="text-muted fst-italic">{value}</span>,
             },
-        },
-        {
-            label: "Document no",
-            key: "document_no",
-            render: (value) => value ?? <span className="text-muted fst-italic">{value}</span>,
-        },
-        {
-            label: "Subtotal",
-            key: "subtotal",
-            render: (value) => <span><Currencies amount={value} /></span>,
-        },
-        {
-            label: "Tax",
-            key: "tax",
-            render: (value) => <span><Currencies amount={value} /></span>,
-        },
-        {
-            label: "Total paid",
-            key: "total_adjusted",
-            render: (value) => <strong><Currencies amount={value} /></strong>,
-        },
-        {
-            label: "Status",
-            key: "approved",
-            render: (value) => {
-                return <StatusBadge status={value ? 'approved' : 'unapproved'} />
-            }
-        },
-        {
-            label: "Invoice date",
-            key: "invoice_date",
-            render: (value) =>
-                value ? isoToDateTime(value) : "",
-        },
-        {
-            label: "Payment",
-            key: "payment_status",
-            render: (value) => {
-                return <StatusBadge status={value} />
-            }
-        },
-        {
-            label: "Order status",
-            key: "order_status",
-            render: (value) => {
-                return <StatusBadge status={value} />
-            }
-        },
-    ])
+            {
+                label: t("Order ID"),
+                key: "order_id",
+                render: (value) => {
+                    return <span className="">OD{value}</span>
+                },
+            },
+            {
+                label: t("Invoice no"), // Sử dụng Invoice no thay cho Document no để đồng bộ
+                key: "document_no",
+                render: (value) => value ?? <span className="text-muted fst-italic">{value}</span>,
+            },
+            {
+                label: t("Subtotal"),
+                key: "subtotal",
+                render: (value) => <span><Currencies amount={value} /></span>,
+            },
+            {
+                label: t("Tax"),
+                key: "tax",
+                render: (value) => <span><Currencies amount={value} /></span>,
+            },
+            {
+                label: t("Total price"), // Đồng bộ với key Total price trong i18n
+                key: "total_adjusted",
+                render: (value) => <strong><Currencies amount={value} /></strong>,
+            },
+            {
+                label: t("Status"),
+                key: "approved",
+                render: (value) => {
+                    return <StatusBadge status={value ? 'approved' : 'unapproved'} />
+                }
+            },
+            {
+                label: t("Order date"), // Đồng bộ với key Order date trong i18n
+                key: "invoice_date",
+                render: (value) =>
+                    value ? isoToDateTime(value) : "",
+            },
+            {
+                label: t("Payment"),
+                key: "payment_status",
+                render: (value) => {
+                    return <StatusBadge status={value} />
+                }
+            },
+            {
+                label: t("Order status"),
+                key: "order_status",
+                render: (value) => {
+                    return <StatusBadge status={value} />
+                }
+            },
+        ])
         getInvoices();
         view();
     }, [])
+
     return <div>
         <CommonDataTable
             filter={<div className="row">
                 <div className="col-2">
-                    <label>Payment status</label>
+                    <label>{t("Payment status")}</label>
                     <Select
                         name="payment_status"
                         value={search.formData?.payment_status}
                         handleChange={search.handleChange}
                         options={[
-                            { value: '', label: 'All' },
-                            { value: 'partial_payment', label: 'Partial' },
-                            { value: 'paid', label: 'Paid' },
-                            { value: 'pending', label: 'Pending' }
+                            { value: '', label: t('All') },
+                            { value: 'partial_payment', label: t('Partial') },
+                            { value: 'paid', label: t('Paid') },
+                            { value: 'pending', label: t('Pending') }
                         ]}
                     />
                 </div>
                 <div className='col-2'>
-                    <label>Order by</label>
+                    <label>{t("Order by")}</label>
                     <Select
                         name='order_by'
                         value={search.formData?.order_by}
                         handleChange={search.handleChange}
                         errorMessage={search.formErrors?.order_by}
                         options={[
-                            { value: 'ASC', label: 'Oldest' },
-                            { value: 'DESC', label: 'Newest' }
+                            { value: 'ASC', label: t('Oldest') },
+                            { value: 'DESC', label: t('Newest') }
                         ]} />
                 </div>
-                {search.hookRender.map((item,index) => {
+                {search.hookRender.map((item, index) => {
                     return <div className='col-2' key={index}>
                         <RenderTableSearch item={item} search={search} />
                     </div>
                 })}
                 <div className="col-2">
-                    <label>Search</label>
+                    <label>{t("Search")}</label>
                     <SearchInput
-                        placeholder="Search by document"
+                        placeholder={t("Search by invoice no")}
                         submit={getInvoices}
                         value={search.formData?.keywords}
                         name="keywords"
@@ -170,7 +178,7 @@ export default function InvoiceOuts() {
                     />
                 </div>
                 <div className="col-2">
-                    <PrimaryButton label='Search' onClick={() => getInvoices()} />
+                    <PrimaryButton label={t('Search')} onClick={() => getInvoices()} />
                 </div>
             </div>}
             loading={table.loading}
@@ -180,6 +188,5 @@ export default function InvoiceOuts() {
             onEdit={onEdit}
             movePage={getInvoices}
         />
-
     </div>
 }

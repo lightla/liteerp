@@ -9,12 +9,12 @@ export default function RequestContent() {
             <h2 className="h5">{t('Send to request')}</h2>
             <p>
                 {t(
-                    'Please check information again before sending request to manager for approval'
+                    'explain_approved'
                 )}
             </p>
             <p>
                 {t(
-                    'You will not be able to change data after requesting. If needed, you should create a new one'
+                    'explain_requested'
                 )}
             </p>
         </div>

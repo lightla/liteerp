@@ -17,8 +17,10 @@ import LoadingBox from "../../LoadingBox";
 import Currencies from "../../Currencies";
 import UploadImage from '../../UI/Input/UploadImage'
 import RenderFormFieldByList from "../../RenderFormFieldByList";
-import {ExtraCard} from '../../ExtraCard'
+import { ExtraCard } from '../../ExtraCard'
+import { useI18n } from "../../../../i18n/useI18n";
 export default function InvoiceOutDetail() {
+    const { t } = useI18n();
     const [loading, setLoading] = useState(false)
     const { openPopup } = usePopup();
     const [searchParams] = useSearchParams();
@@ -92,7 +94,7 @@ export default function InvoiceOutDetail() {
                 setShowEdit(false);
                 openPopup({
                     type: 'success',
-                    message: 'You has been updated'
+                    message: t('You has been updated')
                 });
                 setDetail(form.formData);
                 form.setLoading(false)
@@ -113,7 +115,7 @@ export default function InvoiceOutDetail() {
     const confirmApproved = useCallback(() => {
         openPopup({
             type: 'warning',
-            message: 'Are you sure to take approve',
+            message: t('Are you sure to take approve'),
             onConfirm: () => {
                 form.handleChangeByKey('approved', true);
             }
@@ -130,36 +132,26 @@ export default function InvoiceOutDetail() {
     }, [form.formData?.approved, detail?.approved])
     useEffect(() => {
         table.setColums([
-            { label: "Name", key: "name" },
-            { label: "Buy", key: "buy_quantity" },
-            { label: "Compensation", key: "compensation_quantity" },
-            { label: "Conversion", key: "conversion_quantity" },
-            { label: "Gift", key: "gift_quantity" },
+            { label: t("Name"), key: "name" },
+            { label: t("Buy"), key: "buy_quantity" },
+            { label: t("Compensation"), key: "compensation_quantity" },
+            { label: t("Conversion"), key: "conversion_quantity" },
+            { label: t("Gift"), key: "gift_quantity" },
+            { label: t('Sku'), key: 'sku' },
+            { label: t('Price'), key: 'price' },
+            { label: t('Total tax'), key: 'total_tax' },
             {
-                label: 'Sku', key: 'sku'
+                label: t('Subtotal'), key: 'subtotal',
+                render: (value) => <span><Currencies amount={value} /></span>
             },
             {
-                label: 'Price', key: 'price'
+                label: t('Total'), key: 'total',
+                render: (value) => <span><Currencies amount={value} /></span>
             },
-            {
-                label: 'Total tax', key: 'total_tax'
-            },
-            {
-                label: 'Subtotal', key: 'subtotal',
-                render: (value) => {
-                    return <span><Currencies amount={value} /></span>
-                }
-            },
-            {
-                label: 'Total', key: 'total',
-                render: (value) => {
-                    return <span><Currencies amount={value} /></span>
-                }
-            },
-            { label: "Warehouse", key: "warehouse" },
-        ])
+            { label: t("Warehouse"), key: "warehouse" },
+        ]);
         view();
-    },[])
+    }, [])
     return (
         <div className="text-light min-vh-100">
             <PageHead
@@ -172,11 +164,11 @@ export default function InvoiceOutDetail() {
                     <div className="row g-3 mb-4">
                         <div className="col-md-3">
                             <div className="p-3 rounded border">
-                                <div className="theme-title small">Invoice No
+                                <div className="theme-title small">
+                                    {t("Invoice No")}
                                     {form.formData?.approved
-                                        ? <span className="badge bg-success text-uppercase">Approved</span>
-                                        : <span className="badge bg-warning text-uppercase">Waiting</span>}
-
+                                        ? <span className="badge bg-success text-uppercase ms-2">{t("Approved")}</span>
+                                        : <span className="badge bg-warning text-uppercase ms-2">{t("Waiting")}</span>}
                                 </div>
                                 <div className="fw-semibold theme-title">
                                     {form.formData?.document_no ?? '-'}
@@ -185,7 +177,7 @@ export default function InvoiceOutDetail() {
                         </div>
                         <div className="col-md-3">
                             <div className="p-3 rounded border">
-                                <div className="theme-title small">Order ID</div>
+                                <div className="theme-title small">{t("Order ID")}</div>
                                 <div className="fw-semibold theme-title">
                                     OD{form.formData?.id ?? '-'}
                                 </div>
@@ -193,7 +185,7 @@ export default function InvoiceOutDetail() {
                         </div>
                         <div className="col-md-3">
                             <div className="p-3 rounded border">
-                                <div className="theme-title small">Invoice date</div>
+                                <div className="theme-title small">{t("Invoice date")}</div>
                                 <div className="fw-semibold theme-title">
                                     {form.formData?.invoice_date ?? '-'}
                                 </div>
@@ -201,7 +193,7 @@ export default function InvoiceOutDetail() {
                         </div>
                         <div className="col-md-3">
                             <div className="p-3 rounded border">
-                                <div className="theme-title small">Due date</div>
+                                <div className="theme-title small">{t("Due date")}</div>
                                 <div className="fw-semibold theme-title">
                                     {form.formData?.due_date ?? '-'}
                                 </div>
@@ -209,86 +201,80 @@ export default function InvoiceOutDetail() {
                         </div>
                     </div>
                     <div className="row g-4">
-
-
                         <div className="col-lg-8">
                             {/* Customer Info */}
                             <div className="p-4 rounded border">
                                 <div className="d-flex justify-content-between mb-3">
                                     <h5 className="fw-semibold">
-                                        Customer information
+                                        {t("Customer information")}
                                     </h5>
-
                                 </div>
                                 <div className="mb-2">
-                                    <div className="theme-title small">Name</div>
+                                    <div className="theme-title small">{t("Name")}</div>
                                     <div className="theme-title">{form.formData?.customer_name}</div>
                                 </div>
                                 <div className="mb-2">
-                                    <div className="theme-title small">Email</div>
+                                    <div className="theme-title small">{t("Email")}</div>
                                     <div className="theme-title">{form.formData?.email}</div>
                                 </div>
                                 <div className="mb-2">
-                                    <div className="theme-title small">Address</div>
+                                    <div className="theme-title small">{t("Address")}</div>
                                     <div className="theme-title">{form.formData?.address}</div>
                                 </div>
                                 <div className="row mt-3">
                                     <div className="col-md-6">
                                         <div className="mb-2">
-                                            <div className="theme-title small">Tax code</div>
+                                            <div className="theme-title small">{t("Tax code")}</div>
                                             <div className="theme-title">{form.formData?.tax_code ?? '-'}</div>
                                         </div>
-                                        {/* <SupplierRow label="Mã số thuế" value="0987654321" /> */}
                                     </div>
                                     <div className="col-md-6">
-                                        {/* <SupplierRow label="Số điện thoại" value="0987 654 321" /> */}
                                         <div className="mb-2">
-                                            <div className="theme-title small">Phone</div>
+                                            <div className="theme-title small">{t("Phone")}</div>
                                             <div className="theme-title">{form.formData?.phone ?? '-'}</div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <ExtraCard form={form}/>
+
+                            <ExtraCard form={form} />
+
                             {/* Shipping Info */}
                             <div className="p-4 rounded border mt-3">
                                 <div className="d-flex justify-content-between mb-3">
                                     <h5 className="fw-semibold">
-                                        Shipping information
+                                        {t("Shipping information")}
                                     </h5>
                                 </div>
                                 <BootstrapAlert
-                                    message="If shipping fee actual has insert then system will use, 
-                                but if it is empty will be shipping fee estimated."
+                                    message={t("explain_free_shipping")}
                                 />
                                 <div className="mb-2">
-                                    <div className="theme-title small">Name</div>
+                                    <div className="theme-title small">{t("Name")}</div>
                                     <div className="theme-title">{form.formData?.receiver_name}</div>
                                 </div>
                                 <div className="mb-2">
-                                    <div className="theme-title small">Email</div>
+                                    <div className="theme-title small">{t("Email")}</div>
                                     <div className="theme-title">{form.formData?.receiver_email ?? '-'}</div>
                                 </div>
                                 <div className="mb-2">
-                                    <div className="theme-title small">Address</div>
+                                    <div className="theme-title small">{t("Address")}</div>
                                     <div className="theme-title">{form.formData?.receiver_address ?? '-'}</div>
                                 </div>
                                 <div className="mb-2">
-                                    <div className="theme-title small">Tax code</div>
+                                    <div className="theme-title small">{t("Tax code")}</div>
                                     <div className="theme-title">{form.formData?.tax_code ?? '-'}</div>
                                 </div>
                                 <div className="row mt-3">
                                     <div className="col-md-6">
                                         <div className="mb-2">
-                                            <div className="theme-title small">Shipping unit</div>
+                                            <div className="theme-title small">{t("Shipping unit")}</div>
                                             <div className="theme-title">{form.formData?.preferred_unit_name}</div>
                                         </div>
-                                        {/* <SupplierRow label="Mã số thuế" value="0987654321" /> */}
                                     </div>
                                     <div className="col-md-6">
-                                        {/* <SupplierRow label="Số điện thoại" value="0987 654 321" /> */}
                                         <div className="mb-2">
-                                            <div className="theme-title small">Phone</div>
+                                            <div className="theme-title small">{t("Phone")}</div>
                                             <div className="theme-title">{form.formData?.phone ?? '-'}</div>
                                         </div>
                                     </div>
@@ -296,17 +282,15 @@ export default function InvoiceOutDetail() {
                                 <div className="row mt-3">
                                     <div className="col-md-6">
                                         <div className="mb-2">
-                                            <div className="theme-title small">Shipping fee actual</div>
+                                            <div className="theme-title small">{t("Shipping fee actual")}</div>
                                             <div className="theme-title">
                                                 <Currencies amount={form.formData?.shipping_fee_actual} />
                                             </div>
                                         </div>
-                                        {/* <SupplierRow label="Mã số thuế" value="0987654321" /> */}
                                     </div>
                                     <div className="col-md-6">
-                                        {/* <SupplierRow label="Số điện thoại" value="0987 654 321" /> */}
                                         <div className="mb-2">
-                                            <div className="theme-title small">Shipping fee estimated</div>
+                                            <div className="theme-title small">{t("Shipping fee estimated")}</div>
                                             <div className="theme-title">
                                                 <Currencies amount={form.formData?.shipping_fee_estimated} />
                                             </div>
@@ -316,25 +300,24 @@ export default function InvoiceOutDetail() {
                                 <div className="row mt-3">
                                     <div className="col-md-6">
                                         <div className="mb-2">
-                                            <div className="theme-title small">Shipping code</div>
+                                            <div className="theme-title small">{t("Shipping code")}</div>
                                             <div className="theme-title">{form.formData?.shipping_code ?? '-'}</div>
                                         </div>
-                                        {/* <SupplierRow label="Mã số thuế" value="0987654321" /> */}
                                     </div>
                                     <div className="col-md-6">
-                                        {/* <SupplierRow label="Số điện thoại" value="0987 654 321" /> */}
                                         <div className="mb-2">
-                                            <div className="theme-title small">Receiver note</div>
+                                            <div className="theme-title small">{t("Receiver note")}</div>
                                             <div className="theme-title">{form.formData?.receiver_note ?? '-'}</div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
+
                             {/* Product List */}
                             <div className="p-4 rounded mt-4 border">
                                 <div className="d-flex justify-content-between mb-3">
-                                    <h5 className="fw-semibold">Products Order</h5>
-                                    <div className="theme-title small">{table.total} products</div>
+                                    <h5 className="fw-semibold">{t("Products Order")}</h5>
+                                    <div className="theme-title small">{table.total} {t("Products")}</div>
                                 </div>
                                 <CommonDataTable
                                     columns={table.colums}
@@ -348,126 +331,146 @@ export default function InvoiceOutDetail() {
                         {/* Payment Info */}
                         <div className="col-lg-4">
                             <div className="p-4 rounded border">
-                                <h5 className="fw-semibold mb-3">Payment information</h5>
+                                <h5 className="fw-semibold mb-3">{t("Payment information")}</h5>
                                 <div className="mb-2">
-                                    <div className="theme-title small">Payment method</div>
+                                    <div className="theme-title small">{t("Payment method")}</div>
                                     <div className="theme-title badge bg-primary text-white text-uppercase">{form.formData?.payment_method}</div>
                                 </div>
                                 <div className="mb-2">
-                                    <div className="theme-title small">Payment status</div>
-                                    <div className={"theme-title badge text-white text-uppercase "
-                                        + (form.formData?.payment_status === 'pending' ? 'bg-warning' : 'bg-success')}>{form.formData?.payment_status}</div>
+                                    <div className="theme-title small">{t("Payment status")}</div>
+                                    <div className={`theme-title badge text-white text-uppercase ${form.formData?.payment_status === 'pending' ? 'bg-warning' : 'bg-success'}`}>
+                                        {form.formData?.payment_status}
+                                    </div>
                                 </div>
                             </div>
+
                             {/* Summary */}
-                            <div className=" mt-3">
+                            <div className="mt-3">
                                 <div className="ms-auto">
                                     <div className="p-4 rounded border">
-                                        <h5 className="fw-semibold mb-3">Summary</h5>
+                                        <h5 className="fw-semibold mb-3">{t("Summary")}</h5>
                                         <div className="d-flex justify-content-between theme-title">
-                                            <span>Type order</span>
+                                            <span>{t("Type order")}</span>
                                             <span className="badge bg-primary">{form.formData?.type}</span>
                                         </div>
                                         <div className="d-flex justify-content-between theme-title">
-                                            <span>Subtotal</span>
+                                            <span>{t("Subtotal")}</span>
                                             <Currencies amount={detail?.subtotal} />
-
                                         </div>
-
                                         <div className="d-flex justify-content-between theme-title">
-                                            <span>Shipping fee</span>
+                                            <span>{t("Shipping fee")}</span>
                                             <Currencies amount={detail?.shipping_fee} />
                                         </div>
-
                                         <div className="d-flex justify-content-between theme-title">
-                                            <span>VAT</span>
+                                            <span>{t("VAT")}</span>
                                             <Currencies amount={detail?.tax} />
                                         </div>
                                         <div className="d-flex justify-content-between theme-title">
-                                            <span>Discount</span>
+                                            <span>{t("Discount")}</span>
                                             <Currencies amount={detail?.discount} />
                                         </div>
-
                                         <div className="d-flex justify-content-between mt-3 fs-5 fw-semibold">
-                                            <span className="theme-title">Total:</span>
+                                            <span className="theme-title">{t("Total")}:</span>
                                             <span className="text-primary">
-                                                <Currencies amount={detail?.total_adjusted} /></span>
-
+                                                <Currencies amount={detail?.total_adjusted} />
+                                            </span>
                                         </div>
 
                                         {/* Buttons */}
                                         <div className="d-grid gap-2 mt-4">
                                             <SecondaryButton
                                                 onClick={() => setShowEdit(true)}
-                                                label="Edit invoice" width={'auto'} />
+                                                label={t("Edit invoice")}
+                                                width={'auto'}
+                                            />
                                             <PrimaryButton
                                                 disabled={form.formData?.approved}
-                                                onClick={confirmApproved} label="Take approved" />
+                                                onClick={confirmApproved}
+                                                label={t("Take approved")}
+                                            />
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-
                     </div>
                 </div>}
             </div>
-            {showEdit ? <PopupLayout
-                loading={form.loading}
-                onClose={() => setShowEdit(false)}
-                title="Update invoice" onConfirm={() => {
-                    update();
-                }}>
-                <div>
-                    <div className="form-group">
-                        <label>Invoice Number</label>
-                        <InputForm
-                            errorMessage={form.formErrors?.document_no}
-                            handleChange={form.handleChange}
-                            value={form.formData?.document_no} type="text"
-                            name="document_no" placeholder="Enter invoice number" />
-                    </div>
-                    <div className="form-group mt-3">
-                        <label>Invoice Date</label>
-                        <InputForm
-                            errorMessage={form.formErrors?.invoice_date}
-                            handleChange={form.handleChange} value={form.formData?.invoice_date}
-                            type="date" name="invoice_date" placeholder="Enter invoice date" />
-                    </div>
-                    <div className="form-group mt-3">
-                        <label>Due Date</label>
-                        <InputForm
-                            errorMessage={form.formErrors?.due_date}
-                            handleChange={form.handleChange} value={form.formData?.due_date}
-                            type="date" name="due_date" placeholder="Enter due date" />
-                    </div>
-                    <div className="form-group mt-3">
-                        <label>Payment status</label>
-                        <Select
-                            errorMessage={form.formErrors?.payment_status}
-                            handleChange={form.handleChange}
-                            value={form.formData?.payment_status}
-                            name="payment_status" options={[
-                                { value: 'pending', label: 'Pending' },
-                                { value: 'paid', label: 'Paid' },
-                                { value: 'partial_payment', label: 'Partial payment' }
-                            ]} />
-                    </div>
-                    <div className="form-group mt-3">
-                        <UploadImage
-                            name="image"
-                            errorMessage={form.formErrors?.image}
-                            handleChangeByKey={form.handleChangeByKey}
-                            value={form.formData?.image}
-                        />
-                    </div>
-                    {form.hookRender.map((item,index) => {
-                        return <div className="form-group mt-3" key={index}>
-                            <RenderFormFieldByList item={item} form={form}/>
+            {showEdit ? (
+                <PopupLayout
+                    loading={form.loading}
+                    onClose={() => setShowEdit(false)}
+                    title={t("Update invoice")}
+                    onConfirm={() => {
+                        update();
+                    }}
+                >
+                    <div>
+                        <div className="form-group">
+                            <label>{t("Invoice Number")}</label>
+                            <InputForm
+                                errorMessage={form.formErrors?.document_no}
+                                handleChange={form.handleChange}
+                                value={form.formData?.document_no}
+                                type="text"
+                                name="document_no"
+                                placeholder={t("Enter invoice number")}
+                            />
                         </div>
-                    })}
-                </div>
-            </PopupLayout> : null}
+                        <div className="form-group mt-3">
+                            <label>{t("Invoice Date")}</label>
+                            <InputForm
+                                errorMessage={form.formErrors?.invoice_date}
+                                handleChange={form.handleChange}
+                                value={form.formData?.invoice_date}
+                                type="date"
+                                name="invoice_date"
+                                placeholder={t("Enter invoice date")}
+                            />
+                        </div>
+                        <div className="form-group mt-3">
+                            <label>{t("Due Date")}</label>
+                            <InputForm
+                                errorMessage={form.formErrors?.due_date}
+                                handleChange={form.handleChange}
+                                value={form.formData?.due_date}
+                                type="date"
+                                name="due_date"
+                                placeholder={t("Enter due date")}
+                            />
+                        </div>
+                        <div className="form-group mt-3">
+                            <label>{t("Payment status")}</label>
+                            <Select
+                                errorMessage={form.formErrors?.payment_status}
+                                handleChange={form.handleChange}
+                                value={form.formData?.payment_status}
+                                name="payment_status"
+                                options={[
+                                    { value: 'pending', label: t('Pending') },
+                                    { value: 'paid', label: t('Paid') },
+                                    { value: 'partial_payment', label: t('Partial payment') }
+                                ]}
+                            />
+                        </div>
+                        <div className="form-group mt-3">
+                            <UploadImage
+                                name="image"
+                                errorMessage={form.formErrors?.image}
+                                handleChangeByKey={form.handleChangeByKey}
+                                value={form.formData?.image}
+                            />
+                        </div>
+                        {form.hookRender.map((item, index) => {
+                            return (
+                                <div className="form-group mt-3" key={index}>
+                                    <RenderFormFieldByList item={item} form={form} />
+                                </div>
+                            );
+                        })}
+                    </div>
+                </PopupLayout>
+            ) : null}
 
         </div>
     );

@@ -23,7 +23,9 @@ import Currencies from "../Currencies";
 import OrderItemService from "../../services/OrderItemService";
 import { ExtraCard } from "../ExtraCard";
 import RenderFormFieldByList from "../RenderFormFieldByList";
+import { useI18n } from "../../../i18n/useI18n";
 export default function StockOutDetail() {
+    const { t } = useI18n();
     const [loading, setLoading] = useState(false)
     const [showForm, setShowForm] = useState(false);
     const [showExtraForm, setExtraShowForm] = useState(false);
@@ -54,7 +56,7 @@ export default function StockOutDetail() {
             .then((resp) => {
                 openPopup({
                     type: 'success',
-                    message: 'You has been updated'
+                    message: t('You has been updated')
                 })
                 setDetail(form.formData);
                 form.setLoading(false)
@@ -82,7 +84,7 @@ export default function StockOutDetail() {
             .then((resp) => {
                 openPopup({
                     type: 'success',
-                    message: 'You has been update'
+                    message: t('You has been update')
                 })
                 setShowForm(false);
                 shippingForm.setLoading(false)
@@ -104,7 +106,7 @@ export default function StockOutDetail() {
     const confirmSent = useCallback(() => {
         openPopup({
             type: 'warning',
-            message: 'Are you sure to wanna confirm sent',
+            message: t('Are you sure to wanna confirm sent'),
             onConfirm: () => {
                 //update();
                 form.handleChangeByKey('status', 'shipped')
@@ -114,7 +116,7 @@ export default function StockOutDetail() {
     const confirmCompleted = useCallback(() => {
         openPopup({
             type: 'warning',
-            message: 'Are you sure to wanna confirm completed',
+            message: t('Are you sure to wanna confirm completed'),
             onConfirm: () => {
                 //update();
                 form.handleChangeByKey('status', 'completed')
@@ -135,7 +137,7 @@ export default function StockOutDetail() {
             .catch((error) => {
                 tableInventory.setLoading(false);
             })
-    }, [searchParams,detail?.order_id]);
+    }, [searchParams, detail?.order_id]);
     const view = useCallback(() => {
         StockOutService.view()
             .then((resp) => {
@@ -166,47 +168,38 @@ export default function StockOutDetail() {
     }, []);
     useEffect(() => {
         tableInventory.setColums([
-            { label: "Name", key: "name" },
-            { label: "Buy", key: "buy_quantity" },
-            { label: "Compensation", key: "compensation_quantity" },
-            { label: "Conversion", key: "conversion_quantity" },
-            { label: "Gift", key: "gift_quantity" },
+            { label: t("Name"), key: "name" },
+            { label: t("Buy"), key: "buy_quantity" },
+            { label: t("Compensation"), key: "compensation_quantity" },
+            { label: t("Conversion"), key: "conversion_quantity" },
+            { label: t("Gift"), key: "gift_quantity" },
+            { label: t('Sku'), key: 'sku' },
             {
-                label: 'Sku', key: 'sku'
+                label: t('Price'), key: 'price',
+                render: (value) => <Currencies amount={value} />
             },
             {
-                label: 'Price', key: 'price', render: (value) => {
-                    return <Currencies amount={value} />
-                }
+                label: t('Total tax'), key: 'total_tax',
+                render: (value) => <Currencies amount={value} />
             },
             {
-                label: 'Total tax', key: 'total_tax', render: (value) => {
-                    return <Currencies amount={value} />
-                }
+                label: t('Discount'), key: 'discount',
+                render: (value) => <span>{value}%</span>
             },
             {
-                label: 'Discount', key: 'discount', render: (value) => {
-                    return <span>{value}%</span>
-                }
+                label: t('Subtotal'), key: 'subtotal',
+                render: (value) => <span><Currencies amount={value} /></span>
             },
             {
-                label: 'Subtotal', key: 'subtotal',
-                render: (value) => {
-                    return <span>{<Currencies amount={value} />}</span>
-                }
+                label: t('Total'), key: 'total',
+                render: (value) => <span><Currencies amount={value} /></span>
             },
-            {
-                label: 'Total', key: 'total',
-                render: (value) => {
-                    return <span>{<Currencies amount={value} />}</span>
-                }
-            },
-            { label: "Warehouse", key: "warehouse" },
-        ])
+            { label: t("Warehouse"), key: "warehouse" },
+        ]);
         if (!searchParams.get('stockout')) {
             return;
         }
-        if(!detail?.order_id) {
+        if (!detail?.order_id) {
             getDetail();
         } else {
             getOrderItem();
@@ -241,31 +234,43 @@ export default function StockOutDetail() {
                         <div className="col-lg-8">
                             <div className="p-4 rounded border">
                                 <div className="d-flex justify-content-between mb-3">
-                                    <h5 className="fw-semibold">Stock information</h5>
+                                    <h5 className="fw-semibold">{t("Stock information")}</h5>
                                 </div>
 
-                                <TwoCol label="Employee" left={form.formData?.approved_name ?? '-'}
-                                    rightLabel={'Status'}
+                                <TwoCol
+                                    label={t("Employee")}
+                                    left={form.formData?.approved_name ?? '-'}
+                                    rightLabel={t('Status')}
                                     right={form.formData?.status === 'received'
-                                        ? <span className="badge bg-success text-uppercase">{form.formData?.status}</span>
-                                        : <span className="badge bg-warning text-dark text-uppercase">{form.formData?.status}</span>} />
+                                        ? <span className="badge bg-success text-uppercase">
+                                            {form.formData?.status}</span>
+                                        : <span className="badge bg-warning text-dark text-uppercase">
+                                            {form.formData?.status}</span>
+                                    }
+                                />
 
                                 <div className="mt-3">
-                                    <div className="theme-title small">Note</div>
+                                    <div className="theme-title small">{t("Note")}</div>
                                     <div>{form.formData?.order_note ?? '-'}</div>
                                 </div>
                             </div>
+
                             {/* Customer Info */}
                             <CustomerInfo form={form} />
+
                             {/* Shipping Info */}
                             <ShippingInformation form={shippingForm} />
-                            <ExtraCard form={form} title="Stock extras"/>
-                            <ExtraCard form={shippingForm} title="Shipping extras"/>
-                            {/* Iventory */}
+
+                            <ExtraCard form={form} title={t("Stock extras")} />
+                            <ExtraCard form={shippingForm} title={t("Shipping extras")} />
+
+                            {/* Inventory */}
                             <div className="rounded mt-4 mb-5">
                                 <div className="d-flex justify-content-between mb-3">
-                                    <h5 className="fw-semibold">Inventories</h5>
-                                    <div className="theme-title small">{tableInventory.total} products</div>
+                                    <h5 className="fw-semibold">{t("Inventories")}</h5>
+                                    <div className="theme-title small">
+                                        {tableInventory.total} {t("Products")}
+                                    </div>
                                 </div>
 
                                 {/** Table */}
@@ -282,35 +287,35 @@ export default function StockOutDetail() {
                         <div className="col-lg-4">
                             <PaymentInformation form={form} />
                             {/* Summary */}
-                            <div className=" mt-3">
+                            <div className="mt-3">
                                 <div className="ms-auto">
                                     <div className="p-4 rounded border">
-                                        <h5 className="fw-semibold mb-3">Summary</h5>
+                                        <h5 className="fw-semibold mb-3">{t("Summary")}</h5>
                                         <div className="d-flex justify-content-between theme-title">
-                                            <span>Type order</span>
+                                            <span>{t("Type order")}</span>
                                             <span className="badge bg-primary">{form.formData?.type}</span>
                                         </div>
                                         <div className="d-flex justify-content-between theme-title">
-                                            <span>Subtotal</span>
+                                            <span>{t("Subtotal")}</span>
                                             <Currencies amount={detail?.subtotal} />
                                         </div>
 
                                         <div className="d-flex justify-content-between theme-title">
-                                            <span>Shipping fee</span>
+                                            <span>{t("Shipping fee")}</span>
                                             <Currencies amount={detail?.shipping_fee} />
                                         </div>
 
                                         <div className="d-flex justify-content-between theme-title">
-                                            <span>VAT</span>
+                                            <span>{t("VAT")}</span>
                                             <Currencies amount={detail?.tax} />
                                         </div>
                                         <div className="d-flex justify-content-between theme-title">
-                                            <span>Discount</span>
+                                            <span>{t("Discount")}</span>
                                             <Currencies amount={detail?.discount} />
                                         </div>
 
                                         <div className="d-flex justify-content-between mt-3 fs-5 fw-semibold">
-                                            <span className="theme-title">Total:</span>
+                                            <span className="theme-title">{t("Total")}:</span>
                                             <Currencies amount={detail?.total_adjusted} />
                                         </div>
                                     </div>
@@ -318,35 +323,49 @@ export default function StockOutDetail() {
                             </div>
 
                             {/* Inspection box */}
-                            {form.formData?.status !== 'received' ? <div className="row">
-                                <div className="col-6">
-                                    {detail?.status === 'pending'
-                                        ? <PrimaryButton onClick={confirmSent} 
-                                            label="Shipped" />
-                                        : null}
-                                    {detail?.status === 'shipped'
-                                        ? <SuccessButton
+                            {form.formData?.status !== 'received' ? (
+                                <div className="row g-2 mt-2">
+                                    <div className="col-6">
+                                        {detail?.status === 'pending' && (
+                                            <PrimaryButton
+                                                onClick={confirmSent}
+                                                label={t("Shipped")}
+                                            />
+                                        )}
+                                        {detail?.status === 'shipped' && (
+                                            <SuccessButton
+                                                width={'100%'}
+                                                onClick={confirmCompleted}
+                                                label={t("Completed")}
+                                            />
+                                        )}
+                                        {detail?.status === 'completed' && (
+                                            <PrimaryButton
+                                                disabled={true}
+                                                label={t("Completed")}
+                                            />
+                                        )}
+                                    </div>
+                                    <div className="col-6">
+                                        <SecondaryButton
+                                            disabled={detail?.status !== 'pending'}
+                                            onClick={() => setShowForm(true)}
                                             width={'100%'}
-                                            onClick={confirmCompleted} label="Completed" />
-                                        : null}
-                                    {detail?.status === 'completed'
-                                        ? <PrimaryButton disabled={true} label="Completed" />
-                                        : null}
+                                            label={t("Shipping information")}
+                                        />
+                                    </div>
+                                    {form.hookRender.length >= 1 ? (
+                                        <div className="col-12">
+                                            <SecondaryButton
+                                                disabled={detail?.status !== 'pending'}
+                                                onClick={() => setExtraShowForm(true)}
+                                                width={'100%'}
+                                                label={t("Extra information")}
+                                            />
+                                        </div>
+                                    ) : null}
                                 </div>
-                                <div className="col-6">
-                                    <SecondaryButton
-                                        disabled={detail?.status !== 'pending'}
-                                        onClick={() => setShowForm(true)} width={'100%'} 
-                                        label="Shipping information" />
-                                </div>
-                                {form.hookRender.length >= 1 ? <div className="col-12">
-                                    <SecondaryButton
-                                        disabled={detail?.status !== 'pending'}
-                                        onClick={() => setExtraShowForm(true)} width={'100%'} 
-                                        label="Extra information" />
-                                </div> : null }
-                            </div> : null}
-
+                            ) : null}
                         </div>
                     </div></div>}
             </div>
@@ -365,8 +384,10 @@ export default function StockOutDetail() {
                 onClose={() => setExtraShowForm(false)}
                 title="Update Extras" onConfirm={() => update()}>
                 <div>
-                    {form.hookRender.map((item,index) => {
-                        return <RenderFormFieldByList item={item} form={form}/>
+                    {form.hookRender.map((item, index) => {
+                        return <div key={index}>
+                            <RenderFormFieldByList item={item} form={form} />
+                        </div>
                     })}
                 </div>
             </PopupLayout> : null}
