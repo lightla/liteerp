@@ -314,7 +314,7 @@ Modules communicate via **Domain Events**, enabling:
 - [ ] Extended test coverage  
 - [x] Realtime event streaming (WebSocket)  
 - [ ] Reports
-- [ ] Multiple Language
+- [x] Multiple Language
 - [x] Extensions
 
 ---
