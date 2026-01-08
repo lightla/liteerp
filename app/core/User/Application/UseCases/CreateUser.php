@@ -27,6 +27,7 @@ class CreateUser
             Event::dispatch("erp.user.create", [
                 ...$account->toArray(),
                 'user_id'   => $dto->created_by,
+                'role_user_id'   => $account->id,
                 'business_id' => $dto->business_id,
                 'role' => $dto->role
             ]);
