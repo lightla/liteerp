@@ -16,6 +16,30 @@
 
 ---
 
+## 🎯 Who Is LiteERP Built For?
+
+LiteERP is primarily designed for **retail and wholesale businesses** that need
+a **clean, operational ERP core** without enterprise-level complexity.
+
+Typical use cases include:
+- Retail stores and chains
+- Wholesale distributors
+- Trading companies
+- Import / export businesses
+- SMEs managing inventory, orders, pricing, and customers
+
+LiteERP focuses on **day-to-day operations**, such as:
+- Product & inventory management
+- Purchase & sales workflows
+- Pricing rules and discounts
+- Customer & supplier management
+- Internal operational reporting
+
+Industry-specific requirements — such as tax rules, accounting integration,
+custom pricing logic, or workflow automation — are intentionally handled
+through **extensions**, not hardcoded into the core.
+
+
 # 🏢 LiteERP – A Pure Core ERP, Built for Extension, Not Complexity
 
 LiteERP is an open-source ERP built with **ReactJS**, **Laravel**, and **MySQL 8**,  
