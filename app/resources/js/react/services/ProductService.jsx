@@ -6,6 +6,7 @@ import api from "../common/api";
   list: (data) => api.get("/business-access/products",{
     params: data
   }),
+  view: () => api.get("/business-access/view/products"),
   listByPurchaseId: (data) => api.get("/business-access/products",{
     params: data
   }),

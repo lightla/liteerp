@@ -1,12 +1,13 @@
 import React from 'react'
 import LoadImage from './LoadImage'
+import StatusBadge from './StatusBadge'
 export default function RenderFieldTableByList({
     item = null,
     data = null
 }) {
     return <div>
         {item?.type === 'badge' ?
-            <div className={'badge badge-' + item.value}>{data}</div>
+            <StatusBadge status={data}/>
             : item?.type === 'text' ?
                 <span>{data}</span>
                 : item?.type === 'image' ?

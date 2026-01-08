@@ -15,11 +15,13 @@ import UploadImage from '../UI/Input/UploadImage'
 import LoadImage from '../LoadImage'
 import { useI18n } from '../../../i18n/useI18n'
 import PERMISSIONS from '../../common/permission'
-
+import RenderFieldTableByList from '../RenderFieldTableByList'
+import RenderFormFieldByList from '../RenderFormFieldByList'
+import {RenderTableSearch} from '../RenderTableSearch'
+import PrimaryButton from '../UI/Buttons/PrimaryButton'
 export default function ListProducts() {
     const { t } = useI18n()
     const roles = useSelector((state) => state.businessRole.role);
-    const business = useSelector((state) => state.business.data)
     const { openPopup } = usePopup()
 
     const [showForm, setShowForm] = useState(false)
@@ -29,26 +31,12 @@ export default function ListProducts() {
     const search = useForm()
     const table = useTable()
 
-    const columns = [
-        { label: t('ID'), key: 'id' },
-        {
-            label: t('Thumbnail'),
-            key: 'image',
-            render: (url) => <LoadImage width={35} height={35} url={url} />,
-        },
-        { label: t('Name'), key: 'name' },
-        { label: t('SKU'), key: 'sku' },
-        { label: t('Unit'), key: 'unit' },
-        { label: t('Category'), key: 'category' },
-    ]
-
     const getProducts = useCallback(
         (page = 0) => {
             table.setLoading(true)
             ProductService.list({
                 page,
-                keywords: search.formData?.keywords ?? '',
-                order_by: search.formData?.order_by ?? '',
+                ...search.formData
             })
                 .then((resp) => {
                     table.setData(resp.message.data)
@@ -157,23 +145,54 @@ export default function ListProducts() {
             onConfirm: () => destroy(row),
         })
     }
-
+    const view = useCallback(() => {
+            table.setLoading(true)
+            ProductService.view()
+                .then((resp) => {
+                    form.setHookRender(resp.message.form)
+                    search.setHookRender(resp.message.form)
+                    table.addColums(resp.message.index,(item,data) => {
+                        return <RenderFieldTableByList item={item} data={data}/>
+                    })
+                })
+                .catch((error) => {
+                    if (error.response?.data?.message) {
+                        openPopup({
+                            type: 'error',
+                            message: error.response.data.message,
+                        })
+                    }
+                })
+        },[])
     useEffect(() => {
+        table.setColums([
+            { label: t('ID'), key: 'id' },
+            {
+                label: t('Thumbnail'),
+                key: 'image',
+                render: (url) => <LoadImage width={35} height={35} url={url} />,
+            },
+            { label: t('Name'), key: 'name' },
+            { label: t('SKU'), key: 'sku' },
+            { label: t('Unit'), key: 'unit' },
+            { label: t('Category'), key: 'category' },
+        ])
         getProducts()
-    }, [search.formData?.order_by])
+        view();
+    }, [])
 
     return (
         <div className="mt-3">
             <CommonDataTable
                 add={
                     roles?.includes(PERMISSIONS.PRODUCT.CREATE) ? () => {
-                              setShowForm(true)
-                              form.setIsEdit(false)
-                          } : null
+                        setShowForm(true)
+                        form.setIsEdit(false)
+                    } : null
                 }
                 filter={
-                    <div className="d-flex">
-                        <div className="col-3 mx-2">
+                    <div className="row">
+                        <div className="col-2">
                             <label>{t('Order by')}</label>
                             <Select
                                 name="order_by"
@@ -185,8 +204,12 @@ export default function ListProducts() {
                                 ]}
                             />
                         </div>
-
-                        <div className="col-4">
+                        {search.hookRender.map((item,index) => {
+                            return <div className="col-2" key={index}>
+                                <RenderTableSearch item={item} search={search}/>
+                            </div>
+                        })}
+                        <div className="col-2">
                             <label>{t('Search')}</label>
                             <SearchInput
                                 submit={getProducts}
@@ -195,15 +218,18 @@ export default function ListProducts() {
                                 value={search.formData?.keywords}
                             />
                         </div>
+                        <div className="col-2">
+                            <PrimaryButton label="Search" onClick={() => getProducts()}/>
+                        </div>
                     </div>
                 }
                 loading={table.loading}
                 movePage={getProducts}
-                columns={columns}
+                columns={table.colums}
                 data={table.data}
                 links={table.links}
                 onEdit={roles?.includes(PERMISSIONS.PRODUCT.UPDATE) ? handEdit : null}
-                onDelete={ roles?.includes(PERMISSIONS.PRODUCT.DELETE) ? handleDelete : null}
+                onDelete={roles?.includes(PERMISSIONS.PRODUCT.DELETE) ? handleDelete : null}
             />
 
             {showForm && (
@@ -287,6 +313,11 @@ export default function ListProducts() {
                             placeholder={t('Description')}
                         />
                     </div>
+                    {form.hookRender.map((item,index) => {
+                        return <div className="form-group mt-3" key={index}>
+                            <RenderFormFieldByList item={item} form={form}/>
+                        </div>
+                    })}
                 </PopupLayout>
             )}
         </div>
