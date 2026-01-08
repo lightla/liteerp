@@ -41,22 +41,6 @@ class EloquentProductRepository implements ProductRepositoryInterface
         $entity->id = $row->id;
         return $entity;
     }
-    public function index(array $data): array
-    {
-        $rows = ProductModel::select("products.*",
-            "category_product.name as category")
-            ->join("category_product","category_product.id","=","products.category_id")
-            ->where(function ($query) use ($data) {
-                return $query->where('products.business_id', $data['business_id'])
-                    ->where('products.name', 'like', '%' . ($data['keywords'] ?? '') . '%');
-            })
-            ->orWhere(function($query)  use ($data) {
-                return $query->where('products.business_id', $data['business_id'])
-                    ->where('products.sku', 'like', '%' . ($data['keywords'] ?? '') . '%');
-            })
-            ->orderBy("products.id",$data['order_by']);
-        return $rows->paginate(15)->toArray();
-    }
     public function update(Product $entity): Product
     {
         ProductModel::where('id', $entity->id)

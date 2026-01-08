@@ -2,6 +2,11 @@
 
 namespace Core\Product\Application\UseCases;
 
+use App\Supports\Hooks\HookAction;
+use App\Supports\Hooks\HookContext;
+use App\Supports\Hooks\HookDispatcher;
+use App\Supports\Hooks\HookPhase;
+use App\Supports\Hooks\HookTiming;
 use Core\Product\Application\DTOs\CreateProductRequest;
 use Core\Product\Domain\Services\ProductService;
 use Illuminate\Support\Facades\DB;
@@ -9,18 +14,41 @@ use Illuminate\Support\Facades\Event;
 
 class UpdateProduct
 {
-    public function __construct(private ProductService $service) {}
+    public function __construct(private ProductService $service,
+    private HookDispatcher $hooks) {}
 
-    public function handle(CreateProductRequest $dto)
+    public function handle(array $data)
     {
         DB::beginTransaction();
+        $data = $this->hooks->dispatch(
+            new HookContext(
+                action: HookAction::UPDATE,
+                phase: HookPhase::RESPONSE,
+                timing: HookTiming::BEFORE,
+                payload: $data,
+                module: 'Product'
+            )
+        );
+        $dto = CreateProductRequest::fromArray($data);
         $update = $this->service->update($dto->toArray());
+        $data = $this->hooks->dispatch(
+            new HookContext(
+                action: HookAction::UPDATE,
+                phase: HookPhase::RESPONSE,
+                timing: HookTiming::AFTER,
+                payload: [
+                    ...$data,
+                    ...$update->toArray()
+                ],
+                module: 'Product'
+            )
+        );
         Event::dispatch("erp.product.update", [
-            ...$update->toArray(),
+            ...$data,
             'user_id' => $dto->created_by,
             'business_id' => $dto->business_id
         ]);
         DB::commit();
-        return $update;
+        return $data;
     }
 }

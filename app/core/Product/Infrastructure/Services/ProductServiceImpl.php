@@ -21,10 +21,6 @@ class ProductServiceImpl implements ProductService
         }
         return $this->repo->create($entity);
     }
-    public function index(array $data): array
-    {
-        return $this->repo->index($data);
-    }
     public function show(array $data): array | BadException
     {
         return $this->repo->findOneWithFullData($data) ?? throw new BadException(__("Not found product"));

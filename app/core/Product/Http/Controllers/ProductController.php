@@ -3,11 +3,8 @@
 namespace Core\Product\Http\Controllers;
 
 use Core\Product\Application\UseCases\CreateProduct;
-use Core\Product\Application\DTOs\CreateProductRequest;
-use Core\Product\Application\DTOs\DeleteProductRequest as DTOsDeleteProductRequest;
-use Core\Product\Application\DTOs\IndexProductRequest as DTOsIndexProductRequest;
+use Core\Product\Application\Queries\IndexQuery;
 use Core\Product\Application\UseCases\DeleteProduct;
-use Core\Product\Application\UseCases\IndexProduct;
 use Core\Product\Application\UseCases\ShowProduct;
 use Core\Product\Application\UseCases\UpdateProduct;
 use Core\Product\Http\Requests\CreateProductRequest as FormRequest;
@@ -20,13 +17,11 @@ class ProductController
 {
     public function store(FormRequest $request, CreateProduct $useCase)
     {
-        $dto = CreateProductRequest::fromArray($request->all());
-        $entity = $useCase->handle($dto);
+        $entity = $useCase->handle($request->all());
         return response()->json(['message' => $entity]);
     }
-    public function index(IndexProductRequest $request, IndexProduct $useCase) {
-        $dto = DTOsIndexProductRequest::fromArray($request->all());
-        $entity = $useCase->handle($dto);
+    public function index(IndexProductRequest $request, IndexQuery $useCase) {
+        $entity = $useCase->handle($request->all());
         return response()->json(['message' => $entity]);
     }
     public function show(ShowProductRequest $request, string $id, ShowProduct $useCase){
@@ -42,8 +37,7 @@ class ProductController
         $request->merge([
             'id' => $id
         ]);
-        $dto = CreateProductRequest::fromArray($request->all());
-        $entity = $useCase->handle($dto);
+        $entity = $useCase->handle($request->all());
         return response()->json(['message' => $entity]);
     }
     public function destroy(string $id, 
@@ -52,8 +46,7 @@ class ProductController
         $request->merge([
             'id' => $id
         ]);
-        $dto = DTOsDeleteProductRequest::fromArray($request->all());
-        $entity = $useCase->handle($dto);
+        $entity = $useCase->handle($request->all());
         return response()->json(['message' => $entity]);
     }
 }
