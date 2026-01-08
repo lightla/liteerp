@@ -7,7 +7,7 @@ class CheckRoleBusinessRoleRequest
     public function __construct(
         public int $user_id,
         public int $business_id,
-        public string $action 
+        public string $action
     ) {}
 
     public static function fromArray(array $data): self

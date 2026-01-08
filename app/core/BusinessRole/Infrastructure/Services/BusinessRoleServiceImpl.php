@@ -6,7 +6,6 @@ use App\Exceptions\BadException;
 use Core\BusinessRole\Domain\Services\BusinessRoleService;
 use Core\BusinessRole\Domain\Repositories\BusinessRoleRepositoryInterface;
 use Core\BusinessRole\Domain\Entities\BusinessRole;
-use Illuminate\Support\Facades\Log;
 
 class BusinessRoleServiceImpl implements BusinessRoleService
 {
@@ -33,5 +32,13 @@ class BusinessRoleServiceImpl implements BusinessRoleService
         }
         $entity->role = $data['role'];
         return $this->repo->update($entity);
+    }
+    public function delete(array $data): BusinessRole|BadException
+    {
+        $entity = $this->repo->findOne($data);
+        if(!$entity) {
+            throw new BadException(__("Not found user role"));
+        }
+        return $this->repo->delete($entity);
     }
 }

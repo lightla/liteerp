@@ -3,8 +3,10 @@ namespace Core\BusinessRole\Infrastructure\Listeners;
 
 use Core\BusinessRole\Application\DTOs\CheckRoleBusinessRoleRequest;
 use Core\BusinessRole\Application\DTOs\CreateBusinessRoleRequest;
+use Core\BusinessRole\Application\DTOs\DeleteBusinessRoleRequest;
 use Core\BusinessRole\Application\UseCases\CheckPermissionBusinessRole;
 use Core\BusinessRole\Application\UseCases\CreateBusinessRole;
+use Core\BusinessRole\Application\UseCases\DeleteBusinessRole;
 use Core\BusinessRole\Application\UseCases\UpdateBusinessRole;
 use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Log;
@@ -12,7 +14,8 @@ use Illuminate\Support\Facades\Log;
 class BusinessRoleListener {
     public function __construct(private CheckPermissionBusinessRole $checkPermission,
     private CreateBusinessRole $createBusinessRole,
-    private UpdateBusinessRole $updateBusinessRole)
+    private UpdateBusinessRole $updateBusinessRole,
+    private DeleteBusinessRole $deleteBusinessRole)
     {
         
     }
@@ -48,6 +51,9 @@ class BusinessRoleListener {
             }
             if($eventName === 'erp.user.update') {
                 $this->updateBusinessRole->handle(CreateBusinessRoleRequest::fromArray($data));
+            }
+            if($eventName === 'erp.user.delete') {
+                $this->deleteBusinessRole->handle(DeleteBusinessRoleRequest::fromArray($data));
             }
         });
     }

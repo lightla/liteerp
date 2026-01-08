@@ -4,9 +4,8 @@ namespace Core\BusinessRole\Infrastructure\Providers;
 
 use Core\BusinessRole\Application\UseCases\CheckPermissionBusinessRole;
 use Core\BusinessRole\Application\UseCases\CreateBusinessRole;
+use Core\BusinessRole\Application\UseCases\DeleteBusinessRole;
 use Core\BusinessRole\Application\UseCases\UpdateBusinessRole;
-use Core\BusinessRole\Domain\Services\BusinessTokenService;
-use Core\BusinessRole\Infrastructure\Services\BusinessTokenServiceImpl;
 use Illuminate\Support\ServiceProvider;
 use Core\BusinessRole\Domain\Repositories\BusinessRoleRepositoryInterface;
 use Core\BusinessRole\Infrastructure\Repositories\EloquentBusinessRoleRepository;
@@ -25,13 +24,15 @@ class BusinessRoleServiceProvider extends ServiceProvider
 
     public function boot(CheckPermissionBusinessRole $checkPermission, 
     CreateBusinessRole $createBusinessRole,
-    UpdateBusinessRole $updateBusinessRole)
+    UpdateBusinessRole $updateBusinessRole,
+    DeleteBusinessRole $deleteBusinessRole)
     {
         $this->loadModuleRoutes();
         $this->loadModuleTranslations();
         $event = new BusinessRoleListener($checkPermission,
         $createBusinessRole,
-        $updateBusinessRole);
+        $updateBusinessRole,
+        $deleteBusinessRole);
         $event->handle();
     }
 

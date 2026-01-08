@@ -31,7 +31,7 @@ class EloquentBusinessRoleRepository implements BusinessRoleRepositoryInterface
         /**
          * If it has not cache then implement database
          */
-        $data = BusinessRoleModel::where('user_id',$data['user_id'])
+        $data = BusinessRoleModel::where('user_id',$data['role_user_id'])
             ->where('business_id',$data['business_id']);
         if($data->count() == false ) {
             return null;
@@ -44,5 +44,11 @@ class EloquentBusinessRoleRepository implements BusinessRoleRepositoryInterface
         ->where('business_id',$data['business_id'])
         ->where('id','!=',$data['created_by'])
         ->limit(config('businessrole.limit'))->get()?->toArray();
+    }
+    public function delete(BusinessRole $entity): BusinessRole
+    {
+        BusinessRoleModel::where('id',$entity->id)
+        ->delete();
+        return $entity;
     }
 }

@@ -10,4 +10,5 @@ interface BusinessRoleRepositoryInterface
     public function findOne(array $data): ?BusinessRole;
     public function listUserByRole(array $data): array;
     public function update(BusinessRole $entity) : BusinessRole;
+    public function delete(BusinessRole $entity) : BusinessRole;
 }

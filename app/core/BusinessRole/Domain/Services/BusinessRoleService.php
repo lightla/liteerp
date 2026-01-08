@@ -11,4 +11,5 @@ interface BusinessRoleService
     public function update(array $data): BusinessRole | BadException;
     public function findOne(array $data): BusinessRole | BadException;
     public function listUserByRole(array $data): array;
+    public function delete(array $data): BusinessRole | BadException;
 }
