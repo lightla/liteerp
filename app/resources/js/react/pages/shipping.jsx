@@ -16,6 +16,8 @@ import RenderFormTableByList from '../components/RenderFieldTableByList'
 import RenderFormFieldByList from '../components/RenderFormFieldByList'
 import { RenderTableSearch } from '../components/RenderTableSearch'
 import { useI18n } from '../../i18n/useI18n'
+import { useSelector } from 'react-redux'
+import PERMISSIONS from '../common/permission'
 
 export default function Shipping() {
     const { t } = useI18n()
@@ -24,7 +26,7 @@ export default function Shipping() {
     const form = useForm()
     const search = useForm()
     const [showAdd, setShowAdd] = useState(false)
-
+    const roles = useSelector((state) => state.businessRole.role);
     const handEdit = (row) => {
         form.setFormData(row)
         form.setIsEdit(true)
@@ -208,17 +210,17 @@ export default function Shipping() {
 
                 <div className="container mt-4">
                     <CommonDataTable
-                        add={() => {
+                        add={ roles?.includes(PERMISSIONS.SHIPPING.CREATE) ? () => {
                             setShowAdd(true)
                             form.setIsEdit(false)
-                        }}
+                        } : null}
                         loading={table.loading}
                         movePage={getShippings}
                         data={table.data}
                         links={table.links}
                         columns={table.colums}
-                        onEdit={handEdit}
-                        onDelete={handleDelete}
+                        onEdit={ roles?.includes(PERMISSIONS.SHIPPING.UPDATE) ? handEdit : null}
+                        onDelete={ roles?.includes(PERMISSIONS.SHIPPING.DELETE) ? handleDelete : null}
                         filter={
                             <div className="row">
                                 {search.hookRender.map(

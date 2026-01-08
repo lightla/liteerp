@@ -6,6 +6,9 @@ import api from "../common/api";
   show: (id) => api.get("/business-access/users/" + id),
   list: (data) => api.get("/business-access/users",{
     params: data
-  })
+  }),
+  delete: (data) => api.delete("/business-access/users/" + data.id,{
+    params: data
+  }),
 };
 export default UserService;

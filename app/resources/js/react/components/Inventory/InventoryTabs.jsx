@@ -10,7 +10,6 @@ export default function InventoryTabs() {
     const { t } = useI18n()
     const table = useTable()
     const search = useForm()
-
     const getInventory = useCallback(
         (page = 0) => {
             table.setLoading(true)

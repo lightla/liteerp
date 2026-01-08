@@ -13,9 +13,12 @@ import RenderFieldTableByList from '../../RenderFieldTableByList'
 import { RenderTableSearch } from '../../RenderTableSearch'
 import PrimaryButton from '../../UI/Buttons/PrimaryButton'
 import { useI18n } from '../../../../i18n/useI18n'
+import { useSelector } from 'react-redux'
+import PERMISSIONS from '../../../common/permission'
 
 export default function StockOuts() {
     const { t } = useI18n()
+    const roles = useSelector((state) => state.businessRole.role);
     const navigate = useNavigate()
     const search = useForm()
     const table = useTable()
@@ -125,8 +128,10 @@ export default function StockOuts() {
                 data={table.data}
                 links={table.links}
                 iconEdit={<i className="bi bi-eye"></i>}
-                onEdit={(row) =>
+                onEdit={roles?.includes(PERMISSIONS.STOCK_OUT.SHOW) ? (row) => {
                     navigate(`/stocks?stockout=${row.id}`)
+                } : null
+
                 }
                 filter={
                     <div className="row">

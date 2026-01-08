@@ -18,9 +18,12 @@ import PrimaryButton from '../components/UI/Buttons/PrimaryButton'
 import RenderFormTableByList from '../components/RenderFieldTableByList'
 import { RenderTableSearch } from '../components/RenderTableSearch'
 import { useI18n } from '../../i18n/useI18n'
+import { useSelector } from 'react-redux'
+import PERMISSIONS from '../common/permission'
 
 export default function Suppliers() {
     const { t } = useI18n()
+    const roles = useSelector((state) => state.businessRole.role);
     const { openPopup } = usePopup()
 
     const [addShow, setAddShow] = useState(false)
@@ -274,12 +277,12 @@ export default function Suppliers() {
                             </div>
                         </div>
                     }
-                    add={() => {
+                    add={ roles?.includes(PERMISSIONS.SUPPLIER.CREATE) ? () => {
                         setAddShow(true)
                         form.setIsEdit(false)
-                    }}
-                    onEdit={handleEdit}
-                    onDelete={handleDelete}
+                    } : null}
+                    onEdit={ roles?.includes(PERMISSIONS.SUPPLIER.UPDATE) ? handleEdit : null}
+                    onDelete={ roles?.includes(PERMISSIONS.SUPPLIER.DELETE) ? handleDelete : null}
                 />
 
                 {addShow && (

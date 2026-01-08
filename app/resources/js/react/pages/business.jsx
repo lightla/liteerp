@@ -11,8 +11,7 @@ import LoadingBox from '../components/LoadingBox'
 import { useForm } from '../libraries/handleInput'
 import { useDispatch } from "react-redux";
 import { setBusinessInfo } from "../redux/businessInfoSlice";
-import { clearBusinessNav } from "../redux/businessRoleSlice";
-import NotificationService from "../services/NotificationService";
+import { clearBusinessNav, clearBusinessRole } from "../redux/businessRoleSlice";
 import { cleanNotificationCount } from "../redux/NotificationSlice";
 export default function Business() {
     const [loadViewDetail, setLoadingViewDetail] = useState(false)
@@ -75,7 +74,6 @@ export default function Business() {
             }
             if (error.response.data?.message) {
                 openPopup({
-                    title: "OK",
                     message: error.response.data?.message,
                     type: 'error'
                 })
@@ -86,6 +84,7 @@ export default function Business() {
     useEffect(() => {
         getList();
         dispatch(clearBusinessNav());
+        dispatch(clearBusinessRole());
         dispatch(cleanNotificationCount())
     }, []);
     return (

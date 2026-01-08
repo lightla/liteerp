@@ -8,9 +8,12 @@ import { PopupLayout } from '../../layouts/PopupLayout'
 import { InputForm } from '../UI/Input/InputForm'
 import CustomerGroupService from '../../services/CustomerGroupService'
 import { useI18n } from '../../../i18n/useI18n'
+import { useSelector } from 'react-redux'
+import PERMISSIONS from '../../common/permission'
 
 export default function ListGroup() {
     const { t } = useI18n()
+    const roles = useSelector((state) => state.businessRole.role);
     const table = useTable()
     const search = useForm()
     const form = useForm()
@@ -137,14 +140,14 @@ export default function ListGroup() {
     return (
         <div>
             <CommonDataTable
-                add={() => setShowAdd(true)}
+                add={ roles?.includes(PERMISSIONS.CUSTOMER_GROUP.CREATE) ? () => setShowAdd(true) : null}
                 loading={table.loading}
                 movePage={getGroup}
                 columns={columns}
                 data={table.data}
                 links={table.links}
-                onEdit={handleEdit}
-                onDelete={handleDelete}
+                onEdit={roles?.includes(PERMISSIONS.CUSTOMER_GROUP.UPDATE) ?handleEdit : null}
+                onDelete={roles?.includes(PERMISSIONS.CUSTOMER_GROUP.DELETE) ? handleDelete : null}
                 filter={
                     <div className="d-flex">
                         <div className="mx-2 col-4">

@@ -13,9 +13,12 @@ import RenderFormTableByList from '../RenderFieldTableByList'
 import ButtonPrimary from '../../components/UI/Buttons/PrimaryButton'
 import { RenderTableSearch } from '../RenderTableSearch'
 import { useI18n } from '../../../i18n/useI18n'
+import { useSelector } from 'react-redux'
+import PERMISSIONS from '../../common/permission'
 
 export default function ListCustomer() {
     const { t } = useI18n()
+    const roles = useSelector((state) => state.businessRole.role);
     const table = useTable()
     const search = useForm()
     const form = useForm()
@@ -180,14 +183,16 @@ export default function ListCustomer() {
     return (
         <div>
             <CommonDataTable
-                add={() => setShowAdd(true)}
+                add={ roles?.includes(PERMISSIONS.CUSTOMER.CREATE) 
+                    ? () => setShowAdd(true)
+                    : null}
                 loading={table.loading}
                 movePage={getCustomers}
                 columns={table.colums}
                 data={table.data}
                 links={table.links}
-                onEdit={handleEdit}
-                onDelete={handleDelete}
+                onEdit={roles?.includes(PERMISSIONS.CUSTOMER.UPDATE) ? handleEdit : null}
+                onDelete={ roles?.includes(PERMISSIONS.CUSTOMER.DELETE) ? handleDelete : null}
                 filter={
                     <div className="row">
                         <div className="col-2">

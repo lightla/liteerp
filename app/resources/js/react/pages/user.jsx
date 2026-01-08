@@ -10,6 +10,9 @@ import { InputForm } from '../components/UI/Input/InputForm'
 import { usePopup } from '../components/popups/PopupContext'
 import { Select } from '../components/UI/Input/Select'
 import { useI18n } from '../../i18n/useI18n'
+import { useSelector } from 'react-redux'
+import PERMISSIONS from '../common/permission'
+import ContentOnTable from '../components/ContentOnTable'
 
 export default function User() {
     const { t } = useI18n()
@@ -17,7 +20,7 @@ export default function User() {
     const table = useTable()
     const form = useForm()
     const [showForm, setShowForm] = useState(false)
-
+    const roles = useSelector((state) => state.businessRole.role);
     const getUsers = useCallback(() => {
         table.setLoading(true)
         UserService.list({
@@ -29,13 +32,40 @@ export default function User() {
                 table.setData(resp.message.data)
                 table.setLinks(resp.message.links)
             })
-            .catch(() => {})
+            .catch(() => { })
     }, [])
 
     const handleEdit = (row) => {
         form.setIsEdit(true)
         form.setFormData(row)
         setShowForm(true)
+    }
+    const destroy = useCallback((row) => {
+        UserService.delete(row)
+            .then((resp) => {
+                openPopup({
+                    type: 'success',
+                    message: t('You has been deleted'),
+                })
+                getUsers();
+            })
+            .catch((error) => {
+                if (error.response?.data?.message) {
+                    openPopup({
+                        type: 'error',
+                        message: error.response?.data?.message,
+                    })
+                }
+            })
+    }, [])
+    const handleDelete = (row) => {
+        openPopup({
+            type: 'warning',
+            message: t('Are you sure to delete?'),
+            onConfirm: () => {
+                destroy(row)
+            }
+        })
     }
 
     const submit = useCallback(() => {
@@ -95,6 +125,54 @@ export default function User() {
     }, [form.formData])
 
     useEffect(() => {
+        table.setColums([
+            { key: 'id', label: t('ID') },
+            {
+                key: 'avatar',
+                label: t('Avatar'),
+                render: (avatar) => (
+                    <img
+                        width={50}
+                        height={50}
+                        src={
+                            avatar ??
+                            '/assets/icons/avatar-default.png'
+                        }
+                        alt=""
+                    />
+                ),
+            },
+            {
+                key: 'bio',
+                label: t('Bio'),
+                render: (bio) => (
+                    <ContentOnTable value={bio}/>
+                ),
+            },
+            { key: 'phone', label: t('Phone') },
+            { key: 'email', label: t('Email') },
+            { key: 'name', label: t('Name') },
+            {
+                key: 'role',
+                label: t('Role'),
+                render: (role) => (
+                    <span
+                        className={
+                            'badge text-uppercase ' +
+                            (role === 'admin'
+                                ? 'bg-success'
+                                : 'bg-warning text-dark')
+                        }
+                    >
+                        {t(role)}
+                    </span>
+                ),
+            },
+            {
+                key: 'last_seen',
+                label: t('Last seen'),
+            },
+        ])
         getUsers()
     }, [])
 
@@ -111,65 +189,12 @@ export default function User() {
                 <div className="container mt-3">
                     <CommonDataTable
                         loading={table.loading}
-                        add={() => setShowForm(true)}
-                        columns={[
-                            { key: 'id', label: t('ID') },
-                            {
-                                key: 'avatar',
-                                label: t('Avatar'),
-                                render: (avatar) => (
-                                    <img
-                                        width={50}
-                                        height={50}
-                                        src={
-                                            avatar ??
-                                            '/assets/icons/avatar-default.png'
-                                        }
-                                        alt=""
-                                    />
-                                ),
-                            },
-                            {
-                                key: 'bio',
-                                label: t('Bio'),
-                                render: (bio) => (
-                                    <span>
-                                        {bio?.toString().length >= 20
-                                            ? bio
-                                                  ?.toString()
-                                                  .substring(0, 20) + '...'
-                                            : bio}
-                                    </span>
-                                ),
-                            },
-                            { key: 'phone', label: t('Phone') },
-                            { key: 'email', label: t('Email') },
-                            { key: 'name', label: t('Name') },
-                            {
-                                key: 'role',
-                                label: t('Role'),
-                                render: (role) => (
-                                    <span
-                                        className={
-                                            'badge text-uppercase ' +
-                                            (role === 'admin'
-                                                ? 'bg-success'
-                                                : 'bg-warning text-dark')
-                                        }
-                                    >
-                                        {t(role)}
-                                    </span>
-                                ),
-                            },
-                            {
-                                key: 'last_seen',
-                                label: t('Last seen'),
-                            },
-                        ]}
+                        add={roles?.includes(PERMISSIONS.USER.CREATE) ? () => setShowForm(true) : null}
+                        columns={table.colums}
                         data={table.data}
                         links={table.links}
-                        onEdit={handleEdit}
-                        onDelete={() => {}}
+                        onEdit={roles?.includes(PERMISSIONS.USER.UPDATE) ? handleEdit : null}
+                        onDelete={roles?.includes(PERMISSIONS.USER.DELETE) ? handleDelete : null}
                     />
                 </div>
 

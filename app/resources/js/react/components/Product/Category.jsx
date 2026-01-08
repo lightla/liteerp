@@ -15,9 +15,11 @@ import RenderFieldTableByList from '../RenderFieldTableByList'
 import RenderFormFieldByList from '../RenderFormFieldByList'
 import { RenderTableSearch } from '../RenderTableSearch'
 import { useI18n } from '../../../i18n/useI18n'
+import PERMISSIONS from '../../common/permission'
 
 export default function Category() {
     const { t } = useI18n()
+    const roles = useSelector((state) => state.businessRole.role);
     const business = useSelector((state) => state.business.data)
 
     const [attributes, setAttributes] = useState([])
@@ -261,19 +263,17 @@ export default function Category() {
                     </div>
                 }
                 add={
-                    !hasPermission
-                        ? null
-                        : () => {
+                    roles?.includes(PERMISSIONS.CATEGORY_PRODUCT.CREATE) ? () => {
                               setShowAdd(true)
                               form.setIsEdit(false)
-                          }
+                          } : null
                 }
                 movePage={getCategorires}
                 columns={tableCategory.colums}
                 data={tableCategory.data}
                 links={tableCategory.links}
-                onEdit={!hasPermission ? null : handleEdit}
-                onDelete={!hasPermission ? null : handleDelete}
+                onEdit={roles?.includes(PERMISSIONS.CATEGORY_PRODUCT.UPDATE) ? handleEdit : null}
+                onDelete={roles?.includes(PERMISSIONS.CATEGORY_PRODUCT.DELETE) ? handleDelete : null}
             />
 
             {showAdd && (

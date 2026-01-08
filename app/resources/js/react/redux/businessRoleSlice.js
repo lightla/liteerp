@@ -40,5 +40,5 @@ const businessRoleSlice = createSlice({
     },
 });
 
-export const { setBusinessNav, clearBusinessNav } = businessRoleSlice.actions;
+export const { setBusinessNav, clearBusinessNav, setBusinessRole, clearBusinessRole } = businessRoleSlice.actions;
 export default businessRoleSlice.reducer;

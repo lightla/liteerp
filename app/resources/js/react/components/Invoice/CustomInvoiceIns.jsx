@@ -20,9 +20,12 @@ import RenderFormFieldByList from '../RenderFormFieldByList';
 import { RenderTableSearch } from '../RenderTableSearch';
 import PrimaryButton from '../UI/Buttons/PrimaryButton';
 import { useI18n } from '../../../i18n/useI18n';
+import { useSelector } from 'react-redux';
+import PERMISSIONS from '../../common/permission';
 
 export default function CustomInvoiceIns() {
     const { t } = useI18n();
+    const roles = useSelector((state) => state.businessRole.role);
     const [suppliers, setSuppliers] = useState([]);
     const search = useForm();
     const form = useForm();
@@ -229,9 +232,9 @@ export default function CustomInvoiceIns() {
 
     return <div>
         <CommonDataTable
-            add={() => {
+            add={ roles?.includes(PERMISSIONS.CUSTOM_INVOICE_IN.CREATE) ? () => {
                 setShowForm(true)
-            }}
+            } : null}
             filter={<div className="row">
                 <div className="col-2">
                     <label>{t("Payment status")}</label>
@@ -282,9 +285,9 @@ export default function CustomInvoiceIns() {
             columns={table.colums}
             data={table.data}
             links={table.links}
-            onEdit={onEdit}
+            onEdit={ roles?.includes(PERMISSIONS.CUSTOM_INVOICE_IN.UPDATE) ? onEdit : null}
             movePage={getInvoices}
-            onDelete={onDelete}
+            onDelete={ roles?.includes(PERMISSIONS.CUSTOM_INVOICE_IN.DELETE) ? onDelete : null}
         />
         {showForm ? <PopupLayout
             loading={form.loading}

@@ -4,7 +4,7 @@ import Topbar from "../components/Topbar";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from 'react-router-dom';
 import BusinessRoleService from '../services/BusinessRoleService'
-import { setBusinessNav } from '../redux/businessRoleSlice';
+import { setBusinessNav,setBusinessRole } from '../redux/businessRoleSlice';
 export default function DashboardLayout({
     children
 }) {
@@ -17,9 +17,10 @@ export default function DashboardLayout({
         BusinessRoleService.view()
             .then((resp) => {
                 dispatch(setBusinessNav(resp.message.nav))
+                dispatch(setBusinessRole(resp.message.roles))
             })
             .catch((error) => {
-
+              
             })
     }, [dispatch])
     useEffect(() => {
@@ -42,29 +43,29 @@ export default function DashboardLayout({
                 </div>
             </div>
         </div>
-        <footer class="border-top bg-white">
-  <div class="container-fluid py-2">
-    <div class="row align-items-center text-muted small">
-      <div class="col-md-4 d-flex align-items-center gap-2 justify-content-center justify-content-md-start">
-        <i class="bi bi-box"></i>
+        <footer className="border-top bg-white">
+  <div className="container-fluid py-2">
+    <div className="row align-items-center text-muted small">
+      <div className="col-md-4 d-flex align-items-center gap-2 justify-content-center justify-content-md-start">
+        <i className="bi bi-box"></i>
         <span>LiteERP © 2026</span>
       </div>
-      <div class="col-md-8 d-flex align-items-center gap-3 justify-content-center justify-content-md-end">
+      <div className="col-md-8 d-flex align-items-center gap-3 justify-content-center justify-content-md-end">
         <a href="https://github.com/liteerp-oss/liteerp" target="_blank"
-           class="text-muted text-decoration-none d-flex align-items-center gap-1 hover-opacity">
-          <i class="bi bi-github"></i>
+           className="text-muted text-decoration-none d-flex align-items-center gap-1 hover-opacity">
+          <i className="bi bi-github"></i>
           Github
         </a>
 
         <a href="https://github.com/liteerp-oss/docs"
-           class="text-muted text-decoration-none d-flex align-items-center gap-1">
-          <i class="bi bi-book"></i>
+           className="text-muted text-decoration-none d-flex align-items-center gap-1">
+          <i className="bi bi-book"></i>
           Docs
         </a>
 
         <a href="https://github.com/liteerp-oss/liteerp/issues"
-           class="text-muted text-decoration-none d-flex align-items-center gap-1">
-          <i class="bi bi-life-preserver"></i>
+           className="text-muted text-decoration-none d-flex align-items-center gap-1">
+          <i className="bi bi-life-preserver"></i>
           Support
         </a>
       </div>

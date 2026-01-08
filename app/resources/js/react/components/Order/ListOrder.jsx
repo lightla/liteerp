@@ -15,6 +15,8 @@ import RenderFieldTableByList from '../RenderFieldTableByList';
 import { RenderTableSearch } from '../RenderTableSearch';
 import PrimaryButton from '../UI/Buttons/PrimaryButton';
 import { useI18n } from '../../../i18n/useI18n';
+import PERMISSIONS from '../../common/permission';
+import { useSelector } from 'react-redux';
 
 export default function ListOrder() {
     const { t } = useI18n();
@@ -22,7 +24,7 @@ export default function ListOrder() {
     const { openPopup } = usePopup();
     const table = useTable();
     const search = useForm();
-
+    const roles = useSelector((state) => state.businessRole.role);
     const handleEdit = (row) => {
         navigate('/orders?form=edit&id=' + row.id);
     };
@@ -212,11 +214,13 @@ export default function ListOrder() {
                             </div>
                         </div>
                     }
-                    add={() => navigate('/orders?form=add')}
+                    add={ roles?.includes(PERMISSIONS.ORDER.CREATE) 
+                        ? () => navigate('/orders?form=add')
+                        : null}
                     columns={table.colums}
                     data={table?.data}
                     links={table?.links}
-                    onEdit={handleEdit}
+                    onEdit={ roles?.includes(PERMISSIONS.ORDER.SHOW) ? handleEdit : null}
                     loading={table.loading}
                     movePage={getOrders}
                 />

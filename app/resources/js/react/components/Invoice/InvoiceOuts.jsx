@@ -14,6 +14,8 @@ import RenderFieldTableByList from '../RenderFieldTableByList'
 import { RenderTableSearch } from '../RenderTableSearch';
 import PrimaryButton from '../UI/Buttons/PrimaryButton';
 import { useI18n } from '../../../i18n/useI18n';
+import { useSelector } from 'react-redux';
+import PERMISSIONS from '../../common/permission';
 
 export default function InvoiceOuts() {
     const { t } = useI18n();
@@ -21,7 +23,7 @@ export default function InvoiceOuts() {
     const search = useForm();
     const table = useTable();
     const { openPopup } = usePopup();
-
+    const roles = useSelector((state) => state.businessRole.role);
     const getInvoices = useCallback((page = 0) => {
         table.setLoading(true);
         InvoiceOutService.list({
@@ -185,7 +187,7 @@ export default function InvoiceOuts() {
             columns={table.colums}
             data={table.data}
             links={table.links}
-            onEdit={onEdit}
+            onEdit={ roles?.includes(PERMISSIONS.INVOICE_OUT.SHOW) ? onEdit : null}
             movePage={getInvoices}
         />
     </div>

@@ -48,8 +48,8 @@ export default function UploadImage({
             <input onChange={handleUpload} ref={fileRef} id={name} name={name} type='file' style={{
                 display: 'none'
             }} />
-            {loading ?<div class="uploadimage-component-loading spinner-border text-primary" role="status">
-                <span class="visually-hidden">Loading...</span>
+            {loading ?<div className="uploadimage-component-loading spinner-border text-primary" role="status">
+                <span className="visually-hidden">Loading...</span>
             </div> : null }
             
         </div>

@@ -13,6 +13,8 @@ import { usePopup } from '../popups/PopupContext'
 import TextArea from '../UI/Input/Textarea'
 import { isoToDateTime } from '../../libraries/common'
 import { useI18n } from '../../../i18n/useI18n'
+import PERMISSIONS from '../../common/permission'
+import { useSelector } from 'react-redux'
 
 export default function AdjustmentTabs() {
     const { t } = useI18n()
@@ -20,7 +22,7 @@ export default function AdjustmentTabs() {
     const form = useForm()
     const search = useForm()
     const { openPopup } = usePopup()
-
+    const roles = useSelector((state) => state.businessRole.role);
     const [products, setProducts] = useState([])
     const [warehouses, setWarehouses] = useState([])
     const [showForm, setShowForm] = useState(false)
@@ -100,7 +102,9 @@ export default function AdjustmentTabs() {
                 movePage={getAdjustment}
                 data={table.data}
                 links={table.links}
-                add={() => setShowForm(true)}
+                add={ roles?.includes(PERMISSIONS.INVENTORY.ADJUSTMENT_CREATE) 
+                    ? () => setShowForm(true)
+                    : null}
                 filter={
                     <div className="row">
                         <div className="col-6">

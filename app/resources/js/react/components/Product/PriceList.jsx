@@ -17,9 +17,11 @@ import RenderFieldTableByList from '../RenderFieldTableByList'
 import { RenderTableSearch } from '../RenderTableSearch'
 import PrimaryButton from '../UI/Buttons/PrimaryButton'
 import { useI18n } from '../../../i18n/useI18n'
+import PERMISSIONS from '../../common/permission'
 
 export default function PriceList() {
     const { t } = useI18n()
+    const roles = useSelector((state) => state.businessRole.role);
     const business = useSelector((state) => state.business.data)
     const { openPopup } = usePopup()
 
@@ -204,27 +206,23 @@ export default function PriceList() {
                     </div>
                 }
                 add={
-                    !hasPermission
-                        ? null
-                        : () => {
+                    roles?.includes(PERMISSIONS.PRICE_LIST.CREATE) ? () => {
                               setShowAdd(true)
                               form.setIsEdit(false)
-                          }
+                          } : null
                 }
                 movePage={getPriceList}
                 columns={table.colums}
                 data={table.data}
                 links={table.links}
                 onEdit={
-                    !hasPermission
-                        ? null
-                        : (row) => {
+                    roles?.includes(PERMISSIONS.PRICE_LIST.UPDATE) ? (row) => {
                               form.setIsEdit(true)
                               form.setFormData(row)
                               setShowAdd(true)
-                          }
+                          } : null
                 }
-                onDelete={!hasPermission ? null : handleDelete}
+                onDelete={roles?.includes(PERMISSIONS.PRICE_LIST.DELETE) ? handleDelete : null}
             />
 
             {showAdd && (

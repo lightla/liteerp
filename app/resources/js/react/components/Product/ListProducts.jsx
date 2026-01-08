@@ -14,9 +14,11 @@ import { useSelector } from 'react-redux'
 import UploadImage from '../UI/Input/UploadImage'
 import LoadImage from '../LoadImage'
 import { useI18n } from '../../../i18n/useI18n'
+import PERMISSIONS from '../../common/permission'
 
 export default function ListProducts() {
     const { t } = useI18n()
+    const roles = useSelector((state) => state.businessRole.role);
     const business = useSelector((state) => state.business.data)
     const { openPopup } = usePopup()
 
@@ -160,21 +162,14 @@ export default function ListProducts() {
         getProducts()
     }, [search.formData?.order_by])
 
-    const hasPermission = useMemo(
-        () => business.role === 'manager' || business.role === 'admin',
-        [business]
-    )
-
     return (
         <div className="mt-3">
             <CommonDataTable
                 add={
-                    !hasPermission
-                        ? null
-                        : () => {
+                    roles?.includes(PERMISSIONS.PRODUCT.CREATE) ? () => {
                               setShowForm(true)
                               form.setIsEdit(false)
-                          }
+                          } : null
                 }
                 filter={
                     <div className="d-flex">
@@ -207,8 +202,8 @@ export default function ListProducts() {
                 columns={columns}
                 data={table.data}
                 links={table.links}
-                onEdit={!hasPermission ? null : handEdit}
-                onDelete={!hasPermission ? null : handleDelete}
+                onEdit={roles?.includes(PERMISSIONS.PRODUCT.UPDATE) ? handEdit : null}
+                onDelete={ roles?.includes(PERMISSIONS.PRODUCT.DELETE) ? handleDelete : null}
             />
 
             {showForm && (

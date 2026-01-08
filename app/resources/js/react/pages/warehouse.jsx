@@ -11,42 +11,18 @@ import { useForm } from '../libraries/handleInput'
 import useTable from '../libraries/handleTable'
 import PageHead from '../components/PageHead'
 import { useI18n } from '../../i18n/useI18n'
+import { useSelector } from 'react-redux'
+import PERMISSIONS from '../common/permission'
 
 export default function Warehouse() {
     const { t } = useI18n()
     const { openPopup } = usePopup()
-
+    const roles = useSelector((state) => state.businessRole.role);
     const table = useTable()
     const form = useForm()
     const search = useForm(null)
 
     const [showPopup, setShowPopup] = useState(false)
-
-    const columns = [
-        { label: t('ID'), key: 'id' },
-        { label: t('Name'), key: 'name' },
-        { label: t('Address'), key: 'address' },
-        {
-            label: t('Products'),
-            key: 'product_count',
-            render: (value) => <span>{value}</span>,
-        },
-        {
-            label: t('Status'),
-            key: 'active',
-            render: (value) => (
-                <span
-                    className={`badge rounded-pill px-3 py-2 ${
-                        value === 1
-                            ? 'bg-success bg-opacity-75'
-                            : 'bg-secondary'
-                    }`}
-                >
-                    {value === 1 ? t('Active') : t('Inactive')}
-                </span>
-            ),
-        },
-    ]
 
     const getList = useCallback(
         (page = 0) => {
@@ -69,6 +45,30 @@ export default function Warehouse() {
     )
 
     useEffect(() => {
+        table.setColums([
+            { label: t('ID'), key: 'id' },
+            { label: t('Name'), key: 'name' },
+            { label: t('Address'), key: 'address' },
+            {
+                label: t('Products'),
+                key: 'product_count',
+                render: (value) => <span>{value}</span>,
+            },
+            {
+                label: t('Status'),
+                key: 'active',
+                render: (value) => (
+                    <span
+                        className={`badge rounded-pill px-3 py-2 ${value === 1
+                                ? 'bg-success bg-opacity-75'
+                                : 'bg-secondary'
+                            }`}
+                    >
+                        {value === 1 ? t('Active') : t('Inactive')}
+                    </span>
+                ),
+            },
+        ])
         getList()
     }, [search.formData?.active])
 
@@ -162,21 +162,21 @@ export default function Warehouse() {
 
             <div className="m-4">
                 <CommonDataTable
-                    add={() => {
+                    add={roles?.includes(PERMISSIONS.WAREHOUSE.CREATE) ? () => {
                         setShowPopup(true)
                         form.setIsEdit(false)
-                    }}
+                    } : null}
                     loading={table.loading}
                     movePage={getList}
-                    columns={columns}
+                    columns={table.colums}
                     data={table.data}
                     links={table.links}
-                    onEdit={(row) => {
+                    onEdit={roles?.includes(PERMISSIONS.WAREHOUSE.UPDATE) ? (row) => {
                         setShowPopup(true)
                         form.setFormData(row)
                         form.setIsEdit(true)
-                    }}
-                    onDelete={handleDelete}
+                    } : null}
+                    onDelete={roles?.includes(PERMISSIONS.WAREHOUSE.DELETE) ? handleDelete : null}
                     filter={
                         <div className="d-flex">
                             <div className="col-6">

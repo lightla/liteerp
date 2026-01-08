@@ -14,9 +14,12 @@ import RenderFieldTableByList from '../RenderFieldTableByList'
 import { RenderTableSearch } from '../RenderTableSearch';
 import PrimaryButton from '../UI/Buttons/PrimaryButton';
 import { useI18n } from '../../../i18n/useI18n';
+import { useSelector } from 'react-redux';
+import PERMISSIONS from '../../common/permission';
 
 export default function InvoiceIns() {
     const { t } = useI18n();
+    const roles = useSelector((state) => state.businessRole.role);
     const navigate = useNavigate();
     const { openPopup } = usePopup();
     const table = useTable();
@@ -185,7 +188,7 @@ export default function InvoiceIns() {
             columns={table.colums}
             data={table.data}
             links={table.links}
-            onEdit={handleEdit}
+            onEdit={ roles?.includes(PERMISSIONS.INVOICE_IN.SHOW) ? handleEdit : null}
             movePage={listInvoice}
         />
     </div>

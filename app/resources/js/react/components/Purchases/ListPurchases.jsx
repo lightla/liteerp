@@ -17,6 +17,8 @@ import RenderFormTableByList from '../RenderFieldTableByList';
 import { RenderTableSearch } from '../RenderTableSearch';
 import PrimaryButton from '../UI/Buttons/PrimaryButton';
 import { useI18n } from '../../../i18n/useI18n';
+import { useSelector } from 'react-redux';
+import PERMISSIONS from '../../common/permission';
 
 export default function ListPurchases() {
     const { t } = useI18n();
@@ -24,7 +26,7 @@ export default function ListPurchases() {
     const { openPopup } = usePopup();
     const search = useForm();
     const table = useTable();
-
+    const roles = useSelector((state) => state.businessRole.role);
     const view = useCallback(() => {
         PurchaseService.view()
             .then((resp) => {
@@ -243,11 +245,13 @@ export default function ListPurchases() {
                             </div>
                         </div>
                     }
-                    add={() => navigate('/purchases?form=add')}
+                    add={ roles?.includes(PERMISSIONS.PURCHASE.CREATE) 
+                        ? () => navigate('/purchases?form=add') : null}
                     columns={table.colums}
                     data={table.data}
                     links={table.links}
-                    onEdit={handleEdit}
+                    onEdit={ roles?.includes(PERMISSIONS.PURCHASE.SHOW) 
+                        ? handleEdit : null}
                     movePage={getPurchases}
                     loading={table.loading}
                 />

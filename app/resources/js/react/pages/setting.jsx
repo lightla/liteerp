@@ -10,6 +10,7 @@ import { usePopup } from '../components/popups/PopupContext'
 import { setBusinessInfo } from '../redux/businessInfoSlice'
 import UploadImage from '../components/UI/Input/UploadImage'
 import { useI18n } from '../../i18n/useI18n'
+import PERMISSIONS from '../common/permission'
 
 export default function Setting() {
     const { t } = useI18n()
@@ -17,7 +18,7 @@ export default function Setting() {
     const business = useSelector((state) => state.business.data)
     const form = useForm()
     const { openPopup } = usePopup()
-
+    const roles = useSelector((state) => state.businessRole.role);
     const update = useCallback(() => {
         form.setLoading(true)
         businessService
@@ -229,7 +230,7 @@ export default function Setting() {
 
                         <div style={{ width: 200 }}>
                             <PrimaryButton
-                                loading={form.loading}
+                                loading={form.loading || !roles?.includes(PERMISSIONS.BUSINESS.UPDATE)}
                                 onClick={update}
                                 label={t('Save changes')}
                             />
