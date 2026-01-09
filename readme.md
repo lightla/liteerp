@@ -351,6 +351,32 @@ https://drive.google.com/file/d/1acR1X12C4dLYNyK7w4grxWdTnfyswQDi/view?usp=shari
 
 --- 
 
+## System Requirements & Build Notes
+
+The source code currently supports **extensions** and **parallel builds using Node.js**.
+
+During normal operation, memory usage is stable. However, in **some specific scenarios**—such as:
+
+- Initial resource build
+- Installing or updating extensions
+- Rebuilding large assets in parallel
+
+the build process may temporarily require **higher RAM usage**. This does **not happen frequently**, but it can occur at those critical moments.
+
+### ⚠️ Server Requirement
+
+To ensure the build process runs smoothly without unexpected failures, we **recommend a server with at least 4GB of RAM**.
+
+This requirement helps:
+- Prevent out-of-memory (OOM) errors during build
+- Ensure stable parallel builds
+- Improve reliability when working with extensions
+
+> 💡 Note: Once the build process is completed, runtime memory usage is significantly lower.
+
+
+---
+
 ## 📦 Setup by Docker 
 
 Setup basic information for business, you need change information like business information working for. 
@@ -374,9 +400,11 @@ You also need config SMTP mail, timezone, pusher at `./app/.env` before start.
 - Next run `chmod -R 777 ./extensions`
 - Next run `php artisan jwt:generate-keys` to generate private key and public key for Json Web Token
 - Next run `php artisan app:create-admin {email} {password} {name}` to create admin account
-- Next run `npm run build` for production.
 - Next run `php artisan schedule:work`
 - Next run `php artisan queue:work --queue=low,default,high`
+- Next run `npm run build` for production or `npm run dev` for development
+
+If you using for production then please change `ENV` at `.env` to value `production`.
 
 Visit: http://localhost:8001/dashboard/login
 
