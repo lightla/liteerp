@@ -27,7 +27,7 @@ class ExtensionController
         $entity = $useCase->handle($request->all());
         return response()->json(['message' => $entity]);
     }
-    public function destroy(DeleteExtensionRequest $request, DeleteExtension $useCase)
+    public function destroy(DeleteExtensionRequest $request, DeleteExtension $useCase,string $id)
     {
         $entity = $useCase->handle($request->all());
         return response()->json(['message' => $entity]);

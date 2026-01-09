@@ -2,6 +2,7 @@
 
 namespace Core\Extension\Application\UseCases;
 
+use App\Jobs\RunCommandJob;
 use Core\Extension\Application\DTOs\CreateExtensionRequest;
 use Core\Extension\Domain\Services\ExtensionService;
 use Illuminate\Support\Facades\Event;
@@ -14,6 +15,7 @@ class CreateExtension
     {
         Event::dispatch('erp.extension.create',$data);
         $dto = CreateExtensionRequest::fromArray($data);
+        RunCommandJob::dispatch('app:npmbuild');
         return $this->service->create($dto->toArray());
     }
 }

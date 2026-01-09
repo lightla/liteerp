@@ -139,7 +139,7 @@ class EloquentExtensionRepository implements ExtensionRepositoryInterface
     {
         $directory = $data['directory'] ?? null;
 
-        if (!$directory) {
+        if (!$directory || $directory === '') {
             return null;
         }
 
@@ -157,6 +157,8 @@ class EloquentExtensionRepository implements ExtensionRepositoryInterface
             JSON_THROW_ON_ERROR
         );
 
-        return Extension::fromArray($manifest);
+        $entity = Extension::fromArray($manifest);
+        $entity->directory = $directory;
+        return $entity;
     }
 }
