@@ -1,10 +1,7 @@
-version: "3"
-
 services:
   erpsoft:
-    mem_limit: 1024m
+    mem_limit: 3072m
     mem_reservation: 512M
-    #cpus: 50
     build: 
       context: ./
       dockerfile: './Dockerfile.server'
@@ -19,9 +16,8 @@ services:
       - ./docker-config:/etc/apache2/sites-enabled
       - ./docker-config/php/php.ini:/usr/local/etc/php/conf.d/custom.ini
   laravelcmsdatabase:
-    mem_limit: 1024m
-    mem_reservation: 512M
-    #cpus: 10
+    mem_limit: 512m
+    mem_reservation: 256M
     build:
       context: "./"
       dockerfile: 'Dockerfile.db'
@@ -54,7 +50,7 @@ services:
       - '3309:80'
   redis:
     container_name: 'erpsoft-redis'
-    image: redis:latest
+    image: redis:8.4.0
     restart: 'always'
     mem_limit: 64m
     mem_reservation: 32M
