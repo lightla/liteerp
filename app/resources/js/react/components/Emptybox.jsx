@@ -9,7 +9,7 @@ export default function EmptyBox({
             <div className='mt-5 text-center'>
                 <h4 className='h6'>Empty data</h4>
                 <FlatIcon32 size={64} name='empty-box' />
-                <div>
+                <div className='theme-title'>
                     {message ?? ''}
                 </div>
             </div>
