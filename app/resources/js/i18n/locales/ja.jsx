@@ -311,5 +311,6 @@ export default {
     "Customer Group": "顧客グループ",
     "Total orders": "注文合計",
     "Group": "グループ",
-    "Bank Name": "銀行名"
+    "Bank Name": "銀行名",
+    "overview_nodata":"概要データを作成する必要があるので、ドキュメントのインストールを検討してください。"
 };

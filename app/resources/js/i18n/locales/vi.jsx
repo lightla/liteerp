@@ -311,5 +311,6 @@ export default {
     "Customer Group": "Nhóm khách hàng",
     "Total orders": "Tổng đơn hàng",
     "Group": "Nhóm",
-    "Bank Name": "Tên ngân hàng"
+    "Bank Name": "Tên ngân hàng",
+    "overview_nodata":"Bạn cần hoàn thành phần tổng quan, vui lòng tham khảo tài liệu cài đặt"
 };

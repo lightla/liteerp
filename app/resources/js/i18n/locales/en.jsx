@@ -311,5 +311,6 @@ export default {
     "Customer Group": "Customer Group",
     "Total orders": "Total orders",
     "Group": "Group",
-    "Bank Name": "Bank Name"
+    "Bank Name": "Bank Name",
+    "overview_nodata":"You need make overview data, please consider document install"
 };
