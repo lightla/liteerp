@@ -25,7 +25,8 @@ class InvoiceInModel extends Model
         'due_date',
         'approved',
         'payment_status',
-        'image'
+        'image',
+        'amount_paid'
     ];
 
     protected $casts = [
@@ -33,6 +34,7 @@ class InvoiceInModel extends Model
         'tax' => 'float',
         'discount' => 'float',
         'total' => 'float',
+        'amount_paid' => 'float',
         'invoice_date' => 'date:Y-m-d',
         'due_date' => 'date:Y-m-d',
         'approved' => 'boolean'

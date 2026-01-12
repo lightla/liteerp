@@ -27,6 +27,7 @@ return new class extends Migration
             $table->boolean('approved')->default(false);
             $table->enum('payment_status',['paid','partial_payment',
                 'pending'])->default('pending');
+            $table->decimal('amount_paid',15,0)->default(0);
             $table->softDeletes();
             $table->timestamps();
         });

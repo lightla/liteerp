@@ -25,6 +25,7 @@ class UpdateInvoiceInRequest extends FormRequest
             'approved'      => 'required|boolean',
             'payment_status' => 'required|in:paid,pending,partial_payment',
             'image'         => 'nullable|string|max:250',
+            'amount_paid'   => 'nullable|numeric|min:0',
             ...$hooks->dispatch(
                 new HookContext(
                     action: HookAction::UPDATE,

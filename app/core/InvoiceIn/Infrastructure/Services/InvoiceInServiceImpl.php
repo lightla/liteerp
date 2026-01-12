@@ -41,6 +41,16 @@ class InvoiceInServiceImpl implements InvoiceInService
         $entity->approved = $data['approved'] ?? $entity->approved;
         $entity->payment_status = $data['payment_status'] ?? $entity->payment_status;
         $entity->image = $data['image'] ?? $entity->image;
+        $entity->amount_paid = $data['amount_paid'] ?? $entity->amount_paid;
+        if(!$entity->checkAmountPaidValid()) {
+            throw new BadException(__("This invoice is partial payment, 
+                so you need insert amount paid. 
+                    But amount paid is not greater than or equal total value invoice"));
+        }
+        if($entity->isPaid()) {
+            // paid full money 
+            $entity->markAmountPaid();
+        }
         $update = $this->repo->update($entity);
         return $update;
     }

@@ -404,6 +404,15 @@ const confirmApproved = useCallback(() => {
                             />
                         </div>
                         <div className="form-group mt-3">
+                            <label>{t("Amount paid")}</label>
+                            <InputForm
+                                errorMessage={form.formErrors?.amount_paid}
+                                handleChange={form.handleChange}
+                                value={form.formData?.amount_paid}
+                                name="amount_paid"
+                            />
+                        </div>
+                        <div className="form-group mt-3">
                             <label>
                                 {t("Invoice image")}
                                 <a target="_blank" rel="noreferrer" href={form.formData?.image} className="ms-2">

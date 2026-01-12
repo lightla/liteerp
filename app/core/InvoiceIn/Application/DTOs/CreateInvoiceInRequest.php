@@ -19,7 +19,8 @@ class CreateInvoiceInRequest
         public ?string $payment_status,
         public ?int $id = null,
         public ?int $created_by,
-        public ?string $image = null
+        public ?string $image = null,
+        public ?float $amount_paid = 0 
     ) {}
 
     public static function fromArray(array $data): self
@@ -39,7 +40,8 @@ class CreateInvoiceInRequest
             payment_status : $data['payment_status'] ?? null,
             id: $data['id'] ?? null,
             created_by: $data['user_id'] ?? null,
-            image: $data['image'] ?? null  
+            image: $data['image'] ?? null,
+            amount_paid: $data['amount_paid'] ?? 0  
         );
     }
 
@@ -60,7 +62,8 @@ class CreateInvoiceInRequest
             'payment_status' => $this->payment_status,
             'id'    => $this->id,
             'created_by'    => $this->created_by,
-            'image' => $this->image
+            'image' => $this->image,
+            'amount_paid'   => $this->amount_paid
         ];
     }
 }

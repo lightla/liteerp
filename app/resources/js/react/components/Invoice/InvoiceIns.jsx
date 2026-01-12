@@ -133,6 +133,13 @@ export default function InvoiceIns() {
                     return <StatusBadge status={value} />
                 }
             },
+            {
+                label: t("Amount paid"),
+                key: "amount_paid",
+                render: (value) => {
+                    return <Currencies amount={value}/>
+                }
+            },
         ])
     }, []);
 

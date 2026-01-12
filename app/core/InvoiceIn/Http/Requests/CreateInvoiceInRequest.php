@@ -24,6 +24,7 @@ class CreateInvoiceInRequest extends FormRequest
             'due_date'      => 'required|date_format:Y-m-d|after_or_equal:invoice_date',
             'approved'      => 'required|boolean',
             'payment_status' => 'required|in:paid,pending,partial_payment',
+            'amount_paid'   => 'nullable|numeric|min:0',
             ...$hooks->dispatch(
                 new HookContext(
                     action: HookAction::CREATE,

@@ -20,7 +20,8 @@ class InvoiceIn
         public ?string $due_date = null,
         public bool $approved,
         public string $payment_status,
-        public ?string $image = null 
+        public ?string $image = null,
+        public ?float $amount_paid = 0 
     ) {}
 
     public static function fromArray(array $data): self
@@ -39,7 +40,8 @@ class InvoiceIn
             due_date: !empty($data['due_date']) ? Carbon::parse($data['due_date'])->format('Y-m-d') : null,
             approved: $data['approved'] ?? false,
             payment_status : $data['payment_status'] ?? 'pending',
-            image: $data['image'] ?? null 
+            image: $data['image'] ?? null,
+            amount_paid: $data['amount_paid'] ?? 0 
         );
     }
 
@@ -59,7 +61,8 @@ class InvoiceIn
             'due_date' => $this->due_date,
             'approved' => $this->approved,
             'payment_status' => $this->payment_status,
-            'image' => $this->image
+            'image' => $this->image,
+            'amount_paid' => $this->amount_paid
         ];
     }
     public function markApproved(){
@@ -77,6 +80,9 @@ class InvoiceIn
     public function markPending(){
         $this->payment_status = 'pending';
     }
+    public function markAmountPaid(){
+        $this->amount_paid = $this->total;
+    }
     public function isPaid() : bool{
         return $this->payment_status === 'paid' ? true : false;
     }
@@ -91,5 +97,16 @@ class InvoiceIn
     }
     public function makeDocumentNo(){
         $this->document_no = 'INV-' . ($this->business_id ?? 0) . date('Ymd-His',time());
+    }
+    public function checkAmountPaidValid() : bool {
+        if($this->payment_status === 'partial_payment') {
+            if(floatval($this->amount_paid) === 0.00) {
+                return false;
+            } 
+            if(floatval($this->amount_paid) >= floatval($this->total)) {
+                return false;
+            }
+        }
+        return true;
     }
 }
