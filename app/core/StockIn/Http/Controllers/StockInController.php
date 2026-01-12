@@ -3,7 +3,7 @@
 namespace Core\StockIn\Http\Controllers;
 
 use Core\StockIn\Application\UseCases\CreateStockIn;
-use Core\Stockin\Application\Queries\IndexQuery;
+use Core\StockIn\Application\Queries\IndexQuery;
 use Core\StockIn\Application\UseCases\ShowStockIn;
 use Core\StockIn\Application\UseCases\UpdateStockIn;
 use Core\StockIn\Http\Requests\CreateStockInRequest as FormRequest;
