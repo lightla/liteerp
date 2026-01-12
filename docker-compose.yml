@@ -8,7 +8,7 @@ services:
     container_name: 'erpsoft-8.3'
     restart: 'always'
     ports:
-      - 8001:80
+      - 8002:80
     links: 
       - laravelcmsdatabase
     volumes: 
@@ -24,7 +24,7 @@ services:
     container_name: 'erpsoft'
     restart: 'always'
     ports:
-      - "3303:3306"
+      - "3304:3306"
     volumes: 
       - ./docker/data/mysql:/var/lib/mysql
       - ./docker/logs/mysql:/var/log/mysql
@@ -47,7 +47,7 @@ services:
       PMA_PORT: 3306
       UPLOAD_LIMIT: 1000000
     ports:
-      - '3309:80'
+      - '3310:80'
   redis:
     container_name: 'erpsoft-redis'
     image: redis:8.4.0
@@ -55,4 +55,4 @@ services:
     mem_limit: 64m
     mem_reservation: 32M
     ports:
-      - "6379:6379"
+      - "6380:6379"
