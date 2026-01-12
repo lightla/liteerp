@@ -56,13 +56,21 @@ class OrderItemServiceImpl implements OrderItemService
         $entity->price = $data['price'];
         return $this->repo->update($entity);
     }
-    public function delete(array $data): OrderItem
+    public function delete(array $data): OrderItem | BadException
     {
         $entity = $this->repo->findById($data);
         if(!$entity) {
             throw new BadException(__("Not found data"));
         }
         return $this->repo->delete($entity);
+    }
+    public function findById(array $data): OrderItem|BadException
+    {
+        $entity = $this->repo->findById($data);
+        if(!$entity) {
+            throw new BadException(__("Not found data"));
+        }
+        return $entity;
     }
     public function summary(array $data): array {
         return $this->repo->summary($data);

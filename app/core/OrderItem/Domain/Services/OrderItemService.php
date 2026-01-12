@@ -11,7 +11,8 @@ interface OrderItemService
     public function index(array $data): array;
     public function show(array $data) : array | BadException;
     public function update(array $data) : OrderItem;
-    public function delete(array $data) : OrderItem;
+    public function delete(array $data) : OrderItem | BadException;
+    public function findById(array $data) : OrderItem | BadException;
     public function summary(array $data): array;
     public function indexForStockMovementOut(array $data) : array;
 }

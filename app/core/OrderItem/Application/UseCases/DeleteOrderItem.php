@@ -15,14 +15,15 @@ class DeleteOrderItem
     {
         DB::beginTransaction();
         $delete = $this->service->delete($dto->toArray());
+        $qty_change = (float) ($delete->buy_quantity
+                + $delete->gift_quantity
+                + $delete->compensation_quantity
+                + $delete->conversion_quantity);
         Event::dispatch('erp.orderitem.delete',[
             'user_id' => $dto->user_id,
             'business_id' => $dto->business_id,
             'inventory_id' => $delete->inventory_id,
-            'qty_change' => (float) ($delete->buy_quantity
-                + $delete->gift_quantity
-                + $delete->compensation_quantity
-                + $delete->conversion_quantity),
+            'qty_change' => -abs($qty_change),
             ...$delete->toArray()
         ]);
         DB::commit();
