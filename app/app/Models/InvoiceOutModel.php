@@ -29,7 +29,8 @@ class InvoiceOutModel extends Model
         'payment_status',
         'approved',
         'payment_method',
-        'image'
+        'image',
+        'amount_paid'
     ];
 
     /**
@@ -40,6 +41,7 @@ class InvoiceOutModel extends Model
         'tax'          => 'decimal:2',
         'discount'     => 'decimal:2',
         'total'        => 'decimal:2',
+        'amount_paid'  => 'decimal:2',
         'approved'     => 'boolean'
     ];
 

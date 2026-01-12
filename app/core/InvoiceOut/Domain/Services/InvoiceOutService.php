@@ -11,6 +11,7 @@ interface InvoiceOutService
     public function show(array $data) : array | BadException;
     public function findById(array $data) : InvoiceOut | BadException;
     public function getByOrderId(array $data) : ?InvoiceOut;
+    public function findByOrderId(array $data) : InvoiceOut | BadException;
     public function update(array $data) : InvoiceOut | BadException;
     public function unApproved(array $data): InvoiceOut|BadException;
 }

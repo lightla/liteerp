@@ -4,6 +4,7 @@ namespace Core\InvoiceOut\Infrastructure\Providers;
 
 use Core\InvoiceOut\Application\UseCases\CreateInvoiceOut;
 use Core\InvoiceOut\Application\UseCases\UnapproveInvoiceOutByOrderCancelled;
+use Core\InvoiceOut\Application\UseCases\UpdateTotalByShippingFee;
 use Illuminate\Support\ServiceProvider;
 use Core\InvoiceOut\Domain\Repositories\InvoiceOutRepositoryInterface;
 use Core\InvoiceOut\Infrastructure\Repositories\EloquentInvoiceOutRepository;
@@ -21,12 +22,14 @@ class InvoiceOutServiceProvider extends ServiceProvider
     }
 
     public function boot(CreateInvoiceOut $createInvoiceOut,
-    UnapproveInvoiceOutByOrderCancelled $UnapproveInvoiceOutByOrderCancelled)
+    UnapproveInvoiceOutByOrderCancelled $UnapproveInvoiceOutByOrderCancelled,
+    UpdateTotalByShippingFee $UpdateTotalByShippingFee)
     {
         $this->loadModuleRoutes();
         $this->loadModuleTranslations();
         $listener = new InvoiceOutListener();
-        $listener->handle($createInvoiceOut,$UnapproveInvoiceOutByOrderCancelled);
+        $listener->handle($createInvoiceOut,
+        $UnapproveInvoiceOutByOrderCancelled, $UpdateTotalByShippingFee);
     }
 
     protected function mergeModuleConfig(): void

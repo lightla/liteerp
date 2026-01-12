@@ -34,7 +34,11 @@ class UpdateInvoiceOut
         $dto = CreateInvoiceOutRequest::fromArray($data);
         $arrayData = $dto->toArray();
         $findInvoice = $this->service->findById($arrayData);
-        $update = $this->service->update($arrayData);
+        $update = $this->service->update([
+            ...$arrayData,
+            // block manual update total price, system will reuse old total price to sure everything is correct
+            'total' => $findInvoice->total
+        ]);
         $data = $this->hooks->dispatch(
             new HookContext(
                 action: HookAction::UPDATE,

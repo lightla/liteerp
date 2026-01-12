@@ -27,6 +27,7 @@ class CreateInvoiceOutRequest extends FormRequest
             'invoice_date' => 'required|date_format:Y-m-d',
             'due_date'     => 'nullable|date_format:Y-m-d',
             'approved'     => 'required|boolean',
+            'amount_paid'  => 'nullable|numeric|min:0',
             ...$hooks->dispatch(
                 new HookContext(
                     action: HookAction::CREATE,

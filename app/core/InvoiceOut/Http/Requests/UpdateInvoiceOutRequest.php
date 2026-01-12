@@ -24,6 +24,7 @@ class UpdateInvoiceOutRequest extends FormRequest
             'due_date'     => 'nullable|date_format:Y-m-d',
             'approved'     => 'required|boolean',
             'image'        => 'nullable|string|max:255',
+            'amount_paid'  => 'nullable|numeric|min:0',
             ...$hooks->dispatch(
                 new HookContext(
                     action: HookAction::CREATE,

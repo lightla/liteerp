@@ -27,10 +27,6 @@ class InvoiceOutServiceImpl implements InvoiceOutService
         }
         return $row;
     }
-    public function index(array $data): array
-    {
-        return $this->repo->index($data);
-    }
     public function update(array $data): InvoiceOut|BadException
     {
         $entity = $this->repo->findById($data);
@@ -46,6 +42,17 @@ class InvoiceOutServiceImpl implements InvoiceOutService
         $entity->approved = $data['approved'] ?? $entity->approved;
         $entity->payment_status = $data['payment_status'] ?? $entity->payment_status;
         $entity->image = $data['image'] ?? $entity->image;
+        $entity->amount_paid = $data['amount_paid'] ?? $entity->amount_paid;
+        $entity->total = $data['total'] ?? $entity->total;
+        if(!$entity->checkAmountPaidValid()) {
+            throw new BadException(__("This invoice is partial payment, 
+                so you need insert amount paid. 
+                    But amount paid is not greater than or equal total value invoice"));
+        }
+        if($entity->isPaid()) {
+            // paid full money 
+            $entity->markAmountPaid();
+        }
         return $this->repo->update($entity);
     }
     public function unApproved(array $data): InvoiceOut|BadException
@@ -64,5 +71,8 @@ class InvoiceOutServiceImpl implements InvoiceOutService
     public function getByOrderId(array $data): ?InvoiceOut
     {
         return $this->repo->findByOrderId($data);
+    }
+    public function findByOrderId(array $data): InvoiceOut|BadException {
+        return $this->repo->findByOrderId($data) ?? throw new BadException(__("not found data"));
     }
 }

@@ -19,7 +19,8 @@ class InvoiceOut
         public ?string $due_date,
         public ?string $payment_status,
         public bool $approved,
-        public ?string $image = null
+        public ?string $image = null,
+        public ?float $amount_paid = 0
     ) {}
 
     public static function fromArray(array $data): self
@@ -37,7 +38,8 @@ class InvoiceOut
             due_date: $data['due_date'] ?? null,
             payment_status: $data['payment_status'] ?? null,
             approved: $data['approved'],
-            image: $data['image']
+            image: $data['image'],
+            amount_paid: $data['amount_paid'] ?? 0
         );
     }
 
@@ -56,7 +58,8 @@ class InvoiceOut
             'due_date'     => $this->due_date,
             'payment_status'    => $this->payment_status,
             'approved'     => $this->approved,
-            'image'        => $this->image
+            'image'        => $this->image,
+            'amount_paid'  => $this->amount_paid
         ];
     }
     public function setDocumentNo(){
@@ -83,6 +86,9 @@ class InvoiceOut
     public function markPending(){
         $this->payment_status = 'pending';
     }
+    public function markAmountPaid(){
+        $this->amount_paid = $this->total;
+    }
     public function isPaid() : bool{
         return $this->payment_status === 'paid' ? true : false;
     }
@@ -94,5 +100,16 @@ class InvoiceOut
     }
     public function isApproved(){
         return $this->approved;
+    }
+    public function checkAmountPaidValid() : bool {
+        if($this->payment_status === 'partial_payment') {
+            if(floatval($this->amount_paid) === 0.00) {
+                return false;
+            } 
+            if(floatval($this->amount_paid) >= floatval($this->total)) {
+                return false;
+            }
+        }
+        return true;
     }
 }

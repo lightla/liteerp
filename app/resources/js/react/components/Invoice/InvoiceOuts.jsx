@@ -130,6 +130,13 @@ export default function InvoiceOuts() {
                     return <StatusBadge status={value} />
                 }
             },
+            {
+                label: t("Amount paid"),
+                key: "amount_paid",
+                render: (value) => {
+                    return <Currencies amount={value} />
+                }
+            },
         ])
         getInvoices();
         view();
@@ -187,7 +194,7 @@ export default function InvoiceOuts() {
             columns={table.colums}
             data={table.data}
             links={table.links}
-            onEdit={ roles?.includes(PERMISSIONS.INVOICE_OUT.SHOW) ? onEdit : null}
+            onEdit={roles?.includes(PERMISSIONS.INVOICE_OUT.SHOW) ? onEdit : null}
             movePage={getInvoices}
         />
     </div>
