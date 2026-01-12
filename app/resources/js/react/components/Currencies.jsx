@@ -8,6 +8,6 @@ export default function Currencies({
         new Intl.NumberFormat(business.currency_locale, {
             style: "currency",
             currency: business.currency,
-        }).format(amount)
+        }).format(Number(amount))
     }</span>
 }
