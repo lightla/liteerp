@@ -16,6 +16,7 @@ class CreateExtension
         Event::dispatch('erp.extension.create',$data);
         $dto = CreateExtensionRequest::fromArray($data);
         RunCommandJob::dispatch('app:npmbuild');
+        RunCommandJob::dispatch('migrate');
         return $this->service->create($dto->toArray());
     }
 }
