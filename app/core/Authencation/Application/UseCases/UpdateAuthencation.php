@@ -19,12 +19,17 @@ class UpdateAuthencation
         if(!$user) {
             throw new UnauthorizedException(__("You are not logged"));
         }
-        
+        if($dto->password && !$dto->new_password) {
+            throw new BadException(__("You shuold insert new password and keep empty password if you shuold do not change password"));
+        }
+        if(!$dto->password && $dto->new_password) {
+            throw new BadException(__("You shuold insert password"));
+        }
         if($dto->password && !Hash::check($dto->password,$user->password)) {
             throw new BadException(__("Password is not correctly"));
         }
         if($dto->new_password) {
-            $dto->password = $dto->new_password;
+            $dto->password = Hash::make($dto->new_password);
         }
         $dto->id = $user->id;
         return $this->service->update($dto->toArray());
