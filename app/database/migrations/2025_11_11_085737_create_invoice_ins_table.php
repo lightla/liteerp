@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('business_id')->constrained('business')->onDelete('cascade');
             $table->string('document_no')->nullable();
+            $table->string('image')->nullable();
             $table->foreignId('purchase_id')->constrained('purchases')->onDelete('cascade');
             $table->foreignId('approved_by')->nullable()->constrained('users')->onDelete('cascade');
             $table->decimal('subtotal',15,2)->default(0);
