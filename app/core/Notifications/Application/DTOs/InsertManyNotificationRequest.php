@@ -26,13 +26,13 @@ class InsertManyNotificationRequest
     {
         return new self(
             message: $data['message'] ?? null,
-            link: $data['link'],        
+            link: $data['link'] ?? URL::to('/dashboard'),        
             title: $data['title'] ?? null,      
             entity_type: $data['entity_type'] ?? null,
             entity_id: $data['entity_id'] ?? null,
-            chanels: $data['chanels']  ?? [],
-            queue: $data['queue'] ?? null,
-            role: $data['role'],
+            chanels: $data['chanels']  ?? ['db'],
+            queue: $data['queue'] ?? 'low',
+            role: $data['role'] ?? ['admin', 'manager'],
             business_id: $data['business_id'] ?? null,
             type: $data['type'] ?? null,
             user_id: $data['user_id']
@@ -54,5 +54,8 @@ class InsertManyNotificationRequest
             'type'  => $this->type,
             'user_id' => $this->user_id
         ];
+    }
+    public function getQueue():string {
+        return $this->queue;
     }
 }

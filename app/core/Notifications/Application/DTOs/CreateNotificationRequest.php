@@ -14,7 +14,7 @@ class CreateNotificationRequest
         public array $chanels = ['db'],
         public ?string $queue = null,
         public ?string $type = null,
-        public int $business_id
+        public ?int $business_id = null
     ) {}
 
     public static function fromArray(array $data): self
@@ -29,7 +29,7 @@ class CreateNotificationRequest
             chanels: $data['chanels']  ?? ['db'],
             queue: $data['queue'] ?? null,
             type: $data['type'] ?? null,
-            business_id: $data['business_id']
+            business_id: $data['business_id'] ?? null
         );
     }
     
