@@ -397,6 +397,7 @@ export default function Suppliers() {
                         <div className="form-group mt-1">
                             <label>{t('Active')}</label>
                             <InputForm
+                                width={20}
                                 type="checkbox"
                                 name="active"
                                 value={form.formData?.active}
