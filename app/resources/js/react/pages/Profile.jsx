@@ -8,6 +8,7 @@ import PrimaryButton from '../components/UI/Buttons/PrimaryButton';
 import TextArea from '../components/UI/Input/Textarea';
 import { usePopup } from '../components/popups/PopupContext';
 import { useI18n } from '../../i18n/useI18n';
+import UploadImage from '../components/UI/Input/UploadImage';
 
 export default function Profile() {
     const { t } = useI18n();
@@ -139,14 +140,11 @@ export default function Profile() {
                         <div className="row mt-1">
                             <label>{t('Avatar')}</label>
                             <div>
-                                <img
-                                    width={75}
-                                    height={75}
-                                    src={
-                                        form.formData?.avatar ??
-                                        '/assets/icons/avatar-default.png'
-                                    }
-                                    alt=""
+                                <UploadImage 
+                                name='avatar'
+                                handleChangeByKey={form.handleChangeByKey}
+                                value={'/assets/icons/avatar-default.png'}
+                                errorMessage={form.formErrors?.avatar}
                                 />
                             </div>
                         </div>
