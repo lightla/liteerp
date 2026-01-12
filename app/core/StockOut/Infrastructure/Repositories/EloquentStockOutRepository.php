@@ -60,6 +60,8 @@ class EloquentStockOutRepository implements StockOutRepositoryInterface
         "shippings.shipping_code as shipping_code",
         "shippings.shipping_fee_actual as shipping_fee_actual",
         "shippings.shipping_fee_estimated as shipping_fee_estimated",
+        "shippings.shipped_at as shipped_at",
+        "shippings.delivered_at as delivered_at",
         DB::raw("
         CASE
             WHEN shippings.shipping_fee_actual > 0
@@ -75,13 +77,7 @@ class EloquentStockOutRepository implements StockOutRepositoryInterface
         "invoice_outs.subtotal as subtotal",
         "invoice_outs.tax as tax",
         "invoice_outs.discount as discount",
-        DB::raw("
-        CASE
-            WHEN shippings.shipping_fee_actual > 0
-                THEN (total - shippings.shipping_fee_estimated + shippings.shipping_fee_actual)
-            ELSE total
-        END AS total_adjusted
-        "),
+        "invoice_outs.total as total_adjusted",
         //"invoice_outs.total as total",
         "customers.name as customer_name",
         "customers.email as email",

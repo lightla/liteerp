@@ -8,7 +8,6 @@ use App\Supports\Hooks\HookDispatcher;
 use App\Supports\Hooks\HookPhase;
 use App\Supports\Hooks\HookTiming;
 use Core\StockOut\Application\DTOs\CreateStockOutRequest;
-use Core\StockOut\Domain\Entities\StockOut;
 use Core\StockOut\Domain\Services\StockOutService;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Event;
@@ -58,7 +57,7 @@ class UpdateStockOut
             $statusNotify = 'completed';
         } else if($update->isShipped()) {
             Event::dispatch("erp.stockout.shipped", [
-                ...$update->toArray(),
+                ...$data,
                 'user_id' => $dto->created_by,
                 'business_id' => $dto->business_id,
                 'order_id' => $dto->order_id,
@@ -67,7 +66,7 @@ class UpdateStockOut
             $statusNotify = 'shipped';
         } else {
             Event::dispatch("erp.stockout.update", [
-                ...$update->toArray(),
+                ...$data,
                 'user_id' => $dto->created_by,
                 'business_id' => $dto->business_id,
                 'order_id' => $dto->order_id

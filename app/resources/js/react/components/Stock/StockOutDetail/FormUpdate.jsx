@@ -4,6 +4,7 @@ import TextArea from '../../UI/Input/Textarea'
 import SearchSelect from '../../UI/Input/SearchSelect'
 import ShippingService from '../../../services/ShippingService';
 import RenderFormFieldByList from '../../RenderFormFieldByList';
+import { formatToDateTime, isoToDateTime } from '../../../libraries/common';
 export default function FormUpdate({
     form = {
         formData: null,
@@ -74,16 +75,6 @@ export default function FormUpdate({
             />
         </div>
         <div>
-            <label>Shipping fee estimated</label>
-            <InputForm
-                errorMessage={form.formErrors?.shipping_fee_estimated}
-                value={form.formData?.shipping_fee_estimated}
-                name="shipping_fee_estimated"
-                handleChange={form.handleChange}
-                type="numeric"
-            />
-        </div>
-        <div>
             <label>Shipping code</label>
             <InputForm
                 errorMessage={form.formErrors?.shipping_code}
@@ -107,7 +98,7 @@ export default function FormUpdate({
             <label>Shipped at</label>
             <InputForm
                 errorMessage={form.formErrors?.shipped_at}
-                value={form.formData?.shipped_at}
+                value={isoToDateTime(form.formData?.shipped_at ?? new Date().toDateString)}
                 name="shipped_at"
                 handleChange={form.handleChange}
                 type="date"
@@ -117,7 +108,7 @@ export default function FormUpdate({
             <label>Delivered at</label>
             <InputForm
                 errorMessage={form.formErrors?.delivered_at}
-                value={form.formData?.delivered_at}
+                value={isoToDateTime(form.formData?.delivered_at ?? new Date().toDateString)}
                 name="delivered_at"
                 handleChange={form.handleChange}
                 type="date"
