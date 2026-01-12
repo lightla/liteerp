@@ -15,8 +15,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained('users');
             $table->string('type')->nullable();
-            $table->string('title');
-             $table->string('link')->nullable();
+            $table->string('title')->nullable();
+            $table->string('link')->nullable();
             $table->text('message')->nullable();
             $table->string('entity_type')->nullable();
             $table->unsignedBigInteger('entity_id')->nullable();
