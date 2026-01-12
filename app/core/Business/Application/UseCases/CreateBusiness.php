@@ -21,7 +21,8 @@ class CreateBusiness
             'id' => $user->id,
             'business_id' => $business->id,
             'role' => 'admin',
-            'user_id' => $user->id
+            'user_id' => $user->id,
+            'role_user_id' => $user->id
         ]);
         DB::commit();
         return $business;
