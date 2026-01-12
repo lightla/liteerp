@@ -36,16 +36,22 @@ class OrderShippingServiceImpl implements OrderShippingService
         $entity->receiver_address = $data['receiver_address'] ?? $entity->receiver_address;
         $entity->receiver_note = $data['receiver_note'] ?? $entity->receiver_note;
         $entity->preferred_unit  = $data['preferred_unit'] ?? $entity->preferred_unit;
-        $entity->shipping_fee_estimated = $data['shipping_fee_estimated'] ?? $entity->shipping_fee_estimated;
         $entity->shipping_fee_actual = $data['shipping_fee_actual'] ?? $entity->shipping_fee_actual;
         $entity->shipping_code = $data['shipping_code'] ?? $entity->shipping_code;
         $entity->shipped_at = $data['shipped_at'] ?? $entity->shipped_at;
         $entity->delivered_at = $data['delivered_at'] ?? $entity->delivered_at;
+        $entity->shipping_fee_estimated = $data['shipping_fee_estimated'] ?? $entity->shipping_fee_estimated;
+        $entity->isFeeActualApplied();
         return $this->repo->update($entity);
     }
     public function findByOrderId(array $data): OrderShipping|BadException
     {
         return $this->repo->findByOrderId($data) 
+            ?? throw new BadException(__("Not found data"));
+    }
+    public function findById(array $data): OrderShipping|BadException
+    {
+        return $this->repo->findById($data) 
             ?? throw new BadException(__("Not found data"));
     }
 }

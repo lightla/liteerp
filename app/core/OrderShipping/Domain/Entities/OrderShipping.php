@@ -63,4 +63,9 @@ class OrderShipping
     public function isReady() : bool {
         return $this->preferred_unit ? true : false;
     }
+    public function isFeeActualApplied(){
+        if($this->shipping_fee_actual > 0) {
+            $this->shipping_fee_estimated = 0;
+        }
+    }
 }

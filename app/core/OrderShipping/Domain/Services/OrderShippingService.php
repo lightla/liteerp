@@ -10,5 +10,6 @@ interface OrderShippingService
     public function create(array $data): OrderShipping | BadException;
     public function show(array $data) : array | BadException;
     public function findByOrderId(array $data) : OrderShipping | BadException;
+    public function findById(array $data) : OrderShipping | BadException;
     public function update(array $data) : OrderShipping | BadException;
 }

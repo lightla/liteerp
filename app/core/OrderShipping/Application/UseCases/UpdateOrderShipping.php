@@ -31,6 +31,7 @@ class UpdateOrderShipping
                 module: 'OrderShipping'
             )
         );
+        $oldData = $this->service->findById($data);
         $update = $this->service->update($data);
         $data = $this->hooks->dispatch(
             new HookContext(
@@ -46,6 +47,8 @@ class UpdateOrderShipping
         );
         Event::dispatch('erp.ordershipping.update',[
             ...$update->toArray(),
+            'shipping_fee_estimated' => $oldData->shipping_fee_estimated,
+            'old_shipping_fee_actual' => $oldData->shipping_fee_actual,
             'business_id' => $dto->business_id,
             'user_id' => $dto->created_by
         ]);
