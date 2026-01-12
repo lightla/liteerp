@@ -393,7 +393,7 @@ You also need config SMTP mail, timezone, pusher at `./app/.env` before start.
 - Next login in to docker container `docker exec -it erpsoft-8.3 bash`
 - Next run `composer install` 
 - Next run `cp -r ./.env.example .env`
-- Next run `php artisan generate:key`
+- Next run `php artisan key:generate`
 - Next run `php artisan migrate`
 - Next run `php artisan storage:link`
 - Next run `chmod -R 777 ./storage`
