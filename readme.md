@@ -392,21 +392,13 @@ You also need config SMTP mail, timezone, pusher at `./app/.env` before start.
 - First go to root folder and run `docker compose build && docker compose up -d` 
 - Next login in to docker container `docker exec -it erpsoft-8.3 bash`
 - Next run `composer install` 
-- Next run `cp -r ./.env.example .env`
-- Next run `php artisan key:generate`
-- Next run `php artisan migrate`
-- Next run `php artisan storage:link`
-- Next run `chmod -R 777 ./storage`
-- Next run `chmod -R 777 ./extensions`
-- Next run `php artisan jwt:generate-keys` to generate private key and public key for Json Web Token
+- Next run `php artisan app:setup` 
 - Next run `php artisan app:create-admin {email} {password} {name}` to create admin account
-- Next run `php artisan schedule:work`
-- Next run `php artisan queue:work --queue=low,default,high`
-- Next run `npm run build` for production or `npm run dev` for development
+- At here system has been building for production, if you wanna continue development then run `npm run dev`
 
 If you using for production then please change `ENV` at `.env` to value `production`.
 
-Visit: http://localhost:8001/dashboard/login
+Visit: http://localhost:8002/dashboard/login
 
 Note: You can change password for mysql account at `docker-compose.yml` 
 
