@@ -9,7 +9,7 @@ export default function RenderNav({
         return <li className="nav-item mb-2" key={index} style={{
           height: 40
         }}>
-          <NavLink to={item.to} className="erp-link" style={{
+          {item.to ? <NavLink to={item.to} className="erp-link" style={{
             display: 'inline-block',
             width: '100%'
           }}>
@@ -23,7 +23,22 @@ export default function RenderNav({
                 </div>
               </div>
             </div>
-          </NavLink>
+          </NavLink> : <a href={item.link} className="erp-link" style={{
+            display: 'inline-block',
+            width: '100%'
+          }}>
+            <div className='d-flex align-items-center'>
+              <div className='col-2'>
+                  <div className={item.icon}/>
+              </div>
+              <div className='col-10'>
+                <div className='ml-2'>
+                  {t(item.label)}
+                </div>
+              </div>
+            </div>
+          </a> }
+          
         </li>
     })
 }
