@@ -1,6 +1,6 @@
 services:
   erpsoft:
-    mem_limit: 3072m
+    mem_limit: 2048m
     mem_reservation: 512M
     build: 
       context: ./
@@ -16,8 +16,8 @@ services:
       - ./docker-config:/etc/apache2/sites-enabled
       - ./docker-config/php/php.ini:/usr/local/etc/php/conf.d/custom.ini
   laravelcmsdatabase:
-    mem_limit: 512m
-    mem_reservation: 256M
+    mem_limit: 1024m
+    mem_reservation: 128M
     build:
       context: "./"
       dockerfile: 'Dockerfile.db'
@@ -56,3 +56,49 @@ services:
     mem_reservation: 32M
     ports:
       - "6380:6379"
+  scheduler:
+    container_name: 'erpsoft-scheduler'
+    mem_limit: 256m
+    mem_reservation: 64M
+    build:
+      context: .
+      dockerfile: Dockerfile.server
+    command: >
+      sh -c "
+      while [ ! -f storage/app/private/erp.installed ]; do
+        echo 'Waiting for ERP installation...';
+        sleep 10;
+      done;
+      echo 'Start schedule';
+      php artisan schedule:work
+      "
+    restart: unless-stopped
+    depends_on:
+      - erpsoft
+    volumes: 
+      - ./app:/var/www/html
+      - ./docker-config:/etc/apache2/sites-enabled
+      - ./docker-config/php/php.ini:/usr/local/etc/php/conf.d/custom.ini
+  queue:
+    container_name: 'erpsoft-queue'
+    mem_limit: 256m
+    mem_reservation: 64M
+    build:
+      context: .
+      dockerfile: Dockerfile.server
+    command: >
+      sh -c "
+      while [ ! -f storage/app/private/erp.installed ]; do
+        echo 'Waiting for ERP installation...';
+        sleep 10;
+      done;
+      echo 'Start queue';
+      php artisan queue:work --sleep=3 --tries=3
+      "
+    restart: unless-stopped
+    depends_on:
+      - erpsoft
+    volumes: 
+      - ./app:/var/www/html
+      - ./docker-config:/etc/apache2/sites-enabled
+      - ./docker-config/php/php.ini:/usr/local/etc/php/conf.d/custom.ini
