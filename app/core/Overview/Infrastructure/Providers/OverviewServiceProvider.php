@@ -6,6 +6,7 @@ use Illuminate\Support\ServiceProvider;
 use Core\Overview\Domain\Repositories\OverviewRepositoryInterface;
 use Core\Overview\Infrastructure\Repositories\EloquentOverviewRepository;
 use Core\Overview\Domain\Services\OverviewService;
+use Core\Overview\Infrastructure\Commands\OverviewCommand;
 use Core\Overview\Infrastructure\Services\OverviewServiceImpl;
 
 class OverviewServiceProvider extends ServiceProvider
@@ -21,6 +22,11 @@ class OverviewServiceProvider extends ServiceProvider
     {
         $this->loadModuleRoutes();
         $this->loadModuleTranslations();
+        if ($this->app->runningInConsole()) {
+            $this->commands([
+                OverviewCommand::class
+            ]);
+        }
     }
 
     protected function mergeModuleConfig(): void

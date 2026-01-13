@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Console\Commands;
+namespace Core\Overview\Infrastructure\Commands;
 
 use Core\Business\Application\UseCases\AllBusiness;
 use Core\Overview\Application\UseCases\CreateOverview;
