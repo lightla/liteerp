@@ -333,11 +333,9 @@ Modules communicate via **Domain Events**, enabling:
 
 ## 🧭 Roadmap
 - [x] Notification Center  
-- [ ] Reporting Engine  
 - [x] Overview Dashboard  
 - [ ] Extended test coverage  
 - [x] Realtime event streaming (WebSocket)  
-- [ ] Reports
 - [x] Multiple Language
 - [x] Extensions
 
