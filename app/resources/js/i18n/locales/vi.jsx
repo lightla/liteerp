@@ -34,7 +34,7 @@ export default {
     "Suppliers": "Nhà cung cấp",
     "Customers": "Khách hàng",
     "Warehouses": "Kho hàng",
-    "Stocks": "Tồn kho",
+    "Stocks": "Phiếu kho",
     "Inventories": "Kiểm kê",
     "Invoices": "Hóa đơn",
     "Shipping Providers": "Đơn vị vận chuyển",
@@ -327,5 +327,11 @@ export default {
     "You has been uploaded":"Tải lên thành công",
     "Upload":"Tải lên",
     "Add new":"Tải lên",
-    "page_customer_desc":"Quản lý khách hàng"
+    "page_customer_desc":"Quản lý khách hàng",
+    "Empty data":"Dữ liệu trống",
+    "All Notifications":"Tất cả thông báo",
+    "notifications":"thông báo",
+    "page_stock_subtitle":"Theo dõi và quản lý các hoạt động tồn kho bao gồm nhập kho và xuất kho",
+    "Stock Ins":"Nhập kho",
+    "Stock Outs":"Xuất kho"
 };

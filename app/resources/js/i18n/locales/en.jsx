@@ -327,5 +327,11 @@ export default {
     "You has been uploaded":"You has been uploaded",
     "Upload":"Upload",
     "Add new":"Add new",
-    "page_customer_desc":"Manager customers"
+    "page_customer_desc":"Manager customers",
+    "Empty data":"Empty data",
+    "All Notifications":"All Notifications",
+    "notifications":"Notification",
+    "page_stock_subtitle":"Track and manage stock movements including stock ins and stock outs",
+    "Stock Ins":"Stock Ins",
+    "Stock Outs":"Stock Outs"
 };

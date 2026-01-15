@@ -7,7 +7,10 @@ import LoadingBox from './LoadingBox'
 import ListItem from "./NotificationList/ListItem";
 import { useForm } from '../libraries/handleInput';
 import { Select } from '../components/UI/Input/Select'
+import EmptyBox from "./Emptybox";
+import { useI18n } from "@/i18n/useI18n";
 const NotificationList = () => {
+  const {t} = useI18n();
   const [currentPage, setCurrentPage] = useState(0);
   const [lastPage, setLastPage] = useState(0);
   const [types, setTypes] = useState([]);
@@ -95,10 +98,10 @@ const NotificationList = () => {
     >
       <div className="mx-auto col-xs-12 col-sm-12 col-md-6 col-lg-6">
         <div className="d-flex justify-content-between align-items-center mb-3">
-          <h5 className="theme-title-highlight mb-0">All Notifications</h5>
+          <h5 className="theme-title-highlight mb-0">{t('All Notifications')}</h5>
           <div className="d-flex align-items-center">
             <span className="badge bg-secondary me-2">
-              {table.total} notifications
+              {table.total} {t('notifications')}
             </span>
             <Select className="form-select form-select-sm border-secondary"
               name="type"
@@ -131,7 +134,13 @@ const NotificationList = () => {
             return current + 1;
           })
         }}>
-          <i className="bi bi-arrow-bar-down btn"></i>
+          {table.data?.length === 0 
+          ? <div>
+            <EmptyBox/>
+          </div>
+          : currentPage === lastPage 
+          ? null 
+          : <i className="bi bi-arrow-bar-down btn"></i>}
         </div>}
 
 

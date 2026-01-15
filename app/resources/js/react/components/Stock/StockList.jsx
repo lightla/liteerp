@@ -3,17 +3,19 @@ import TabsCustom from '../TabsCustom';
 import StockIns from './StockList/StockIns';
 import StockOuts from './StockList/StockOuts';
 import PageHead from '../PageHead';
+import { useI18n } from '@/i18n/useI18n';
 export default function StockList() {
+    const {t} = useI18n();
     return <div>
         <PageHead
               containerClass='mx-4'
               title='Stocks'
-              subtitle='Manage warehouse receipts by business and import invoices'
+              subtitle='page_stock_subtitle'
               />
         <div className="m-4">
             <TabsCustom
-                navs={[{ key: 'stockin', label: "Stock Ins" },
-                { key: 'stockout', label: "Stock Outs" }]}
+                navs={[{ key: 'stockin', label: t('Stock Ins') },
+                { key: 'stockout', label: t('Stock Outs')}]}
                 contents={[
                     <StockIns/>,
                     <StockOuts/>

@@ -327,5 +327,11 @@ export default {
     "You has been uploaded":"アップロードされました",
     "Upload":"アップロード",
     "Add new":"新規追加",
-    "page_customer_desc":"マネージャー顧客"
+    "page_customer_desc":"マネージャー顧客",
+    "Empty data":"データがありません",
+    "All Notifications":"すべての通知",
+    "notifications":"通知",
+    "page_stock_subtitle":"在庫の入出庫を含む在庫の動きを追跡および管理します",
+    "Stock Ins":"入庫",
+    "Stock Outs":"出庫" 
 };
