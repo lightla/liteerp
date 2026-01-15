@@ -5,7 +5,6 @@ import BusinessChart from '../components/Dashboard/BusinessChart'
 import OverviewService from '../services/OverviewService';
 import { usePopup } from '../components/popups/PopupContext'
 import LoadingBox from '../components/LoadingBox'
-import BootstrapAlert from '../components/BootstrapAlert';
 import { useI18n } from '../../i18n/useI18n';
 export default function Dashboard() {
     const {t} = useI18n();
@@ -22,10 +21,12 @@ export default function Dashboard() {
                 setLoading(false)
             })
             .catch((error) => {
-                openPopup({
-                    type: 'error',
-                    message: error.response?.data?.message ?? 'Error'
-                })
+                if(error.response?.data?.message) {
+                    openPopup({
+                        type: 'error',
+                        message: error.response?.data?.message
+                    })    
+                }
                 setLoading(false)
             })
        
@@ -42,7 +43,7 @@ export default function Dashboard() {
                     </div>
                 </div> : <div>
                     <DashboardSummary summaryData={summaryData} />
-                <BusinessChart data={businessChart} title='Business chart' />
+                <BusinessChart data={businessChart} title={t('Business chart')} />
                 </div> }
                 
             </div> }
