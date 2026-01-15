@@ -312,5 +312,20 @@ export default {
     "Total orders": "Tổng đơn hàng",
     "Group": "Nhóm",
     "Bank Name": "Tên ngân hàng",
-    "overview_nodata":"Bạn cần hoàn thành phần tổng quan, vui lòng tham khảo tài liệu cài đặt"
+    "overview_nodata":"Bạn cần hoàn thành phần tổng quan, vui lòng tham khảo tài liệu cài đặt",
+    "Business chart":"Biểu đồ  kinh doanh",
+    "Logout account":"Thoát tài khoản",
+    "Logout business":"Lựa chọn doanh nghiệp",
+    "extension_page_desc": "quản lý tiện ích mở rộng dễ dang, bạn có thể kích hoạt hoặc tắt kích hoạt, có thể bạn cần thoát khỏi trang quản lý và đăng nhập vào lại công ty để kích hoạt các tính năng đầy đủ của Tiện Ích, khi tải lên 1 Tiện Ích bạn cần chắc rằng nó là file ZIP và được tải ở trang quản lý mã nguồn, không khuyến khích cài đặt các Tiện Ích chưa được xác thực từ LiteERP Team  ",
+    "All extensions": "Tất cả tiện ích",
+    "Author":"Tác giả",
+    "Directory":"Thư mục",
+    "Disable":"Tắt",
+    "Enable":"Mở",
+    "Verified":"Đã xác thực",
+    "Unverified":"Chưa xác thực",
+    "You has been uploaded":"Tải lên thành công",
+    "Upload":"Tải lên",
+    "Add new":"Tải lên",
+    "page_customer_desc":"Quản lý khách hàng"
 };

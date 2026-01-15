@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import ExtensionService from "../../services/ExtensionService";
 import { useForm } from '../../libraries/handleInput'
 import { usePopup } from '../popups/PopupContext'
+import { useI18n } from "../../../i18n/useI18n";
 export default function ExtensionCard({
   item = {
     iconClass: "bi bi-box",
@@ -16,6 +17,7 @@ export default function ExtensionCard({
     setting_link: "#"
   }
 }) {
+  const {t} = useI18n();
   const { openPopup } = usePopup();
   const form = useForm();
   const update = useCallback(() => {
@@ -55,7 +57,7 @@ export default function ExtensionCard({
   const confirmDelete = useCallback(() => {
     openPopup({
       type: 'warning',
-      message: 'Are you sure to delete?',
+      message: t('Are you sure to delete?'),
       onConfirm: () => {
         destroy();
       }
@@ -80,9 +82,9 @@ export default function ExtensionCard({
             <div className="small text-muted">
               v{form.formData?.version} •{" "}
               {form.formData?.verified ? (
-                <span className="text-success">Verified</span>
+                <span className="text-success">{t('Verified')}</span>
               ) : (
-                <span className="text-danger">Unverified</span>
+                <span className="text-danger">{t('Unverified')}</span>
               )}
             </div>
           </div>
@@ -98,10 +100,10 @@ export default function ExtensionCard({
         {/* Meta */}
         <ul className="list-unstyled small text-muted mb-4">
           <li>
-            <strong>Author:</strong> {form.formData?.author}
+            <strong>{t('Author')}:</strong> {form.formData?.author}
           </li>
           <li>
-            <strong>Directory:</strong> {form.formData?.directory}
+            <strong>{t('Directory')}:</strong> {form.formData?.directory}
           </li>
         </ul>
 
@@ -114,7 +116,7 @@ export default function ExtensionCard({
               }`}
           >
             <i className={`bi ${form.formData?.status ? "bi-x-circle" : "bi-check-circle"} me-1`} />
-            {form.formData?.status ? "Disable" : "Enable"}
+            {form.formData?.status ? t("Disable") : t("Enable")}
           </button>
           {form.formData?.setting_link ? <a
             href={form.formData?.setting_link}
@@ -123,13 +125,13 @@ export default function ExtensionCard({
             rel="noreferrer"
           >
             <i className="bi bi-gear me-1" />
-            Settings
+            {t("Settings")}
           </a> : null }   
 
           <button
             onClick={confirmDelete}
             className="btn btn-sm btn-outline-danger ms-auto"
-            title="Delete"
+            title={t("Delete")}
           >
             <i className="bi bi-trash" />
           </button>

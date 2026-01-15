@@ -1,4 +1,5 @@
 import React from "react";
+import { useI18n } from "../../i18n/useI18n";
 
 export default function CommonDataTable({
   columns = [],
@@ -15,7 +16,7 @@ export default function CommonDataTable({
   add = null,
   iconEdit = null 
 }) {
-
+  const {t} = useI18n();
   return (
     <div className={`card rounded-3 p-4 shadow-sm theme-sidebar-bg theme-title`}>
       <div className="d-flex justify-content-between">
@@ -24,7 +25,7 @@ export default function CommonDataTable({
         </div>
         {add ? <span style={{
           height: 25
-        }} onClick={add} className="badge bg-primary text-right btn">Add new</span> : null }
+        }} onClick={add} className="badge bg-primary text-right btn">{t('Add new')}</span> : null }
         
       </div>
       <div className="table-responsive">

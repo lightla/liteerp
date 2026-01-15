@@ -6,9 +6,10 @@ import { Link, useNavigate } from "react-router-dom";
 import NotificationService from "../services/NotificationService";
 import { setNotificationCount } from "../redux/NotificationSlice";
 import { useEcho } from "@laravel/echo-react";
-import reactEcho from "../../bootstrap";
 import LanguageSwitcher from "./LanguageSwitcher";
+import { useI18n } from "../../i18n/useI18n";
 export default function Topbar() {
+  const {t} = useI18n();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const theme = useSelector((state) => state.theme.mode);
@@ -74,10 +75,10 @@ export default function Topbar() {
         </button>
         <div>
           <ul className="dropdown-menu" aria-labelledby="navbarDropdown">
-            <li><Link className="dropdown-item" to={"/profile"}>Profile</Link></li>
+            <li><Link className="dropdown-item" to={"/profile"}>{t('Profile')}</Link></li>
             <li><hr className="dropdown-divider" /></li>
-            <li><Link className="dropdown-item" to="/logout">Logout account</Link></li>
-            <li><Link className="dropdown-item" to="/business">Logout business</Link></li>
+            <li><Link className="dropdown-item" to="/logout">{t('Logout account')}</Link></li>
+            <li><Link className="dropdown-item" to="/business">{t('Logout business')}</Link></li>
           </ul>
         </div>
       </div>

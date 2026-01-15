@@ -312,5 +312,20 @@ export default {
     "Total orders": "注文合計",
     "Group": "グループ",
     "Bank Name": "銀行名",
-    "overview_nodata":"概要データを作成する必要があるので、ドキュメントのインストールを検討してください。"
+    "overview_nodata":"概要データを作成する必要があるので、ドキュメントのインストールを検討してください。",
+    "Business chart":"ビジネスチャート",
+    "Logout account":"ログアウトアカウント",
+    "Logout business":"ログアウトビジネス",
+    "extension_page_desc": "拡張機能の管理は簡単で、有効化または無効化できます。拡張機能の全機能を有効にするには、管理ページを終了して再度ログインする必要がある場合があります。拡張機能をアップロードする際は、ZIPファイルでソースコード管理ページからダウンロードしてください。LiteERPチームによって検証されていない拡張機能のインストールは推奨されません。",
+    "All extensions": "すべての拡張機能",
+    "Author":"著者",
+    "Directory":"ディレクトリ",
+    "Disable":"無効",
+    "Enable":"有効",
+    "Verified":"検証済み",
+    "Unverified":"未検証",
+    "You has been uploaded":"アップロードされました",
+    "Upload":"アップロード",
+    "Add new":"新規追加",
+    "page_customer_desc":"マネージャー顧客"
 };

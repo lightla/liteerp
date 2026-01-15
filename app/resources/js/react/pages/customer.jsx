@@ -12,7 +12,7 @@ export default function Customer() {
             <PageHead
             containerClass='mx-4'
             title='Customers'
-            subtitle='Manager customers'
+            subtitle="page_customer_desc"
             />
             <div className="m-4">
                 <TabsCustom

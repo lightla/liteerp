@@ -7,7 +7,9 @@ import { InputForm } from '../components/UI/Input/InputForm'
 import {usePopup} from '../components/popups/PopupContext'
 import LoadingBox from '../components/LoadingBox'
 import EmptyBox from '../components/Emptybox'
+import { useI18n } from '../../i18n/useI18n';
 export default function Extensions() {
+    const {t} = useI18n();
     let fileRef = useRef(null);
     const [loading,setLoading] = useState(false)
     const { openPopup } = usePopup();
@@ -30,7 +32,7 @@ export default function Extensions() {
         .then((resp) => {
             openPopup({
                 type: 'success',
-                message: 'You has been uploaded'
+                message: t('You has been uploaded')
             })
             setExtensions([])
             list();
@@ -53,8 +55,8 @@ export default function Extensions() {
     }, [])
     return <DashboardLayout>
         <div>
-            <PageHead title='Extension'
-                subtitle='Manage extension'
+            <PageHead title={t('Extension')}
+                subtitle={t('extension_page_desc')}
             />
             <div className=''>
                 <div className='border-bottom'>
@@ -62,11 +64,11 @@ export default function Extensions() {
                         <div className='row mb-2 pt-3 pb-2 px-1'>
                             <div className='col-8'>
                                 <div className='d-flex'>
-                                    <h4>All extensions</h4>
+                                    <h4>{t('All extensions')}</h4>
                                     <small className='mt-1 mx-3 badge bg-primary text-white'
                                         style={{
                                             height: 20
-                                        }} onClick={upload} >Upload</small>
+                                        }} onClick={upload} >{t('Upload')}</small>
                                         <input onChange={uploadExtension} ref={fileRef} type='file' id='file' style={{
                                             display: 'none'
                                         }} />
@@ -83,7 +85,7 @@ export default function Extensions() {
                                 <ExtensionCard item={item} />
                             </div>
                         })}
-                        {extensions.length === 0 ? <EmptyBox message='Please install extensions'/> : null}
+                        {extensions.length === 0 ? <EmptyBox message={t('Please install extensions')}/> : null}
                     </div>
 
                 </div>

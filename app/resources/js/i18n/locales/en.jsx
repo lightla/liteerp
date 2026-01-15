@@ -312,5 +312,20 @@ export default {
     "Total orders": "Total orders",
     "Group": "Group",
     "Bank Name": "Bank Name",
-    "overview_nodata":"You need make overview data, please consider document install"
+    "overview_nodata":"You need make overview data, please consider document install",
+    "Business chart":"Business chart",
+    "Logout account":"Logout account",
+    "Logout business":"Logout business",
+    "extension_page_desc": "Extension management is easy; you can enable or disable them. You may need to exit the management page and log back in to activate the full features of the extension. When uploading an extension, make sure it's a ZIP file and downloaded from the source code management page. Installing extensions that haven't been verified by the LiteERP Team is not recommended.",
+    "All extensions": "All extensions",
+    "Author":"Author",
+    "Directory": "Directory",
+    "Disable": "Disable",
+    "Enable": "Enable",
+    "Verified":"Verified",
+    "Unverified":"Unverified",
+    "You has been uploaded":"You has been uploaded",
+    "Upload":"Upload",
+    "Add new":"Add new",
+    "page_customer_desc":"Manager customers"
 };
