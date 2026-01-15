@@ -30,6 +30,7 @@ class ViewBusinessRole {
                 phase: HookPhase::UI,
                 timing: HookTiming::ON,
                 payload: [
+                    ...$data,
                     'roles' => $roles,
                     'nav' => $nav
                 ],
