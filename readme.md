@@ -389,18 +389,22 @@ Setup basic information for business, you need change information like business 
 
 You also need config SMTP mail, timezone, pusher at `./app/.env` before start.
 
+To config docker environment you can copy file `.env.example` at root folder and rename to `.env`
+
 - First go to root folder and run `docker compose build && docker compose up -d` 
-- Next login in to docker container `docker exec -it erpsoft-8.3 bash`
+- Next login in to docker container `docker exec -it LiteERP-8.3 bash`
 - Next run `composer install` 
 - Next run `php artisan app:setup` 
 - Next run `php artisan app:create-admin {email} {password} {name}` to create admin account
-- At here system has been building for production, if you wanna continue development then run `npm run dev`
+- At here system has been building for production, if you wanna continue development then run `npm run dev`, but you shuold exit docker container and run with OS Environment.
 
 If you using for production then please change `ENV` at `.env` to value `production`.
 
-Visit: http://localhost:8002/dashboard/login
+Visit: http://localhost:8002/dashboard/login. 
 
-Note: You can change password for mysql account at `docker-compose.yml` 
+To config all devices inernal using together, you need check current ip local of server and change `APP_URL` example: 
+
+`APP_URL=http://192.168.1.2:8002`. Then all devices can access to this endpoint and use software. But don't forget devices shuold connect with one device router.
 
 --- 
 
