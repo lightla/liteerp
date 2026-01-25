@@ -23,8 +23,8 @@ class ExtensionInstallExecutor implements ExtensionInstallExecutorInterface
     private function runMigrations(ExtensionInstallPlan $plan): void
     {
         foreach ($plan->migrations as $migration) {
-            $filePath = base_path("extensions/". $plan->directory ."/Database/Migrations/". $migration);
-            if(file_exists($filePath)) {
+            $filePath = "extensions/". $plan->directory ."/Database/Migrations/". $migration;
+            if(file_exists(base_path($filePath))) {
                Artisan::call($plan->install ? "migrate" : "migrate:rollback",[
                 '--path' => $filePath,
                 '--force' => true
