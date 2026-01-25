@@ -3,7 +3,6 @@ import DashboardLayout from '../layouts/DashboardLayout'
 import PageHead from '../components/PageHead'
 import ExtensionService from '../services/ExtensionService';
 import ExtensionCard from '../components/Extension/ExtensionCard';
-import { InputForm } from '../components/UI/Input/InputForm'
 import {usePopup} from '../components/popups/PopupContext'
 import LoadingBox from '../components/LoadingBox'
 import EmptyBox from '../components/Emptybox'
@@ -80,12 +79,12 @@ export default function Extensions() {
                 <div className='container mt-3'>
                     <div className='row'>
                         {loading ?<LoadingBox/>: null }
-                        {extensions.map((item, index) => {
+                        {extensions?.map((item, index) => {
                             return <div className='col-4 mb-3' key={index}>
                                 <ExtensionCard item={item} />
                             </div>
                         })}
-                        {extensions.length === 0 ? <EmptyBox message={t('Please install extensions')}/> : null}
+                        {extensions?.length === 0 ? <EmptyBox message={t('Please install extensions')}/> : null}
                     </div>
 
                 </div>
