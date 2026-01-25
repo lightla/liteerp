@@ -2,6 +2,7 @@
 
 namespace Core\Extension\Http\Controllers;
 
+use Core\Extension\Application\UseCases\AllExtension;
 use Core\Extension\Application\UseCases\CreateExtension;
 use Core\Extension\Application\UseCases\DeleteExtension;
 use Core\Extension\Application\UseCases\IndexExtension;
@@ -18,12 +19,12 @@ class ExtensionController
         $entity = $useCase->handle($request->all());
         return response()->json(['message' => $entity]);
     }
-    public function update(UpdateExtensionRequest $request, UpdateExtension $useCase)
+    public function update(UpdateExtensionRequest $request, UpdateExtension $useCase,string $id)
     {
         $entity = $useCase->handle($request->all());
         return response()->json(['message' => $entity]);
     }
-    public function index(IndexExtensionRequest $request, IndexExtension $useCase) {
+    public function index(IndexExtensionRequest $request, AllExtension $useCase) {
         $entity = $useCase->handle($request->all());
         return response()->json(['message' => $entity]);
     }

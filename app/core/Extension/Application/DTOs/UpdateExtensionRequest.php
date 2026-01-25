@@ -8,8 +8,8 @@ class UpdateExtensionRequest
     public function __construct(
         public int $user_id,
         public int $business_id,
-        public string $directory,
-        public bool $status
+        public bool $status,
+        public ?int $id = null,
     ) {}
 
     public static function fromArray(array $data): self
@@ -17,8 +17,8 @@ class UpdateExtensionRequest
         return new self(
             user_id: $data['user_id'],
             business_id: $data['business_id'],
-            directory: $data['directory'],
-            status: $data['status']
+            status: $data['status'],
+            id: $data['id'],
         );
     }
 
@@ -27,8 +27,8 @@ class UpdateExtensionRequest
         return [
             'user_id' => $this->user_id,
             'business_id' => $this->business_id,
-            'directory' => $this->directory,
-            'status'    => $this->status
+            'status'    => $this->status,
+            'id'=> $this->id
         ];
     }
 }

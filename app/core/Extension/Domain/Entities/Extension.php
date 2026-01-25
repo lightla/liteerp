@@ -12,7 +12,10 @@ final class Extension
         public bool $verified,
         public bool $status,
         public ?string $author = null,
-        public ?string $icon = null
+        public ?string $icon = null,
+        public ?string $support_version = null,
+        public ?string $email = null,
+        public ?int $id = null 
     ) {}
 
 
@@ -26,7 +29,10 @@ final class Extension
             verified: (bool) ($data['verified'] ?? false),
             status: (bool) ($data['status'] ?? false),
             author: $data['author'] ?? null,
-            icon: $data['icon'] ?? null
+            icon: $data['icon'] ?? 'bi bi-gear',
+            support_version: $data['support_version'] ?? null,
+            email: $data['email'] ?? null,
+            id: $data['id'] ?? null
         );
     }
 
@@ -42,7 +48,10 @@ final class Extension
             'verified'    => $this->verified,
             'status'     => $this->status,
             'author' => $this->author,
-            'icon'  => $this->icon
+            'icon'  => $this->icon,
+            'support_version' => $this->support_version,
+            'email'=> $this->email,
+            'id' => $this->id
         ];
     }
 
@@ -98,5 +107,8 @@ final class Extension
     public function disable()
     {
         $this->status = false;
+    }
+    public function switchStatus(){
+        $this->status = $this->status ? false : true;
     }
 }

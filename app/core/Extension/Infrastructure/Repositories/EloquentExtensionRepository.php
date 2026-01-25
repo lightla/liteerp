@@ -2,11 +2,13 @@
 
 namespace Core\Extension\Infrastructure\Repositories;
 
+use App\Models\ExtensionModel;
 use Core\Extension\Domain\Entities\Extension;
 use Core\Extension\Domain\Repositories\ExtensionRepositoryInterface;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Str;
 use ZipArchive;
 
 class EloquentExtensionRepository implements ExtensionRepositoryInterface
@@ -19,35 +21,18 @@ class EloquentExtensionRepository implements ExtensionRepositoryInterface
     }
     public function update(Extension $entity): ?Extension
     {
-
-        $extensionPath = $this->extensionsPath . '/' . $entity->directory;
-        $manifestPath  = $extensionPath . '/extension.json';
-
-        /**
-         * Toggle enabled flag
-         * Default = false
-         */
-       $entity->isEnabled() ? $entity->disable() : $entity->enable();
-
-        // Save back to file
-        File::put(
-            $manifestPath,
-            json_encode(
-                $entity->toArray(),
-                JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES
-            )
-        );
-
+        ExtensionModel::where('id', $entity->id)->update($entity->toArray());
         return $entity;
     }
     /**
      * Upload zip & extract extension
      */
-    public function create(array $data): ?array
+    public function create(array $data): ?Extension
     {
         /** @var UploadedFile $file */
         $file = $data['file'] ?? null;
-
+        $originalName = $file->getClientOriginalName(); 
+        $directory = pathinfo($originalName, PATHINFO_FILENAME);
         if (!$file instanceof UploadedFile) {
             Log::info('Extension file is required');
             return null;
@@ -59,7 +44,7 @@ class EloquentExtensionRepository implements ExtensionRepositoryInterface
         // Store zip temporarily
         $zipPath = $file->storeAs(
             'extensions/tmp',
-            uniqid('ext_') . '.zip',
+            $originalName,
             'local'
         );
 
@@ -76,76 +61,13 @@ class EloquentExtensionRepository implements ExtensionRepositoryInterface
             Log::info('Cannot open extension zip file');
             return null;
         }
-
-        // Extract to extensions directory
         $zip->extractTo($this->extensionsPath);
         $zip->close();
-
-        // Cleanup zip
         File::delete($fullZipPath);
-
-        return $data;
-    }
-
-    /**
-     * Scan extensions directory & load extension.json
-     */
-    public function index(array $data = []): array
-    {
-        if (!File::exists($this->extensionsPath)) {
-            return [];
-        }
-
-        $extensions = [];
-
-        foreach (File::directories($this->extensionsPath) as $dir) {
-            $manifestPath = $dir . '/extension.json';
-
-            if (!File::exists($manifestPath)) {
-                continue;
-            }
-
-            $manifest = json_decode(
-                File::get($manifestPath),
-                true,
-                512,
-                JSON_THROW_ON_ERROR
-            );
-
-            // Fallback slug from folder name
-            $manifest['directory'] = $dir;
-            $item = Extension::fromArray($manifest);
-            $extensions[] = $item->toArray();
-        }
-
-        return $extensions;
-    }
-
-    /**
-     * Delete extension folder
-     */
-    public function delete(Extension $entity): ?Extension
-    {
-        $directory = $entity->directory;
-
-        $extensionPath = $this->extensionsPath . '/' . $directory;
-
-        // Delete extension directory
-        File::deleteDirectory($extensionPath);
-
-        return $entity;
-    }
-    public function findByDirectory(array $data): ?Extension
-    {
-        $directory = $data['directory'] ?? null;
-
-        if (!$directory || $directory === '') {
-            return null;
-        }
-
-        $extensionPath = $this->extensionsPath . '/' . $directory;
-        $manifestPath  = $extensionPath . '/extension.json';
-
+        /**
+         * Save DB and run setup
+         */
+        $manifestPath = $this->extensionsPath . '/' . $directory . '/extension.json';
         if (!File::exists($manifestPath)) {
             return null;
         }
@@ -158,7 +80,59 @@ class EloquentExtensionRepository implements ExtensionRepositoryInterface
         );
 
         $entity = Extension::fromArray($manifest);
-        $entity->directory = $directory;
+        ExtensionModel::updateOrInsert([
+            'name' => $entity->name,
+        ], [
+            'name' => $entity->name,
+            'version' => $entity->version,
+            'directory' => $directory,
+            'status' => $entity->status,
+            'author' => $entity->author,
+            'email' => $entity->email,
+            'support_version' => $entity->support_version,
+            'verified' => $entity->verified,
+            'icon' => $entity->icon,
+            'created_at' => date('Y-m-d H:i:s', time()),
+            'updated_at' => date('Y-m-d H:i:s', time())
+        ]);
         return $entity;
+    }
+
+    /**
+     * Scan extensions directory & load extension.json
+     */
+    public function index(array $data = []): array
+    {
+        return ExtensionModel::paginate(15)->toArray();
+    }
+
+    public function all(): array
+    {
+        return ExtensionModel::get()->toArray();
+    }
+
+    /**
+     * Delete extension folder
+     */
+    public function delete(Extension $entity): ?Extension
+    {
+        ExtensionModel::where('id', $entity->id)->delete();
+        $directory = $entity->directory;
+
+        $extensionPath = $this->extensionsPath . '/' . $directory;
+
+        // Delete extension directory
+        if (File::exists($extensionPath)) {
+            File::deleteDirectory($extensionPath);
+        }
+        return $entity;
+    }
+    public function findById(array $data): ?Extension
+    {
+        $row = ExtensionModel::where('id',$data['id'])->first()?->toArray();
+        if(!$row) {
+            return null;
+        }
+        return Extension::fromArray($row);
     }
 }

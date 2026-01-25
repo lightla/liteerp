@@ -8,9 +8,7 @@ class DeleteExtensionRequest extends FormRequest
 {
     public function rules(): array
     {
-        return [
-            'directory' => 'required|string|max:250'
-        ];
+        return [];
     }
 
     public function authorize(): bool

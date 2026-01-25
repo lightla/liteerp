@@ -7,8 +7,10 @@ use Core\Extension\Domain\Entities\Extension;
 
 interface ExtensionService
 {
-    public function create(array $data): array | BadException;
+    public function create(array $data): Extension | BadException;
     public function update(array $data): Extension | BadException;
     public function delete(array $data): Extension | BadException;
+    public function findById(array $data): Extension | BadException;
     public function index(array $data): array;
+    public function all(): array;
 }
