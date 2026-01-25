@@ -15,10 +15,10 @@ class DeleteExtension
 
     public function handle(array $data)
     {
-        DB::beginTransaction();
         $dto = DeleteExtensionRequest::fromArray($data);
         $entity = $this->service->findById($dto->toArray());
-        $this->exec->execute($this->install->installPlan($entity));   
+        $this->exec->execute($this->install->uninstallPlan($entity));   
+        DB::beginTransaction();
         $entity = $this->service->delete($entity->toArray());
         DB::commit();
         return $entity;

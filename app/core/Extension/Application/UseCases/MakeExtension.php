@@ -18,8 +18,8 @@ class MakeExtension
         DB::beginTransaction();
         $dto = MakeExtensionCommand::fromArray($data);
         $entity = $this->service->make($dto->toArray());
-        $this->exec->execute($this->install->installPlan($entity));   
         DB::commit();
+        $this->exec->execute($this->install->installPlan($entity));   
         return $entity;
     }
 }
