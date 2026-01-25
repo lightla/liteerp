@@ -145,6 +145,42 @@ class {$name}Model extends Model
 }
 PHP);
 
+// Install
+        $fs->put("{$base}/Install.php", <<<PHP
+<?php
+
+return [
+    'install' => [
+        'commands' => [
+            // [
+            //     'name' => 'app:npmbuild',
+            //     'description' => 'Build frontend assets',
+            //     'risk' => 'low',
+            // ],
+        ],
+
+        'migrations' => [
+            // '2025_01_01_000000_create_example_table.php',
+        ],
+    ],
+
+    'uninstall' => [
+        'commands' => [
+            // [
+            //     'name' => 'app:npmbuild',
+            //     'description' => 'Rebuild frontend after uninstall',
+            //     'risk' => 'low',
+            // ],
+        ],
+
+        'migrations' => [
+            // rollback handled by core
+        ],
+    ],
+];
+
+PHP);
+
         // extension.json
         $fs->put("{$base}/extension.json", json_encode([
             'name' => Str::kebab($name),
@@ -154,8 +190,9 @@ PHP);
             "verified"  => true,
             "author" => "Author name",
             "icon" => null,
-            "setting_link" => null
-            
+            "setting_link" => null,
+            "email"=> null,
+
         ], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
 
         // README
