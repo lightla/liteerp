@@ -1,7 +1,7 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { Bell, Sun, Moon } from "react-bootstrap-icons";
 import { useDispatch, useSelector } from "react-redux";
-import { toggleTheme } from "../redux/themeSlice";
+import { setTheme, toggleTheme } from "../redux/themeSlice";
 import { Link, useNavigate } from "react-router-dom";
 import NotificationService from "../services/NotificationService";
 import { setNotificationCount } from "../redux/NotificationSlice";
@@ -9,7 +9,7 @@ import { useEcho } from "@laravel/echo-react";
 import LanguageSwitcher from "./LanguageSwitcher";
 import { useI18n } from "../../i18n/useI18n";
 export default function Topbar() {
-  const {t} = useI18n();
+  const { t } = useI18n();
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const theme = useSelector((state) => state.theme.mode);
@@ -32,10 +32,14 @@ export default function Topbar() {
    * Pull notifications
   */
   useEffect(() => {
-    if(!notify) {
+    if (!notify) {
       getNotification();
     }
   }, [notify]);
+  const media = window.matchMedia('(prefers-color-scheme: dark)');
+  media.addEventListener('change', e => {
+    dispatch(setTheme(e.matches ? 'dark-theme' : 'light-theme'));
+  });
   return (
     <div className="erp-topbar d-flex align-items-center justify-content-between px-4">
       {/* Left Section */}
@@ -50,7 +54,7 @@ export default function Topbar() {
 
       {/* Right Section */}
       <div className="d-flex align-items-center">
-        <LanguageSwitcher/>
+        <LanguageSwitcher />
         <div onClick={() => {
           navigate('/notification')
         }} className="position-relative me-4 topbar-notification ml-2">
