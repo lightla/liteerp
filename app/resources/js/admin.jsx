@@ -30,8 +30,9 @@ import Profile from "./react/pages/Profile";
 import ForgetPassword from "./react/pages/forget-password";
 import ResetPassword from "./react/pages/reset-password";
 import Logout from "./react/pages/Logout";
-import Extensions from "./react/pages/Extensions";
+import Extensions from "./react/pages/extensions";
 import { I18nProvider } from "./i18n/I18nContext";
+
 const App = () => {
   return (
       <Provider store={store}>
