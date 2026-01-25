@@ -2,18 +2,33 @@
 
 namespace App\Console\Commands;
 
+use Core\Extension\Application\UseCases\MakeExtension as UseCasesMakeExtension;
 use Illuminate\Console\Command;
 use Illuminate\Support\Str;
 use Illuminate\Filesystem\Filesystem;
 
 class MakeExtension extends Command
 {
-    protected $signature = 'make:extension {name}';
+    protected $signature = 'make:extension {name} {directory}';
     protected $description = 'Generate a new LiteERP extension skeleton';
+    private array $info = [
+        'name' => '',
+        'version' => '0.0.1',
+        'description' => "",
+        'status' => false,
+        "verified"  => true,
+        "author" => "Author name",
+        "icon" => null,
+        "setting_link" => null,
+        "email" => null,
+        "directory" => '',
+        "support_version" => '',
+    ];
 
-    public function handle()
+    public function handle(UseCasesMakeExtension $make)
     {
         $name = Str::studly($this->argument('name'));
+        $directory = Str::studly($this->argument('directory'));
         $basePath = base_path("extensions/{$name}");
 
         $fs = new Filesystem();
@@ -22,10 +37,16 @@ class MakeExtension extends Command
             $this->error("Extension {$name} already exists.");
             return Command::FAILURE;
         }
-
+        $this->info['name'] = $name;
+        $this->info['directory'] = $directory;
+        $this->info['description'] = $name ." extension support LiteERP";  
         $this->createDirectories($fs, $basePath);
         $this->createFiles($fs, $basePath, $name);
-
+        $make->handle($this->info);
+        /**
+         * We need setup chmod 777 to support ubuntu delete folder
+         */
+        exec('chmod -R 777 ' . $basePath);
         $this->info("Extension {$name} generated successfully.");
         return Command::SUCCESS;
     }
@@ -33,7 +54,6 @@ class MakeExtension extends Command
     protected function createDirectories(Filesystem $fs, string $base)
     {
         $dirs = [
-            '',
             'Http/Controllers',
             'Models',
             'Hooks',
@@ -72,7 +92,10 @@ class ExtensionServiceProvider extends ServiceProvider
 
     public function boot()
     {
-        \$this->loadMigrationsFrom(__DIR__.'/Database/Migrations');
+        if(env('APP_ENV') !== 'production') {
+          // support for development to easy
+          \$this->loadMigrationsFrom(__DIR__.'/Database/Migrations');
+        }
         \$this->loadRoutesFrom(__DIR__.'/Routes/web.php');
     }
 }
@@ -145,7 +168,7 @@ class {$name}Model extends Model
 }
 PHP);
 
-// Install
+        // Install
         $fs->put("{$base}/Install.php", <<<PHP
 <?php
 
@@ -182,18 +205,7 @@ return [
 PHP);
 
         // extension.json
-        $fs->put("{$base}/extension.json", json_encode([
-            'name' => Str::kebab($name),
-            'version' => '0.0.1',
-            'description' => "{$name} extension for LiteERP",
-            'status' => false,
-            "verified"  => true,
-            "author" => "Author name",
-            "icon" => null,
-            "setting_link" => null,
-            "email"=> null,
-
-        ], JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
+        $fs->put("{$base}/extension.json", json_encode($this->info, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES));
 
         // README
         $fs->put("{$base}/README.md", <<<MD
