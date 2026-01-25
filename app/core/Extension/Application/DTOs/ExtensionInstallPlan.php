@@ -7,5 +7,8 @@ class ExtensionInstallPlan
         public array $commands, 
         public array $migrations, 
         public array $warnings, 
-        public string $directory) {}
+        public string $directory,
+        public bool $install) {
+            
+        }
 }

@@ -19,7 +19,8 @@ class ExtensionInstall implements ExtensionInstallInterface
             commands: $config['install']["commands"],
             migrations: $config['install']["migrations"],
             warnings: [],
-            directory: $extension->directory
+            directory: $extension->directory,
+            install: true
         );
     }
     public function uninstallPlan(Extension $extension): ExtensionInstallPlan
@@ -33,7 +34,8 @@ class ExtensionInstall implements ExtensionInstallInterface
             commands: $config['uninstall']["commands"],
             migrations: $config['uninstall']["migrations"],
             warnings: [],
-            directory: $extension->directory
+            directory: $extension->directory,
+            install: false
         );
     }
 }
