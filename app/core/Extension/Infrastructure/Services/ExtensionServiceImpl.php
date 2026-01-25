@@ -52,4 +52,12 @@ class ExtensionServiceImpl implements ExtensionService
     {
         return $this->repo->all();
     }
+    public function make(array $data): Extension | BadException
+    {
+        $entity = $this->repo->make(Extension::fromArray($data));
+        if(!$entity) {
+            throw new BadException(__("Add extension error"));
+        }
+        return $entity;
+    }
 }

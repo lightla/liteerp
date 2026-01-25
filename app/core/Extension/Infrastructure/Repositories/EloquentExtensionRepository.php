@@ -135,4 +135,27 @@ class EloquentExtensionRepository implements ExtensionRepositoryInterface
         }
         return Extension::fromArray($row);
     }
+    /**
+     * Only insert DB, because extension make manual 
+     */
+    public function make(Extension $entity): Extension
+    {
+        
+        ExtensionModel::updateOrInsert([
+            'name' => $entity->name,
+        ], [
+            'name' => $entity->name,
+            'version' => $entity->version,
+            'directory' => $entity->directory,
+            'status' => $entity->status,
+            'author' => $entity->author,
+            'email' => $entity->email,
+            'support_version' => $entity->support_version,
+            'verified' => $entity->verified,
+            'icon' => $entity->icon,
+            'created_at' => date('Y-m-d H:i:s', time()),
+            'updated_at' => date('Y-m-d H:i:s', time())
+        ]);
+        return $entity;
+    }
 }

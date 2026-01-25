@@ -7,7 +7,6 @@ use Core\Extension\Domain\Services\ExtensionService;
 use Core\Extension\Infrastructure\Supports\ExtensionInstall;
 use Core\Extension\Infrastructure\Supports\ExtensionInstallExecutor;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Event;
 
 class DeleteExtension
 {
@@ -17,7 +16,6 @@ class DeleteExtension
     public function handle(array $data)
     {
         DB::beginTransaction();
-        Event::dispatch('erp.extension.delete',$data);
         $dto = DeleteExtensionRequest::fromArray($data);
         $entity = $this->service->findById($dto->toArray());
         $this->exec->execute($this->install->installPlan($entity));   

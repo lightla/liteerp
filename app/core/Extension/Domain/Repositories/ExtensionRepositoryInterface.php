@@ -12,4 +12,5 @@ interface ExtensionRepositoryInterface
     public function delete(Extension $data): ?Extension;
     public function index(array $data): array;
     public function all(): array;
+    public function make(Extension $entity): Extension;
 }
