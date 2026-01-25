@@ -2,10 +2,14 @@
 
 namespace App\Jobs;
 
-use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Contracts\Queue\ShouldQueueAfterCommit;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Support\Facades\Artisan;
-class RunCommandJob implements ShouldQueue
+/**
+ * This job only run at extension
+ * Not implement at module, because module can use module job
+ */
+class RunCommandJob implements ShouldQueueAfterCommit
 {
     use Queueable;
 
@@ -23,8 +27,6 @@ class RunCommandJob implements ShouldQueue
     public function handle(): void
     {
         //
-        if(env('ENV') === 'production') {
-            Artisan::call($this->command);
-        }
+        Artisan::call($this->command);
     }
 }
