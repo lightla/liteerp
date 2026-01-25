@@ -3,31 +3,33 @@
 namespace App\Providers;
 
 use App\Supports\Hooks\HookDispatcher;
+use Core\Extension\Application\UseCases\AllExtension;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
+    
     /**
      * Register any application services.
      */
     public function register(): void
     {
         $this->registerCoreModules();
-        $this->app->singleton(HookDispatcher::class);
     }
 
     /**
      * Bootstrap any application services.
      */
-    public function boot(): void
+    public function boot(AllExtension $allExtension): void
     {
         //
+        $this->autoloadExtension($allExtension);
+        $this->app->singleton(HookDispatcher::class);
     }
     protected function registerCoreModules(): void
     {
         $this->autoloadModule();
-        $this->autoloadExtension();
     }
     protected function autoloadModule()
     {
@@ -53,7 +55,7 @@ class AppServiceProvider extends ServiceProvider
         }
     }
 
-    protected function autoloadExtension(): void
+    protected function autoloadExtension(AllExtension $allExtension): void
     {
         $extensionsPath = base_path('extensions');
 
@@ -61,22 +63,12 @@ class AppServiceProvider extends ServiceProvider
             return;
         }
 
-        foreach (File::directories($extensionsPath) as $extensionPath) {
-            $moduleName = basename($extensionPath);
-            $configPath = "{$extensionPath}/extension.json";
-            $providerPath = "{$extensionPath}/ExtensionServiceProvider.php";
+        foreach ($allExtension->handle() as $extension) {
+            $moduleName = $extension['name'];
+            $extensionPath = $extension['directory'];
+            $providerPath = base_path('extensions/' .$extensionPath . "/ExtensionServiceProvider.php");
 
-            if (! File::exists($configPath)) {
-                continue;
-            }
-            try {
-                $config = json_decode(File::get($configPath), true, 512, JSON_THROW_ON_ERROR);
-            } catch (\Throwable $e) {
-                logger()->error("Invalid extension.json in {$moduleName}: {$e->getMessage()}");
-                continue;
-            }
-
-            if (! ($config['status'] ?? false)) {
+            if (boolval($extension["status"]) === false) {
                 continue;
             }
 
@@ -85,7 +77,7 @@ class AppServiceProvider extends ServiceProvider
                 continue;
             }
 
-            $providerClass = "Extensions\\{$moduleName}\\ExtensionServiceProvider";
+            $providerClass = "Extensions\\{$extensionPath}\\ExtensionServiceProvider";
 
             try {
                 $this->app->register($providerClass);
