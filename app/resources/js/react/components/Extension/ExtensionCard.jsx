@@ -5,7 +5,7 @@ import { usePopup } from '../popups/PopupContext'
 import { useI18n } from "../../../i18n/useI18n";
 export default function ExtensionCard({
   item = {
-    iconClass: "bi bi-box",
+    icon: "bi bi-box",
     name: "Unknown Extension",
     version: "0.0.0",
     verified: false,
@@ -72,14 +72,14 @@ export default function ExtensionCard({
         {/* Header */}
         <div className="d-flex align-items-start mb-3">
           <div className="me-3 fs-3 text-primary">
-            <i className={form.formData?.iconClass ?? 'bi bi-google-play'}></i>
+            <i className={form.formData?.icon ?? 'bi bi-google-play'}></i>
           </div>
 
           <div className="flex-grow-1">
             <h5 className="card-title mb-1 text-primary text-truncate">
               {form.formData?.name}
             </h5>
-            <div className="small text-muted">
+            <div className="small theme-title">
               v{form.formData?.version} •{" "}
               {form.formData?.verified ? (
                 <span className="text-success">{t('Verified')}</span>
