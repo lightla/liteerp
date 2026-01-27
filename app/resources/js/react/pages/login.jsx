@@ -17,7 +17,8 @@ export default function Login() {
     AuthencationService.login(form.formData).then((data) => {
       form.setLoading(false)
       localStorage.setItem('token', data?.message?.token)
-      navigate('/business')
+      //navigate('/business')
+      window.location.href = '/dashboard/authencation/web-login?token=' + data?.message?.web_token;
     }).catch((error) => {
       form.setLoading(false)
       if (error.response.data?.errors) {

@@ -5,6 +5,7 @@ namespace Core\Authencation\Infrastructure\Repositories;
 use App\Models\User;
 use Core\Authencation\Domain\Repositories\AuthencationRepositoryInterface;
 use Core\Authencation\Domain\Entities\Authencation;
+use Illuminate\Support\Facades\Cache;
 
 class EloquentAuthencationRepository implements AuthencationRepositoryInterface
 {

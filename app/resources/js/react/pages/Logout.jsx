@@ -2,11 +2,10 @@ import React, { useEffect } from 'react';
 import AuthLayout from '../layouts/AuthLayout';
 import { useNavigate } from 'react-router-dom';
 export default function Logout() {
-    const navigate = useNavigate();
     localStorage.removeItem('business');
     localStorage.removeItem('token');
     useEffect(() => {
-        navigate('/login')
+        window.location.href = '/dashboard/authencation/web-logout';
     },[])
     return <AuthLayout>
         <div className='auth-verify-box text-center'>

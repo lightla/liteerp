@@ -6,7 +6,9 @@ use Illuminate\Support\ServiceProvider;
 use Core\Authencation\Domain\Repositories\AuthencationRepositoryInterface;
 use Core\Authencation\Infrastructure\Repositories\EloquentAuthencationRepository;
 use Core\Authencation\Domain\Services\AuthencationService;
+use Core\Authencation\Domain\Services\AuthSessionManager;
 use Core\Authencation\Infrastructure\Services\AuthencationServiceImpl;
+use Core\Authencation\Infrastructure\Services\AuthSessionManagerImplement;
 
 class AuthencationServiceProvider extends ServiceProvider
 {
@@ -14,6 +16,7 @@ class AuthencationServiceProvider extends ServiceProvider
     {
         $this->app->bind(AuthencationRepositoryInterface::class, EloquentAuthencationRepository::class);
         $this->app->bind(AuthencationService::class, AuthencationServiceImpl::class);
+        $this->app->bind(AuthSessionManager::class, AuthSessionManagerImplement::class);
         $this->mergeModuleConfig();
     }
 

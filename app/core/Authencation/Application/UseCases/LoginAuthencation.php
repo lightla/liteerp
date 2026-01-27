@@ -20,15 +20,15 @@ class LoginAuthencation
     public function handle(CreateAuthencationRequest $dto)
     {
         $account = $this->service->login($dto->toArray());
-        $token = $this->createAppToken->handle(CreateAppTokenRequest::fromArray([
-            'id' => $account->id,
-            'data' => [
-                'id' => $account->id,
-                'name' => $account->name
-            ],
-            'exp' => 5
-        ]));
         if (!$account->email_verified_at) {
+            $token = $this->createAppToken->handle(CreateAppTokenRequest::fromArray([
+                'id' => $account->id,
+                'data' => [
+                    'id' => $account->id,
+                    'name' => $account->name
+                ],
+                'exp' => 5
+            ]));
             Event::dispatch('erp.notification.create', [
                 'user_id' => $account->id,
                 'message' => __("This is email to verify your account"),
@@ -41,6 +41,17 @@ class LoginAuthencation
             throw new UnauthorizedException(__("Your account is not verify, 
             please check inbox your mail"));
         }
-        return $account;
+        return [
+            ...$account->response(),
+            'web_token' => $this->createAppToken->handle(CreateAppTokenRequest::fromArray([
+                'id' => $account->id,
+                'data' => [
+                    'id' => $account->id,
+                    'name' => $account->name,
+                    'type' => 'web_login'
+                ],
+                'exp' => 1
+            ]))
+        ];
     }
 }

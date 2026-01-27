@@ -61,6 +61,20 @@ class Authencation
             'last_seen' => $this->last_seen
         ];
     }
+    public function response(): array
+    {
+        return [
+            'email' => $this->email,
+            'name'  => $this->name,
+            'id'    => $this->id,
+            'email_verified_at' => $this->email_verified_at,
+            'bio' => $this->bio,
+            'avatar' => $this->avatar,
+            'phone' => $this->phone,
+            'last_seen' => $this->last_seen,
+            'token' => $this->token
+        ];
+    }
     public function verifyAt() {
         $this->email_verified_at = Carbon::now()->format('Y-m-d H:i:s');
     }
