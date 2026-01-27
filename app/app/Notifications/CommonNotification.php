@@ -2,6 +2,7 @@
 
 namespace App\Notifications;
 
+
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
@@ -14,10 +15,7 @@ class CommonNotification extends Notification
     /**
      * Create a new notification instance.
      */
-    public function __construct(private string $title,
-        private string $message,
-        private string $link)
-    {
+    public function __construct(private array $data) {
         //
     }
 
@@ -36,11 +34,19 @@ class CommonNotification extends Notification
      */
     public function toMail(object $notifiable): MailMessage
     {
-        return (new MailMessage)
-            ->subject($this->title)
-            ->line($this->message)
-            ->action('Notification Action', $this->link)
-            ->line('Thank you for using our application!');
+        $mail = (new MailMessage)
+            ->subject($this->data['subject'] ?? 'No subject');
+        if(!empty($smtp['mailer'])) {
+            $mail->line($smtp['mailer']);
+        }
+        foreach($this->data['messages'] ?? [] as $line) {
+            $mail->line($line); 
+        }
+        if(!empty($smtp['link'])) { 
+            $mail = $mail->action('Notification Action', $this->data['link']);
+        }
+        $mail = $mail->line('Thank you for using our application!');
+        return $mail;
     }
 
     /**

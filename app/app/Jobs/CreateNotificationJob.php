@@ -5,10 +5,11 @@ namespace App\Jobs;
 use Core\Notifications\Application\DTOs\InsertManyNotificationRequest;
 use Core\Notifications\Application\UseCases\InsertManyNotification;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use Illuminate\Contracts\Queue\ShouldQueueAfterCommit;
 use Illuminate\Foundation\Queue\Queueable;
 use Illuminate\Support\Facades\Log;
 
-class CreateNotificationJob implements ShouldQueue
+class CreateNotificationJob implements ShouldQueue,ShouldQueueAfterCommit
 {
     use Queueable;
 
