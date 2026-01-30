@@ -30,10 +30,6 @@ class Setup extends Command
         //
         $steps = [
             [
-                'command' => 'cp -r ./.env.example .env',
-                'desc'    => 'Copy environment configuration file',
-            ],
-            [
                 'command' => 'php artisan key:generate',
                 'desc'    => 'Generate application encryption key',
             ],
@@ -70,7 +66,8 @@ class Setup extends Command
                 'desc'    => 'Build cache overview',
             ],
         ];
-
+        Process::run("cp -r ./.env.example .env");
+        echo $this->info(__("Copy environment configuration file"));
         foreach ($steps as $key => $value) {
             $result = Process::run($value['command']);
             echo $result->output();
@@ -81,18 +78,6 @@ class Setup extends Command
                 echo $result->errorOutput();
             }
         }
-        $this->markErpAsInstalled();
         $this->info("Please visit: " . env('APP_URL') . "/dashboard/login");
-    }
-    function markErpAsInstalled(): void
-    {
-        $path = 'erp.installed';
-
-        if (!Storage::disk('local')->exists($path)) {
-            Storage::disk('local')->put(
-                $path,
-                'LiteERP installed at ' . now()->toDateTimeString()
-            );
-        }
     }
 }
