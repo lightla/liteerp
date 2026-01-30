@@ -51,7 +51,7 @@ class SendMailJob implements ShouldQueue, ShouldQueueAfterCommit
                 'user' => $user->toArray()
             ]
         ));
-        $user->notify(new CommonNotification($mail));
+        $user->notify(new CommonNotification($mail,$hook));
         $hook->dispatch(new HookContext(
             HookAction::CREATE,
             HookPhase::RESPONSE,
