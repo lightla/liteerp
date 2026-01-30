@@ -65,10 +65,6 @@ services:
       dockerfile: Dockerfile.server
     command: >
       sh -c "
-      while [ ! -f storage/app/private/erp.installed ]; do
-        echo 'Waiting for ERP installation...';
-        sleep 10;
-      done;
       echo 'Start schedule';
       php artisan schedule:work
       "
