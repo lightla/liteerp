@@ -16,7 +16,7 @@ export default function ForgetPassword() {
     AuthencationService.forgetPassword(form.formData).then((data) => {
       openPopup({
         type: 'success',
-        message: 'You has been created, please check inbox your email to active account',
+        message: 'The system will send email confirm reset password to your email, please check it',
         onConfirm: () => {
           navigate('/login')
         }
