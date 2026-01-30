@@ -65,12 +65,19 @@ services:
       dockerfile: Dockerfile.server
     command: >
       sh -c "
+      while [ ! -f storage/app/private/erp.installed ]; do
+        echo 'Waiting for ERP installation...';
+        sleep 10;
+      done;
       echo 'Start schedule';
       php artisan schedule:work
       "
     restart: unless-stopped
     depends_on:
       - erpsoft
+      - database
+    links: 
+      - database
     volumes: 
       - ./app:/var/www/html
       - ./docker-config:/etc/apache2/sites-enabled
