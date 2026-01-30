@@ -78,6 +78,18 @@ class Setup extends Command
                 echo $result->errorOutput();
             }
         }
+        $this->markErpAsInstalled();
         $this->info("Please visit: " . env('APP_URL') . "/dashboard/login");
+    }
+    function markErpAsInstalled(): void
+    {
+        $path = 'erp.installed';
+
+        if (!Storage::disk('local')->exists($path)) {
+            Storage::disk('local')->put(
+                $path,
+                'LiteERP installed at ' . now()->toDateTimeString()
+            );
+        }
     }
 }
