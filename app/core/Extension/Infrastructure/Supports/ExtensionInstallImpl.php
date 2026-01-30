@@ -4,9 +4,9 @@ namespace Core\Extension\Infrastructure\Supports;
 
 use Core\Extension\Application\DTOs\ExtensionInstallPlan;
 use Core\Extension\Domain\Entities\Extension;
-use Core\Extension\Domain\Supports\ExtensionInstallInterface;
+use Core\Extension\Domain\Supports\ExtensionInstall;
 
-class ExtensionInstall implements ExtensionInstallInterface
+class ExtensionInstallImpl implements ExtensionInstall
 {
     public function installPlan(Extension $extension): ExtensionInstallPlan
     {

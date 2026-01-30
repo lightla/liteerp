@@ -6,7 +6,11 @@ use Illuminate\Support\ServiceProvider;
 use Core\Extension\Domain\Repositories\ExtensionRepositoryInterface;
 use Core\Extension\Infrastructure\Repositories\EloquentExtensionRepository;
 use Core\Extension\Domain\Services\ExtensionService;
+use Core\Extension\Domain\Supports\ExtensionInstall;
+use Core\Extension\Domain\Supports\ExtensionInstallExecutor;
 use Core\Extension\Infrastructure\Services\ExtensionServiceImpl;
+use Core\Extension\Infrastructure\Supports\ExtensionInstallExecutorImpl;
+use Core\Extension\Infrastructure\Supports\ExtensionInstallImpl;
 
 class ExtensionServiceProvider extends ServiceProvider
 {
@@ -14,6 +18,8 @@ class ExtensionServiceProvider extends ServiceProvider
     {
         $this->app->bind(ExtensionRepositoryInterface::class, EloquentExtensionRepository::class);
         $this->app->bind(ExtensionService::class, ExtensionServiceImpl::class);
+        $this->app->bind(ExtensionInstall::class, ExtensionInstallImpl::class);
+        $this->app->bind(ExtensionInstallExecutor::class, ExtensionInstallExecutorImpl::class);
         $this->mergeModuleConfig();
     }
 

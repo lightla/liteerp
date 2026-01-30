@@ -4,8 +4,9 @@ namespace Core\Extension\Application\UseCases;
 
 use Core\Extension\Application\DTOs\CreateExtensionRequest;
 use Core\Extension\Domain\Services\ExtensionService;
-use Core\Extension\Infrastructure\Supports\ExtensionInstall;
-use Core\Extension\Infrastructure\Supports\ExtensionInstallExecutor;
+use Core\Extension\Domain\Supports\ExtensionChange;
+use Core\Extension\Domain\Supports\ExtensionInstall;
+use Core\Extension\Domain\Supports\ExtensionInstallExecutor;
 use Illuminate\Support\Facades\DB;
 
 class CreateExtension

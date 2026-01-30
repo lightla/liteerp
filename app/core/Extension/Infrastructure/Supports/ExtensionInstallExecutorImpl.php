@@ -4,11 +4,11 @@ namespace Core\Extension\Infrastructure\Supports;
 
 use App\Exceptions\BadException;
 use Core\Extension\Application\DTOs\ExtensionInstallPlan;
-use Core\Extension\Domain\Supports\ExtensionInstallExecutorInterface;
+use Core\Extension\Domain\Supports\ExtensionInstallExecutor;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Log;
 
-class ExtensionInstallExecutor implements ExtensionInstallExecutorInterface
+class ExtensionInstallExecutorImpl implements ExtensionInstallExecutor
 {
     private $allowCommands = [
         "app:npmbuild"
