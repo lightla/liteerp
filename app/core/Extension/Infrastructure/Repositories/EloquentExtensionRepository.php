@@ -6,6 +6,7 @@ use App\Models\ExtensionModel;
 use Core\Extension\Domain\Entities\Extension;
 use Core\Extension\Domain\Repositories\ExtensionRepositoryInterface;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
@@ -31,7 +32,7 @@ class EloquentExtensionRepository implements ExtensionRepositoryInterface
     {
         /** @var UploadedFile $file */
         $file = $data['file'] ?? null;
-        $originalName = $file->getClientOriginalName(); 
+        $originalName = $file->getClientOriginalName();
         $directory = pathinfo($originalName, PATHINFO_FILENAME);
         if (!$file instanceof UploadedFile) {
             Log::info('Extension file is required');
@@ -108,7 +109,15 @@ class EloquentExtensionRepository implements ExtensionRepositoryInterface
 
     public function all(): array
     {
-        return ExtensionModel::get()->toArray();
+        /**
+         * Because this function will run at provider core, so if in first setup will is not yet connect DB
+         */
+        try {
+            DB::connection()->getPdo();
+            return ExtensionModel::get()->toArray();
+        } catch (\Throwable $e) {
+            return [];
+        }
     }
 
     /**
@@ -129,8 +138,8 @@ class EloquentExtensionRepository implements ExtensionRepositoryInterface
     }
     public function findById(array $data): ?Extension
     {
-        $row = ExtensionModel::where('id',$data['id'])->first()?->toArray();
-        if(!$row) {
+        $row = ExtensionModel::where('id', $data['id'])->first()?->toArray();
+        if (!$row) {
             return null;
         }
         return Extension::fromArray($row);
@@ -140,7 +149,7 @@ class EloquentExtensionRepository implements ExtensionRepositoryInterface
      */
     public function make(Extension $entity): Extension
     {
-        
+
         ExtensionModel::updateOrInsert([
             'name' => $entity->name,
         ], [
