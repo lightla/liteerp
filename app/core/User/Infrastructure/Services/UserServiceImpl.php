@@ -14,7 +14,7 @@ class UserServiceImpl implements UserService
 
     public function findById(array $data): User|BadException
     {
-        return $this->repo->findById($data) ?? throw new BadException(__("Not found data"));
+        return $this->repo->findById($data) ?? throw new BadException(__("user::messages.not_found"));
     }
     public function getByEmail(array $data): ?User
     {

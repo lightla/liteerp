@@ -17,15 +17,15 @@ class UpdateUser
 {
     public function __construct(private UserService $service) {}
 
-    public function handle(CreateUserRequest $dto)
+    public function handle(array $data)
     {
         DB::beginTransaction();
+        $dto = CreateUserRequest::fromArray($data);
         $account = $this->service->getByEmail($dto->toArray());
         if (!$account) {
-            throw new BadException(__("Account is exists on business"));
+            throw new BadException(__("user::messages.not_exists_on_business"));
         }
-        $user = Auth::guard('sanctum')->user();
-        if($user->id === $account->id) {
+        if($dto->created_by === $account->id) {
             throw new BadException(__("You can not change role your-self"));
         }
         Event::dispatch("erp.user.update", [

@@ -3,8 +3,6 @@
 namespace Core\User\Http\Controllers;
 
 use Core\User\Application\UseCases\CreateUser;
-use Core\User\Application\DTOs\CreateUserRequest;
-use Core\User\Application\DTOs\DeleteUserRequest as DTOsDeleteUserRequest;
 use Core\User\Application\UseCases\DeleteUser;
 use Core\User\Application\UseCases\IndexUser;
 use Core\User\Application\UseCases\UpdateUser;
@@ -21,21 +19,18 @@ class UserController
     }
     public function store(CreateFormRequest $request, CreateUser $useCase)
     {
-        $form = CreateUserRequest::fromArray($request->all());
-        return response(['message' => $useCase->handle($form)]);
+        return response(['message' => $useCase->handle($request->all())]);
     }
     public function update(UpdateUserRequest $request, 
         UpdateUser $useCase, string $id)
     {
         $request->merge(['id' => $id]);
-        $form = CreateUserRequest::fromArray($request->all());
-        return response(['message' => $useCase->handle($form)]);
+        return response(['message' => $useCase->handle($request->all())]);
     }
     public function destroy(DeleteUserRequest $request, 
         DeleteUser $useCase, string $id)
     {
         $request->merge(['id' => $id]);
-        $form = DTOsDeleteUserRequest::fromArray($request->all());
-        return response(['message' => $useCase->handle($form)]);
+        return response(['message' => $useCase->handle($request->all())]);
     }
 }

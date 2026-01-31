@@ -16,7 +16,6 @@ class UserServiceProvider extends ServiceProvider
     {
         $this->app->bind(UserRepositoryInterface::class, EloquentUserRepository::class);
         $this->app->bind(UserService::class, UserServiceImpl::class);
-        $this->app->bind(AuthenToken::class, AuthenTokenImpl::class);
         $this->mergeModuleConfig();
     }
 

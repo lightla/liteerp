@@ -18,7 +18,7 @@ class DeleteUserRequest
             id: $data['id'] ?? null 
         );
     }
-    public function toArray()
+    public function toArray() : array
     {
         return [
             'created_by' => $this->created_by,

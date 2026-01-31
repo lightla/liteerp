@@ -5,7 +5,6 @@ namespace Core\User\Application\UseCases;
 use App\Exceptions\BadException;
 use Core\User\Application\DTOs\DeleteUserRequest;
 use Core\User\Domain\Services\UserService;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Event;
 
@@ -13,15 +12,12 @@ class DeleteUser
 {
     public function __construct(private UserService $service) {}
 
-    public function handle(DeleteUserRequest $dto)
+    public function handle(array $data)
     {
         DB::beginTransaction();
+        $dto = DeleteUserRequest::fromArray($data);
         $account = $this->service->findById($dto->toArray());
-        if (!$account) {
-            throw new BadException(__("Account is not exists on business"));
-        }
-        $user = Auth::guard('sanctum')->user();
-        if($user->id === $account->id) {
+        if($dto->created_by === $account->id) {
             throw new BadException(__("You can not delete to your-self"));
         }
         Event::dispatch("erp.user.delete", [

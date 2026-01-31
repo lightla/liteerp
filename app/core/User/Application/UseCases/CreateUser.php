@@ -15,12 +15,13 @@ class CreateUser
 {
     public function __construct(private UserService $service) {}
 
-    public function handle(CreateUserRequest $dto)
+    public function handle(array $data)
     {
         DB::beginTransaction();
+        $dto = CreateUserRequest::fromArray($data);
         $checkExists = $this->service->getByEmail($dto->toArray());
         if($checkExists) {
-            throw new BadException(__("Account is exists on business"));
+            throw new BadException(__("user::messages.is_exists_on_business"));
         }
         $account = $this->service->findByEmailOnSystem($dto->toArray());
         if ($account) {
@@ -34,7 +35,7 @@ class CreateUser
              DB::commit();
             return $account;
         } else {
-            throw new BadException(__("Account is not exists on system"));
+            throw new BadException(__("user::messages.not_exists"));
         }
     }
 }
