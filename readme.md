@@ -11,8 +11,13 @@
 ---
 
 <p align="center">
+  <img src="screenshoot3.png" alt="LiteERP Logo" />
+</p>
+
+<p align="center">
   <img src="screenshoot2.png" alt="LiteERP Logo" />
 </p>
+
 
 ---
 
