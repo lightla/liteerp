@@ -52,7 +52,4 @@ class PurchaseModel extends Model
     {
         return $this->belongsTo(User::class, 'approved_by');
     }
-    public function products(){
-        return $this->hasMany(ProductModel::class,'id','purchase_id');
-    }
 }
