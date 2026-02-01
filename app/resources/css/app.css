@@ -17,8 +17,10 @@
 .dashboard-content {
   border-left: 1px solid var(--border-color);
 }
-.BusinessChart {
+.card-overview {
     border: 1px solid var(--border-color);
+    background-color: var(--erp-sidebar-bg);
+    color: var(--erp-text);
 }
 a {
   text-decoration: none!important;

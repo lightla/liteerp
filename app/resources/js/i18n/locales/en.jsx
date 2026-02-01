@@ -333,5 +333,12 @@ export default {
     "notifications":"Notification",
     "page_stock_subtitle":"Track and manage stock movements including stock ins and stock outs",
     "Stock Ins":"Stock Ins",
-    "Stock Outs":"Stock Outs"
+    "Stock Outs":"Stock Outs",
+    "dashboard_subtitle":"Here's what's happening with your business",
+    "Today":"Today",
+    "This week":"This week",
+    "This month":"This month",
+    "This year":"This year",
+    "Revenue":"Revenue",
+    "Expense":"Expense"
 };

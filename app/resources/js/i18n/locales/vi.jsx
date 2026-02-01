@@ -333,5 +333,12 @@ export default {
     "notifications":"thông báo",
     "page_stock_subtitle":"Theo dõi và quản lý các hoạt động tồn kho bao gồm nhập kho và xuất kho",
     "Stock Ins":"Nhập kho",
-    "Stock Outs":"Xuất kho"
+    "Stock Outs":"Xuất kho",
+    "dashboard_subtitle":"Xem dữ liệu thống kê cho doanh nghiệp của bạn",
+    "Today":"Hôm nay",
+    "This week":"Tuần này",
+    "This month":"Tháng này",
+    "This year":"Năm nay",
+    "Revenue":"Doanh thu",
+    "Expense":"Chi phí"
 };

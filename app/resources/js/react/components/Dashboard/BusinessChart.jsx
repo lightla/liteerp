@@ -16,11 +16,7 @@ export default function BusinessChart({
 
   return (
     <div
-      className="p-3 rounded-3 mt-4 BusinessChart"
-      style={{
-        backgroundColor: isDark ? "#162235" : "#fff",
-        color: textColor,
-      }}
+      className="p-3 rounded-3 mt-4 card-overview"
     >
       <h5 className="mb-3">{title}</h5>
       <ResponsiveContainer width="100%" height={500}>

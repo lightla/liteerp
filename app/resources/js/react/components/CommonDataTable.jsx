@@ -1,5 +1,6 @@
 import React from "react";
 import { useI18n } from "../../i18n/useI18n";
+import EmptyBox from "./Emptybox";
 
 export default function CommonDataTable({
   columns = [],
@@ -101,7 +102,7 @@ export default function CommonDataTable({
                     className="d-flex justify-content-center align-items-center py-4"
                     style={{ minHeight: "80px" }}
                   >
-                    <p>No data</p>
+                    <EmptyBox/>
                   </div>
                 </td>
               </tr>
