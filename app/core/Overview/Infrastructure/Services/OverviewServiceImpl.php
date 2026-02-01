@@ -14,8 +14,12 @@ class OverviewServiceImpl implements OverviewService
     {
         $prepare = [
             'top' => [
-                ...$this->repo->getCacheForMonth($data),
-                ...$this->repo->getCacheRevenueByTime($data),
+                ...$this->repo->getCacheForMonth($data)
+            ],
+            'revenue' => [
+                ...$this->repo->getCacheRevenueByTime($data)
+            ],
+            'expense' => [
                 ...$this->repo->getCacheExpenseByTime($data),
             ],
             'chart' => $this->repo->getCacheForYear($data),
@@ -25,6 +29,16 @@ class OverviewServiceImpl implements OverviewService
             $value->compare_text = __($value->compare_text);
             $value->type = __($value->type);
             $response['top'][$key] = $value;
+        }
+        foreach($prepare['revenue'] as $key => $value) {
+            $value->compare_text = __($value->compare_text);
+            $value->type = __($value->type);
+            $response['revenue'][$key] = $value;
+        }
+        foreach($prepare['expense'] as $key => $value) {
+            $value->compare_text = __($value->compare_text);
+            $value->type = __($value->type);
+            $response['expense'][$key] = $value;
         }
         foreach($prepare['chart'] as $key => $value) {
             $value['name'] = __($value['name']);
