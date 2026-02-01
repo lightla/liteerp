@@ -1,6 +1,5 @@
 <?php
 
 return [
-    'created' => 'Authencation created successfully!',
-    'deleted' => 'Authencation deleted successfully!',
+    'not_verify' => 'Your account is not verify, please check inbox your mail',
 ];

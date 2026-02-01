@@ -1,6 +1,5 @@
 <?php
 
 return [
-    'created' => 'Tạo Authencation thành công!',
-    'deleted' => 'Xoá Authencation thành công!',
+    'not_verify' => 'Tài khoản chưa được xác thực, vui lòng kiểm tra hợp thư đến trong email',
 ];

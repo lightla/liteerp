@@ -38,8 +38,7 @@ class LoginAuthencation
                 'chanels' => ['mail'],
                 'link'     => URL::to('/dashboard/verify-account?token=' . $token)
             ]);
-            throw new UnauthorizedException(__("Your account is not verify, 
-            please check inbox your mail"));
+            throw new UnauthorizedException(__("authcation::messages.not_verify"));
         }
         return [
             ...$account->response(),
