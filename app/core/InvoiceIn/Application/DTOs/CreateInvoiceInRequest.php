@@ -31,7 +31,7 @@ class CreateInvoiceInRequest
             purchase_id: $data['purchase_id'],
             approved_by: $data['user_id'] ?? null,
             subtotal: (float) ($data['subtotal'] ?? 0),
-            tax: (float) ($data['tax'] ?? 0),
+            tax: (float) ($data['total_tax'] ?? 0),
             discount: (float) ($data['discount'] ?? 0),
             total: (float) ($data['total'] ?? 0),
             invoice_date: $data['invoice_date'] ?? null,

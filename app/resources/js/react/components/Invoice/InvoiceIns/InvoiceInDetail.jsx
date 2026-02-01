@@ -311,7 +311,7 @@ const confirmApproved = useCallback(() => {
 
                                         <div className="d-flex justify-content-between theme-title">
                                             <span>{t("VAT")}</span>
-                                            <Currencies amount={form.formData?.total_tax} />
+                                            <Currencies amount={form.formData?.tax} />
                                         </div>
                                         <div className="d-flex justify-content-between theme-title">
                                             <span>{t("Discount")}</span>
