@@ -418,7 +418,11 @@ LiteERP
 
 ## 📄 Contact
 
-Contact email: hoang.le.tn91@gmail.com
+Contact email: hoang.le.tn91@gmail.com 
+
+## Discord
+
+<a href="https://discord.com/channels/1468234700689772701/1468234701197152279">Discord</a>
 
 ## ❤️ Support LiteERP
 
