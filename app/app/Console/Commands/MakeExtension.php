@@ -27,27 +27,26 @@ class MakeExtension extends Command
 
     public function handle(UseCasesMakeExtension $make)
     {
-        $name = Str::studly($this->argument('name'));
         $directory = Str::studly($this->argument('directory'));
-        $basePath = base_path("extensions/{$name}");
+        $basePath = base_path("extensions/{$directory}");
 
         $fs = new Filesystem();
 
         if ($fs->exists($basePath)) {
-            $this->error("Extension {$name} already exists.");
+            $this->error("Extension {$this->argument('name')} already exists.");
             return Command::FAILURE;
         }
-        $this->info['name'] = $name;
+        $this->info['name'] = $this->argument('name');
         $this->info['directory'] = $directory;
-        $this->info['description'] = $name ." extension support LiteERP";  
+        $this->info['description'] = $this->argument('name') ." extension support LiteERP";  
         $this->createDirectories($fs, $basePath);
-        $this->createFiles($fs, $basePath, $name);
+        $this->createFiles($fs, $basePath, $directory);
         $make->handle($this->info);
         /**
          * We need setup chmod 777 to support ubuntu delete folder
          */
         exec('chmod -R 777 ' . $basePath);
-        $this->info("Extension {$name} generated successfully.");
+        $this->info("Extension {$this->argument('name')} generated successfully.");
         return Command::SUCCESS;
     }
 
@@ -67,9 +66,9 @@ class MakeExtension extends Command
         }
     }
 
-    protected function createFiles(Filesystem $fs, string $base, string $name)
+    protected function createFiles(Filesystem $fs, string $base, string $directory)
     {
-        $namespace = "Extensions\\{$name}";
+        $namespace = "Extensions\\{$directory}";
 
         // Service Provider
         $fs->put("{$base}/ExtensionServiceProvider.php", <<<PHP
@@ -85,7 +84,7 @@ class ExtensionServiceProvider extends ServiceProvider
     {
         //
         \$this->app->tag(
-            \Extensions\\{$name}\\Hooks\ViewShowHook::class,
+            \Extensions\\{$directory}\\Hooks\ViewShowHook::class,
             'liteerp.hooks'
         );
     }
@@ -118,7 +117,7 @@ PHP);
         $fs->put("{$base}/Hooks/ViewShowHook.php", <<<PHP
 <?php
 
-namespace Extensions\\{$name}\\Hooks;
+namespace Extensions\\{$directory}\\Hooks;
 
 use App\Supports\Forms\FormFieldRender;
 use App\Supports\Forms\FormFieldType;
@@ -155,14 +154,14 @@ class ViewShowHook implements HookInterface
 PHP);
 
         // Model
-        $fs->put("{$base}/Models/{$name}Model.php", <<<PHP
+        $fs->put("{$base}/Models/{$directory}Model.php", <<<PHP
 <?php
 
 namespace {$namespace}\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class {$name}Model extends Model
+class {$directory}Model extends Model
 {
     protected \$guarded = [];
 }
@@ -209,7 +208,7 @@ PHP);
 
         // README
         $fs->put("{$base}/README.md", <<<MD
-# {$name}
+# {$directory}
 
 LiteERP extension.
 
