@@ -190,7 +190,7 @@ LiteERP is built with **full multi-language support**, making it easy to use for
 
 List extension example
 
-<a href="https://github.com/liteerp-oss/liteerp/extension-examples">Extensions</a>
+<a href="https://github.com/liteerp-oss/liteerp/tree/dev/extension-examples">Extensions</a>
 
 
 --- 
