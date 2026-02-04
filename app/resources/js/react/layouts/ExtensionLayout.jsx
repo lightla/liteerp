@@ -7,6 +7,10 @@ export default function ExtensionLayout({
 }) {
     const dispatch = useDispatch();
     const theme = useSelector((state) => state.theme.mode);
+    const media = window.matchMedia('(prefers-color-scheme: dark)');
+      media.addEventListener('change', e => {
+        dispatch(setTheme(e.matches ? 'dark-theme' : 'light-theme'));
+      });
     return <div className={"container-fuild dashboard-megabox dark-theme "} data-theme={theme}>
         <div className="mb-5 extension-content-page">
             {children}
