@@ -340,5 +340,6 @@ export default {
     "This month": "今月",
     "This year": "今年",
     "Revenue": "収益",
-    "Expense": "費用"
+    "Expense": "費用",
+    "Email language":"メールの言語"
 };

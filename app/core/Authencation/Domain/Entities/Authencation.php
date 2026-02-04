@@ -17,7 +17,8 @@ class Authencation
         public ?string $avatar = null,
         public ?string $phone = null,
         public ?string $last_seen = null,
-        public ?string $token = null
+        public ?string $token = null,
+        public ?string $lang = 'en',
     ) {}
 
     public static function fromArray(array $data): self
@@ -33,12 +34,13 @@ class Authencation
             bio: $data['bio'] ?? null,
             avatar: $data['avatar'] ?? null,
             phone: $data['phone'] ?? null,
-            last_seen: $data['last_seen'] ?? null
+            last_seen: $data['last_seen'] ?? null,
+            lang: $data['lang'] ?? 'en'
         );
     }
     public function toArray(): array
     {
-        return $this->system_role ? [
+        $toArray = [
             'email' => $this->email,
             'password' => $this->password,
             'name'  => $this->name,
@@ -48,18 +50,12 @@ class Authencation
             'avatar' => $this->avatar,
             'phone' => $this->phone,
             'last_seen' => $this->last_seen,
-            'system_role' => $this->system_role
-        ] : [
-            'email' => $this->email,
-            'password' => $this->password,
-            'name'  => $this->name,
-            'id'    => $this->id,
-            'email_verified_at' => $this->email_verified_at,
-            'bio' => $this->bio,
-            'avatar' => $this->avatar,
-            'phone' => $this->phone,
-            'last_seen' => $this->last_seen
+            'lang' => $this->lang
         ];
+        if($this->system_role) {
+          $toArray['system_role'] = $this->system_role;
+        }
+        return $toArray;
     }
     public function response(): array
     {
@@ -72,7 +68,8 @@ class Authencation
             'avatar' => $this->avatar,
             'phone' => $this->phone,
             'last_seen' => $this->last_seen,
-            'token' => $this->token
+            'token' => $this->token,
+            'lang' => $this->lang
         ];
     }
     public function verifyAt() {

@@ -76,6 +76,7 @@ class AuthencationServiceImpl implements AuthencationService
         $entity->bio = $data['bio'] ?? $entity->bio;
         $entity->avatar = $data['avatar'] ?? $entity->avatar;
         $entity->password = $data['password'] ?? $entity->password;
+        $entity->lang = $data['lang'] ?? $entity->lang;
         return $this->repo->update($entity);
     }
     public function findByEmail(array $data): Authencation|UnauthorizedException

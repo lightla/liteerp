@@ -340,5 +340,6 @@ export default {
     "This month":"Tháng này",
     "This year":"Năm nay",
     "Revenue":"Doanh thu",
-    "Expense":"Chi phí"
+    "Expense":"Chi phí",
+    "Email language":"Ngôn ngữ email"
 };

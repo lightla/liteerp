@@ -28,7 +28,8 @@ class ProfileAuthencation
             'avatar'=> $user->avatar,
             'phone'=> $user->phone,
             'last_seen'=> $user->last_seen,
-            'role' => $user->role
+            'role' => $user->role,
+            'lang' => $user->lang
         ]);
     }
 }

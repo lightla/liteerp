@@ -12,7 +12,8 @@ class UpdateAuthencationRequest
         public string $phone,
         public ?string $bio,
         public ?string $avatar,
-        public ?int $id
+        public ?int $id,
+        public ?string $lang = null
     ) {}
 
     public static function fromArray(array $data): self
@@ -25,7 +26,8 @@ class UpdateAuthencationRequest
             id: $data['id'] ?? null,
             new_password: $data['new_password'] ?? null,
             bio: $data['bio'] ?? null,
-            avatar: $data['avatar'] ?? null
+            avatar: $data['avatar'] ?? null,
+            lang: $data['lang'] ?? null
         );
     }
     public function toArray(): array
@@ -38,7 +40,8 @@ class UpdateAuthencationRequest
             'id'    => $this->id,
             'new_password'  => $this->new_password,
             'bio'   => $this->bio,
-            'avatar'    => $this->avatar
+            'avatar'    => $this->avatar,
+            'lang'=> $this->lang,
         ];
     }
 }

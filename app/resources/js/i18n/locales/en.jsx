@@ -340,5 +340,6 @@ export default {
     "This month":"This month",
     "This year":"This year",
     "Revenue":"Revenue",
-    "Expense":"Expense"
+    "Expense":"Expense",
+    "Email language":"Email language"
 };

@@ -29,7 +29,8 @@ class User extends Authenticatable
         'last_seen',
         'phone',
         'system_role',
-        'email_verified_at'
+        'email_verified_at',
+        'lang'
     ];
 
     /**

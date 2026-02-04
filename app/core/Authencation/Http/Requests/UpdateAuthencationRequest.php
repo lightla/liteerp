@@ -16,6 +16,7 @@ class UpdateAuthencationRequest extends FormRequest
             'avatar' => 'nullable|string|max:250',
             'phone' => 'required|string|max:12',
             'new_password' => 'nullable|string|max:64',
+            'lang'=> 'required|in:en,vi,ja',
         ];
     }
 
