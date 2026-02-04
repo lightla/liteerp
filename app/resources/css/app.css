@@ -44,3 +44,6 @@ a {
 .show {
   display: block;
 }
+.extension-content-page {
+  min-height: 100vh;
+}
