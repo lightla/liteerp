@@ -54,6 +54,10 @@ How to contribute:
 
 At here we have `Test Ext` is name of extension, and Test is directory. Directory has rules name no using space and special character. After this action you can seen new extension on dashboard or at directory `./app/extensions`
 
+## Rules 
+
+- If you need do anything relate to core module then please use `service` no reuse `usecase` and `model`. Maybe you will seen a some place use `Model` of core module on `Extension Example` but it's old and in that we have not yet make this rule.
+
 ## 📄 License
 
 This project is licensed under the **MIT License**.

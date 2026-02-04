@@ -28,10 +28,45 @@ class BusinessRole
             id: $data['id'] ?? null
         );
     }
+    // set 
     public function setAdmin(){
         $this->role = 'admin';
     }
     public function setDefault(){
-        $this->role ??= config('businessrole.default_role');
+        $this->role ??= 'manager';
+    }
+    public function setManager(){
+        $this->role = 'manager';
+    }
+    public function setSeller(){
+        $this->role = 'seller';
+    }
+    public function setAccountanter(){
+        $this->role = 'accountanter';
+    }
+    public function setWarehouseman(){
+        $this->role = 'warehouseman';
+    }
+    public function setPurchaser(){
+        $this->role = 'purchaser';
+    }
+    // check 
+    public function isAdmin():bool{
+        return $this->role === 'admin';
+    }
+    public function isManager():bool{
+        return $this->role === 'manager';
+    }
+    public function isSeller():bool{
+        return $this->role === 'seller';
+    }
+    public function isAccountanter():bool{
+        return $this->role === 'accountanter';
+    }
+    public function isWarehouseman():bool{
+        return $this->role === 'warehouseman';
+    }
+    public function isPurchaser():bool{
+        return $this->role === 'purchaser';
     }
 }
