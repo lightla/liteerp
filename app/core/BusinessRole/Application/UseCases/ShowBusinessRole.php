@@ -30,7 +30,7 @@ class ShowBusinessRole
         $dto = ShowBusinessRoleRequest::fromArray($data);
         $role = $this->service->findOne([
             'business_id' => $dto->business_id,
-            'user_id' => $dto->user_id
+            'role_user_id' => $dto->user_id
         ]);
         $roles = config('businessrole.roles.' . $role->role);
         $data = $this->hooks->dispatch(
