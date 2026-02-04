@@ -12,4 +12,4 @@ import api from "../common/api";
     params: data
   }),
 };
-export default PriceListService;
+export default PriceListService; 

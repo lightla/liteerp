@@ -22,4 +22,4 @@ import api from "../common/api";
   deleteCategory: (data) => api.delete("/business-access/category-product/" + data.id),
   viewCategory: () => api.get("/business-access/view/category-product"),
 };
-export default ProductService;
+export default ProductService; 

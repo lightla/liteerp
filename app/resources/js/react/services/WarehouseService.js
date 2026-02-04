@@ -10,4 +10,4 @@ import api from "../common/api";
     params: data
   })
 };
-export default WarehouseService;
+export default WarehouseService; 
