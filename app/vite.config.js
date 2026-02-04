@@ -19,6 +19,7 @@ export default defineConfig({
             '@redux': path.resolve(__dirname, 'resources/js/react/redux'),
             '@libraries': path.resolve(__dirname, 'resources/js/react/libraries'),
             '@wrappers': path.resolve(__dirname, 'resources/js/react/wrappers'),
+            '@layouts': path.resolve(__dirname, 'resources/js/react/layouts'),
         }
     },
 
