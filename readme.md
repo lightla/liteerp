@@ -197,10 +197,7 @@ List extension example
 
 ## 📦 Document 
 
-<a href="https://github.com/liteerp-oss/liteerp/tree/dev/Module.md">Module document</a>
-<a href="https://github.com/liteerp-oss/liteerp/tree/dev/Ext.md">Extension document</a>
-<a href="https://github.com/liteerp-oss/liteerp/tree/dev/Hook.md">Hook document</a>
-<a href="https://github.com/liteerp-oss/liteerp/tree/dev/React.md">Frontend document</a>
+<a href="https://github.com/liteerp-oss/liteerp/tree/dev/docs">Docs</a>
 
 ---
 
