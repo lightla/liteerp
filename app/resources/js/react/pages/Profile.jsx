@@ -9,6 +9,7 @@ import TextArea from '../components/UI/Input/Textarea';
 import { usePopup } from '../components/popups/PopupContext';
 import { useI18n } from '../../i18n/useI18n';
 import UploadImage from '../components/UI/Input/UploadImage';
+import { Select } from '../components/UI/Input/Select';
 
 export default function Profile() {
     const { t } = useI18n();
@@ -72,7 +73,7 @@ export default function Profile() {
                 <div className="container mt-3">
                     <div className="card rounded-3 p-4 shadow-sm theme-sidebar-bg theme-title">
                         <div className="row">
-                            <div className="col-6">
+                            <div className="col-4">
                                 <label>{t('Name')}</label>
                                 <InputForm
                                     name="name"
@@ -82,13 +83,32 @@ export default function Profile() {
                                 />
                             </div>
 
-                            <div className="col-6">
+                            <div className="col-4">
                                 <label>{t('Email')}</label>
                                 <InputForm
                                     name="email"
                                     handleChange={form.handleChange}
                                     errorMessage={form.formErrors?.email}
                                     value={form.formData?.email}
+                                />
+                            </div>
+                            <div className="col-4">
+                                <label>{t('Email language')}</label>
+                                <Select
+                                    name="lang"
+                                    handleChange={form.handleChange}
+                                    errorMessage={form.formErrors?.lang}
+                                    value={form.formData?.lang}
+                                    options={[{
+                                        value: 'en',
+                                        label: 'English'
+                                    },{
+                                        value: 'vi',
+                                        label: 'Tiếng việt'
+                                    },{
+                                        value: 'ja',
+                                        label: 'Japanese'
+                                    }]}
                                 />
                             </div>
                         </div>
