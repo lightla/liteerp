@@ -29,8 +29,9 @@ import ResetPassword from "./react/pages/reset-password";
 import Logout from "./react/pages/Logout";
 import Extensions from "./react/pages/extensions";
 import Wrapper from "@/react/wrappers/Wrapper";
-
+import routeRegistry from '@core/RouteRegistry'
 const App = () => {
+  const routes = routeRegistry.all();
   return (
     <Wrapper>
       <BrowserRouter basename="/dashboard">
@@ -60,6 +61,9 @@ const App = () => {
           <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/logout" element={<Logout />} />
           <Route path="/extensions" element={<Extensions />} />
+          {routes.map(r => (
+            <Route key={r.path} path={r.path} element={<r.component />} />
+          ))}
         </Routes>
       </BrowserRouter>
     </Wrapper>
