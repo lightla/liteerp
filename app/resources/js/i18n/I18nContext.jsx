@@ -1,9 +1,5 @@
 import React, { createContext, useEffect, useState } from "react";
-import en from "./locales/en";
-import vi from "./locales/vi";
-import ja from "./locales/ja";
-
-const dictionaries = { en, vi, ja };
+import { i18nMessages } from "./locales/autoload";
 
 export const I18nContext = createContext({
   lang: "en",
@@ -24,7 +20,7 @@ export const I18nProvider = ({ children }) => {
     return (
       key
         .split(".")
-        .reduce((obj, k) => (obj ? obj[k] : null), dictionaries[lang]) ||
+        .reduce((obj, k) => (obj ? obj[k] : null), i18nMessages[lang]) ||
       key
     );
   };
