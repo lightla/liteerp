@@ -20,6 +20,7 @@ export default defineConfig({
             '@libraries': path.resolve(__dirname, 'resources/js/react/libraries'),
             '@wrappers': path.resolve(__dirname, 'resources/js/react/wrappers'),
             '@layouts': path.resolve(__dirname, 'resources/js/react/layouts'),
+            '@core': path.resolve(__dirname, 'resources/js/core'),
         }
     },
 
