@@ -5,10 +5,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from 'react-router-dom';
 import BusinessRoleService from '../services/BusinessRoleService'
 import { setBusinessNav,setBusinessRole } from '../redux/businessRoleSlice';
+import { useI18n } from '@/i18n/useI18n';
 export default function DashboardLayout({
     children
 }) {
     const navigate = useNavigate();
+    const { lang } = useI18n();
     const nav = useSelector((state) => state.businessRole.nav);
     const business = useSelector((state) => state.business.data);
     const theme = useSelector((state) => state.theme.mode);
@@ -31,6 +33,12 @@ export default function DashboardLayout({
             businessRole();
         }
     }, [business, nav]);
+    /**
+     * If has event change language then need call API again
+     */
+    useEffect(() => {
+        businessRole();
+    },[lang]);
     return <div className={"container-fuild dashboard-megabox dark-theme "} data-theme={theme}>
         <div className="row">
             <div className="col-lg-2 col-md-3 col-sm-4 px-0">
