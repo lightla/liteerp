@@ -13,8 +13,10 @@ api.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("token");
     const businessToken = localStorage.getItem("business-access");
+    const lang = localStorage.getItem("lang") || "en";
     if (token) config.headers.Authorization = `Bearer ${token}`;
     if(businessToken) config.headers['business-access'] = businessToken;
+    if(lang) config.headers['App-Language'] = lang;
     return config;
   },
   (error) => Promise.reject(error)
