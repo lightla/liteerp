@@ -10,4 +10,5 @@ interface UserRepositoryInterface
     public function findByEmail(array $data): ?User;
     public function findByEmailOnSystem(array $data): ?User;
     public function index(array $data) : array;
+    public function all(array $data) : array;
 }
