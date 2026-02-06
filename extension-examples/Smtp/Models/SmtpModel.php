@@ -16,4 +16,5 @@ class SmtpModel extends Model
         'username',
         'password'
     ];
+    protected $hidden = ['password'];
 }
