@@ -86,7 +86,7 @@ const Home = () => {
                         { key: 'test', label: t('smtp.test') }
                     ]}
                     contents={[
-                        <div className="" id="smtp-setting">
+                        <div className="border p-2 rounded-2" id="smtp-setting">
                             <div className="mb-3">
                                 <label className="form-label">{t('smtp.host')}</label>
                                 <InputForm name="host"
@@ -156,7 +156,7 @@ const Home = () => {
                                 <PrimaryButton loading={form.loading} onClick={saveSmtp} label="Save setting" />
                             </div>
                         </div>,
-                        <div className="" id="smtp-test">
+                        <div className="border p-2 rounded-2" id="smtp-test">
                             <div className="mb-3">
                                 <label className="form-label">{t('smtp.to')}</label>
                                 <InputForm name="to"
