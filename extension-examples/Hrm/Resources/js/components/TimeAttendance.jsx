@@ -36,40 +36,6 @@ const TimeAttendance = () => {
             })
     };
     useEffect(() => {
-        table.setColums([
-            {
-                label: t("hrm.attendance.date"),
-                key: 'date',
-                render: (value) => {
-                    return isoToDateTime(value)
-                }
-            },
-            {
-                label: t("hrm.attendance.checkin"),
-                key: 'check_in_time'
-            },
-            {
-                label: t("hrm.attendance.checkout"),
-                key: 'check_out_time'
-            },
-            {
-                label: t("hrm.attendance.note"),
-                key: 'note'
-            },
-            {
-                label: t("hrm.attendance.name"),
-                key: 'name'
-            },
-            {
-                label: t("hrm.attendance.approved"),
-                key: 'approved',
-                render: (value) => {
-                    return value ? <i className="bi bi-check-all text-success" style={{
-                        fontSize: 34
-                    }}></i> : null
-                }
-            }
-        ])
         getData();
     }, []);
     const handleAdd = () => {
@@ -147,7 +113,40 @@ const TimeAttendance = () => {
                                     form.setFormData(null)
                                     setShowAdd(true)
                                 }}
-                                columns={table.colums}
+                                columns={[
+            {
+                label: t("hrm.attendance.date"),
+                key: 'date',
+                render: (value) => {
+                    return isoToDateTime(value)
+                }
+            },
+            {
+                label: t("hrm.attendance.checkin"),
+                key: 'check_in_time'
+            },
+            {
+                label: t("hrm.attendance.checkout"),
+                key: 'check_out_time'
+            },
+            {
+                label: t("hrm.attendance.note"),
+                key: 'note'
+            },
+            {
+                label: t("hrm.attendance.name"),
+                key: 'name'
+            },
+            {
+                label: t("hrm.attendance.approved"),
+                key: 'approved',
+                render: (value) => {
+                    return value ? <i className="bi bi-check-all text-success" style={{
+                        fontSize: 34
+                    }}></i> : null
+                }
+            }
+        ]}
                                 data={table.data}
                                 loading={table.loading}
                                 movePage={getData}

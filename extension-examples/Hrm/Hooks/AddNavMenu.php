@@ -31,7 +31,7 @@ class AddNavMenu implements HookInterface
             SupportUINav::buildNavItem([
                 'to'        => '/hrm',
                 'link'      => null,
-                'icon'      => "bi bi-journal-bookmark",
+                'icon'      => "bi bi-person-workspace",
                 'label'     => __("extension.hrm::messages.nav"),
                 'ability'   => $this->action,
             ])
