@@ -36,11 +36,10 @@ LiteERP focuses on **day-to-day internal operations**, such as:
 - Purchase & sales workflows
 - Pricing rules and discounts
 - Customer & supplier management
-- Internal operational reporting
 
-Industry-specific requirements — such as tax rules, accounting integration,
-custom pricing logic, or workflow automation — are intentionally handled through
-**Extensions**, not hardcoded into the core.
+Industry-specific requirements — such as reporting, analytics, tax rules,
+accounting integration, custom pricing logic, or workflow automation —
+are intentionally handled through **Extensions**, not hardcoded into the core.
 
 ---
 
@@ -75,11 +74,6 @@ The system is built on:
 | Upgrade safety | **High** | Medium | Low–Medium |
 | Target users | SMEs & developers | SMEs–Enterprises | Large enterprises |
 
-Odoo and SAP aim to **cover every possible business scenario inside the core**.  
-This makes them powerful, but also heavy, expensive, and difficult to evolve safely.
-
-LiteERP deliberately chooses a different path.
-
 ---
 
 ## 🧠 A Pure and Minimal Core
@@ -94,12 +88,6 @@ The LiteERP core intentionally focuses only on:
 
 Instead of absorbing complexity,  
 LiteERP treats **complexity as an external concern** handled by extensions.
-
-This makes the core:
-- Easy to understand
-- Safe to evolve
-- Fast to deploy
-- Suitable for low-resource environments
 
 ---
 
@@ -119,15 +107,7 @@ Extensions are:
 - **Debt Extension** – basic debt & receivable tracking
 
 ### 📚 Example & Guide Extensions
-LiteERP also provides **example extensions** for learning and reference:
-
 https://github.com/liteerp-oss/liteerp/tree/dev/extension-examples
-
-These examples demonstrate:
-- Extension structure
-- ServiceProvider registration
-- API exposure
-- React & Blade UI integration
 
 ---
 
@@ -136,55 +116,30 @@ These examples demonstrate:
 LiteERP uses a **Hybrid Frontend Architecture**, giving each Extension full freedom
 to choose the most suitable UI approach.
 
-### UI Options per Extension
 An Extension can:
-- 🧱 Use **Blade Templates**  
-  Ideal for CRUD screens, admin forms, and simple internal tools.
-- ⚛️ Use **ReactJS**  
-  Ideal for dashboards, real-time UI, complex user interactions.
-- 🖥️ Build a **fully independent dashboard**  
-  Extensions can have their own layout, routing, and UI structure.
-
-React modules are loaded dynamically via a dedicated **React ServiceProvider**.
-
-### Why Hybrid Matters
-- SMEs can start simple with Blade
-- Upgrade to React only when needed
-- No forced rewrite
-- Lower development cost
-- Better long-term flexibility
+- 🧱 Use **Blade Templates**
+- ⚛️ Use **ReactJS**
+- 🖥️ Build a **fully independent dashboard**
 
 ---
 
 ## 🌐 Multi-language Support
 
-LiteERP is built with **first-class multi-language support**.
-
-- Each Extension has its own language files
-- Clear namespace separation
-- Works with both Blade and React
-- Easy to add new languages
-
-Currently supported:
+Supported languages:
 - 🇺🇸 English
 - 🇯🇵 Japanese
 - 🇻🇳 Vietnamese
+
+Each Extension manages its own translations.
 
 ---
 
 ## 📉 Lightweight by Design
 
-LiteERP intentionally stays lightweight.
+LiteERP focuses on **operations**, not accounting or tax compliance.
 
-Compared to all-in-one ERP platforms:
-- Lower infrastructure cost
-- Faster onboarding
-- Easier customization
-- Better control over long-term complexity
-
-> LiteERP invoices are **operational invoices**, not tax invoices.  
-> The system focuses on **operations**, not replacing accounting software  
-> or government e-invoicing platforms.
+> LiteERP invoices are operational invoices,  
+> not replacements for accounting or government e-invoicing systems.
 
 ---
 
@@ -192,7 +147,7 @@ Compared to all-in-one ERP platforms:
 
 - ❌ Accounting software
 - ❌ Tax-compliant invoicing system
-- ❌ Replacement for government e-invoice platforms
+- ❌ Government e-invoice platform
 
 ---
 
@@ -208,9 +163,9 @@ Compared to all-in-one ERP platforms:
 ---
 
 ## 🧪 Testing & Quality
-- Global testing
 - Unit tests
-- Clean code standards (Laravel & React)
+- Global testing
+- Clean code standards
 
 ---
 
@@ -220,10 +175,31 @@ https://github.com/liteerp-oss/liteerp/tree/dev/docs
 ---
 
 ## 🧭 Roadmap
+
 - Extension standards & best practices
 - Expanded documentation
-- Reporting module
 - Extension marketplace concept
+
+### 🤖 AI Agent Extensions (Planned)
+
+LiteERP plans to introduce **AI Agent Extensions** as optional, fully decoupled
+extensions designed to **assist businesses**, not replace human decision-making.
+
+AI agents will:
+- Live entirely outside the core
+- Subscribe to domain events and APIs
+- Provide insights, recommendations, and explanations
+- Be optional, replaceable, and safe to disable
+- Support self-hosted or external AI providers
+
+Example AI agent concepts:
+- Operations insight & anomaly detection
+- Sales and purchasing recommendations
+- Natural language business queries (internal Q&A)
+- Workflow observation and optimization suggestions
+
+LiteERP treats AI as an **extension-level concern**, fully aligned with its
+pure-core and extension-first philosophy.
 
 ---
 
@@ -231,12 +207,9 @@ https://github.com/liteerp-oss/liteerp/tree/dev/docs
 
 Basic environment configuration:
 
-  APP_TIMEZONE="Asia/Ho_Chi_Minh"
-
-  APP_CURRENCY="USD"
-  
+  APP_TIMEZONE="Asia/Ho_Chi_Minh"  
+  APP_CURRENCY="USD"  
   APP_CURRENCY_LOCALE="en-US"
-
 
 Steps:
 1. `docker compose build && docker compose up -d`
