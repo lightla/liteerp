@@ -1,5 +1,4 @@
 import React from "react";
-import GradientButton from "../UI/Buttons/GradientButton";
 import SuccessButton from "../UI/Buttons/SuccessButton";
 import FlatIcon32 from "../UI/FlatIcons/FlatIcon32";
 
