@@ -13,6 +13,10 @@ class ExtensionServiceProvider extends ServiceProvider
             \Extensions\Smtp\Hooks\CommonNotification::class,
             'liteerp.hooks'
         );
+        $this->app->tag(
+            \Extensions\Smtp\Hooks\AddNavMenu::class,
+            'liteerp.hooks'
+        );
     }
 
     public function boot()
@@ -24,5 +28,6 @@ class ExtensionServiceProvider extends ServiceProvider
         $this->loadRoutesFrom(__DIR__.'/Routes/web.php');
         $this->loadRoutesFrom(__DIR__.'/Routes/api.php');
         $this->loadViewsFrom(__DIR__.'/Resources/views','SMTP');
+        $this->loadTranslationsFrom(__DIR__.'/lang','extension.smtp');
     }
 }

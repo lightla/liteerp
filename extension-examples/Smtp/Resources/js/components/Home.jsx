@@ -6,8 +6,11 @@ import { InputForm } from '@components/UI/Input/InputForm'
 import TextArea from '@components/UI/Input/Textarea'
 import smtpService from "../services/smtpService";
 import { usePopup } from '@components/popups/PopupContext'
-
+import { useI18n } from '@i18n/useI18n'
+import PageHead from '@components/PageHead'
+import TabsCustom from '@components/TabsCustom'
 const Home = () => {
+    const { t } = useI18n();
     const form = useForm();
     const { openPopup } = usePopup();
     const saveSmtp = () => {
@@ -16,7 +19,7 @@ const Home = () => {
         smtpService.save(form.formData)
             .then((resp) => {
                 openPopup({
-                    message: 'You has been saved',
+                    message: t('smtp.save.success'),
                     type: 'success'
                 })
                 form.setLoading(false)
@@ -41,7 +44,7 @@ const Home = () => {
         smtpService.send(form.formData)
             .then((resp) => {
                 openPopup({
-                    message: 'You has been saved',
+                    message: t('smtp.send.success'),
                     type: 'success'
                 })
                 form.setLoading(false)
@@ -73,43 +76,19 @@ const Home = () => {
     }, []);
 
     return (
-        <div className="container py-4" style={{ maxWidth: 720 }}>
-            <div className="card">
-                <div className="card-header fw-bold">
-                    Mail Settings
-                </div>
-
-                <div className="card-body">
-                    {/* TABS */}
-                    <ul className="nav nav-tabs mb-3" role="tablist">
-                        <li className="nav-item">
-                            <button
-                                className="nav-link active"
-                                data-bs-toggle="tab"
-                                data-bs-target="#smtp-setting"
-                                type="button"
-                            >
-                                SMTP Settings
-                            </button>
-                        </li>
-                        <li className="nav-item">
-                            <button
-                                className="nav-link"
-                                data-bs-toggle="tab"
-                                data-bs-target="#smtp-test"
-                                type="button"
-                            >
-                                Send Test Mail
-                            </button>
-                        </li>
-                    </ul>
-
-                    {/* TAB CONTENT */}
-                    <div className="tab-content">
-                        {/* SETTINGS TAB */}
-                        <div className="tab-pane fade show active" id="smtp-setting">
+        <div className="py-4">
+            <PageHead title={t('smtp.title')} subtitle={t('smtp.subtitle')} />
+            <div className="container mt-3">
+                <div>
+                    <TabsCustom
+                    navs={[
+                        { key: 'setting', label: t('smtp.setting') },
+                        { key: 'test', label: t('smtp.test') }
+                    ]}
+                    contents={[
+                        <div className="" id="smtp-setting">
                             <div className="mb-3">
-                                <label className="form-label">Host</label>
+                                <label className="form-label">{t('smtp.host')}</label>
                                 <InputForm name="host"
                                     value={form.formData?.host}
                                     handleChange={form.handleChange} errorMessage={form.formErrors?.host} />
@@ -117,14 +96,14 @@ const Home = () => {
 
                             <div className="row">
                                 <div className="col-md-6 mb-3">
-                                    <label className="form-label">Port</label>
+                                    <label className="form-label">{t('smtp.port')}</label>
                                     <InputForm
                                         value={form.formData?.port}
                                         name="port" handleChange={form.handleChange} errorMessage={form.formErrors?.port} />
                                 </div>
 
                                 <div className="col-md-6 mb-3">
-                                    <label className="form-label">Encryption</label>
+                                    <label className="form-label">{t('smtp.encryption')}</label>
                                     <Select
                                         value={form.formData?.encryption}
                                         name="encryption" handleChange={form.handleChange}
@@ -138,7 +117,7 @@ const Home = () => {
                             </div>
 
                             <div className="mb-3">
-                                <label className="form-label">Username</label>
+                                <label className="form-label">{t('smtp.username')}</label>
                                 <InputForm name="username"
                                     value={form.formData?.username}
                                     handleChange={form.handleChange}
@@ -146,7 +125,7 @@ const Home = () => {
                             </div>
 
                             <div className="mb-3">
-                                <label className="form-label">Password</label>
+                                <label className="form-label">{t('smtp.password')}</label>
                                 <InputForm
                                     type="password"
                                     name="password"
@@ -157,7 +136,7 @@ const Home = () => {
 
                             <div className="row">
                                 <div className="col-md-6 mb-3">
-                                    <label className="form-label">From Email</label>
+                                    <label className="form-label">{t('smtp.from_email')}</label>
                                     <InputForm name="from_email"
                                         value={form.formData?.from_email}
                                         handleChange={form.handleChange}
@@ -165,7 +144,7 @@ const Home = () => {
                                 </div>
 
                                 <div className="col-md-6 mb-3">
-                                    <label className="form-label">From Name</label>
+                                    <label className="form-label">{t('smtp.from_name')}</label>
                                     <InputForm name="from_name"
                                         value={form.formData?.from_name}
                                         handleChange={form.handleChange}
@@ -173,15 +152,13 @@ const Home = () => {
                                 </div>
                             </div>
 
-                            <div className="text-end">
+                            <div className="col-2">
                                 <PrimaryButton loading={form.loading} onClick={saveSmtp} label="Save setting" />
                             </div>
-                        </div>
-
-                        {/* TEST TAB */}
-                        <div className="tab-pane fade" id="smtp-test">
+                        </div>,
+                        <div className="" id="smtp-test">
                             <div className="mb-3">
-                                <label className="form-label">To</label>
+                                <label className="form-label">{t('smtp.to')}</label>
                                 <InputForm name="to"
                                     value={form.formData?.to}
                                     handleChange={form.handleChange}
@@ -189,7 +166,7 @@ const Home = () => {
                             </div>
 
                             <div className="mb-3">
-                                <label className="form-label">Subject</label>
+                                <label className="form-label">{t('smtp.subject')}</label>
                                 <InputForm name="subject"
                                     value={form.formData?.subject}
                                     handleChange={form.handleChange}
@@ -197,18 +174,19 @@ const Home = () => {
                             </div>
 
                             <div className="mb-3">
-                                <label className="form-label">Message</label>
+                                <label className="form-label">{t('smtp.message')}</label>
                                 <TextArea name="message"
                                     value={form.formData?.message}
                                     handleChange={form.handleChange}
                                     errorMessage={form.formErrors?.message} />
                             </div>
 
-                            <div className="text-end">
+                            <div className="col-2">
                                 <PrimaryButton loading={form.loading} onClick={sendTestMail} label="Send test" />
                             </div>
                         </div>
-                    </div>
+                    ]}
+                />
                 </div>
             </div>
         </div>
