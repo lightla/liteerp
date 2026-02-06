@@ -15,7 +15,6 @@ import User from "./react/pages/user";
 import Register from "./react/pages/register";
 import Business from "./react/pages/business";
 import VerifyAccount from "./react/pages/verify-account";
-import Membership from "./react/pages/membership";
 import Notification from "./react/pages/notification";
 import Stock from "./react/pages/stock";
 import Purchases from "./react/pages/purchases";
@@ -48,7 +47,6 @@ const App = () => {
           <Route path="/settings" element={<Setting />} />
           <Route path="/users" element={<User />} />
           <Route path="/business" element={<Business />} />
-          <Route path="/membership" element={<Membership />} />
           <Route path="/notification" element={<Notification />} />
           <Route path="/stocks" element={<Stock />} />
           <Route path="/inventories" element={<Inventory />} />
