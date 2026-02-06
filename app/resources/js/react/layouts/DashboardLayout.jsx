@@ -43,7 +43,7 @@ export default function DashboardLayout({
                 </div>
             </div>
         </div>
-        <footer className="border-top bg-white">
+        <footer className="border-top bg-white mt-5">
   <div className="container-fluid py-2">
     <div className="row align-items-center text-muted small">
       <div className="col-md-4 d-flex align-items-center gap-2 justify-content-center justify-content-md-start">
