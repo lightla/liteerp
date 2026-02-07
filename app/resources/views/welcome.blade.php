@@ -23,7 +23,7 @@
                 <a href="{{ url('/dashboard/login') }}" class="btn btn-primary me-2">
                     Get Started
                 </a>
-                <a href="https://github.com/liteerp-oss/docs" target="_blank" class="btn btn-outline-secondary">
+                <a href="https://github.com/liteerp-oss/liteerp/tree/dev/docs" target="_blank" class="btn btn-outline-secondary">
                     Documentation
                 </a>
             </div>
