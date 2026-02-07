@@ -231,7 +231,7 @@ http://localhost:8002/dashboard/login
 
 ## 💬 Community
 Discord:  
-https://discord.com/channels/1468234700689772701/1468234701197152279
+https://discord.gg/VExDJ7k8
 
 ---
 
