@@ -61,10 +61,14 @@ When proposing a feature, please describe:
 ### 1. Fork & Branch
 
 * Fork the repository
-* Create a new branch from `main`
+* Create a new branch from `dev`
 
 ```bash
-git checkout -b feature/your-feature-name
+git checkout -b features/your-feature-name
+
+Or 
+
+git checkout -b extensions/your-feature-name
 ```
 
 ### 2. Coding Rules
